@@ -1,2 +1,2 @@
 # MC-Bottle
-A new kind Minecraft Server with lots of Features still to come
+Bottle is a new Type of Minecraft Server with the Goal to stand out from the Performance Limitations of previous Servers but still be expandable and flexible.
