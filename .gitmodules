@@ -16,3 +16,6 @@
 [submodule "dynamic_bitset"]
 	path = dynamic_bitset
 	url = ../../pinam45/dynamic_bitset.git
+[submodule "lodepng"]
+	path = lodepng
+	url = ../../lvandeve/lodepng.git
