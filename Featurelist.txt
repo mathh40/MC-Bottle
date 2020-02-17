@@ -9,10 +9,6 @@ Features to work on:
  |Basic Dos Protection
  |Rcon Support
  |Lua Scripting Support + Basic Plugins as Samples
- 
-|-Low
- |Support for Spigot Plugins
- |Forgemod Modloader Support
  |Create an Banlist that uses the Players ID. The IP will also be banned if set in the Config
  |Console Command: kick <Name/ID/IP> - Kicks an specific Player by Name, ID or IP
  |Console Command: ban <Time(0=Permanent)> <Name/ID/IP> - bans an specific Player by Name, ID or IP over the specified Time
@@ -23,6 +19,11 @@ Features to work on:
  |Ingame Command: /online - Print all Players Names 
  |Ingame Command: /ping - Make 4 Ping Tests and Print the Output
  |Ingame Command: /tps - Print the Delta TPS of the last Second
+ 
+|-Low
+ |Automatic Updater with restart
+ |Support for Spigot Plugins
+ |Forgemod Modloader Support
  
  |-Very Low
   |Create an Multiserver management Webinterface
