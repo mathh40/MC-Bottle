@@ -1,0 +1,31 @@
+Features to work on:
+|-Critical
+
+|-High
+ |Create Server Base compatible to the latest Java/Win10 Client
+ 
+|-Normal
+ |Create an Keyvalue based Config System
+ |Basic Dos Protection
+ |Rcon Support
+ |Lua Scripting Support + Basic Plugins as Samples
+ 
+|-Low
+ |Support for Spigot Plugins
+ |Forgemod Modloader Support
+ |Create an Banlist that uses the Players ID. The IP will also be banned if set in the Config
+ |Console Command: kick <Name/ID/IP> - Kicks an specific Player by Name, ID or IP
+ |Console Command: ban <Time(0=Permanent)> <Name/ID/IP> - bans an specific Player by Name, ID or IP over the specified Time
+ |Console Command: tps - Print the Delta TPS of the last Second
+ |Console Command: worlds - Print all Active and Inactive World along with their Dimensions and 1sec Delta TPS
+ |Console Command: memdebug - Get detailed Memory Usage Information about the Plugins, Mods and Server
+ |Console Command: online - Print all Players Names along with their IDs and IPs
+ |Ingame Command: /online - Print all Players Names 
+ |Ingame Command: /ping - Make 4 Ping Tests and Print the Output
+ |Ingame Command: /tps - Print the Delta TPS of the last Second
+ 
+ |-Very Low
+  |Create an Multiserver management Webinterface
+  |Create a Subserver which starts before the main Server and automatically redirects the Players once the main Server is done loading
+  |LiteLoader Modloader Support (runs fine along with Forge)
+  |Fabric Modloader Support (may not run fine along with Forge)
