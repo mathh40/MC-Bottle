@@ -1,0 +1,21 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+  - name: Install Ninja
+    uses: seanmiddleditch/gha-setup-ninja@master
+  - name: Setup VS Environment
+    uses: seanmiddleditch/gha-setup-vsdevenv@master
+  - name: Configure
+    env:
+      CXXFLAGS: ${{ matrix.cxxflags }}
+      CXX: ${{ matrix.cxx }}
+      CC: ${{ matrix.cc }}
+    run: |
+      mkdir build
+      cd build
+      cmake -G Ninja -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config }} ..
+  - name: Build
+    run: cmake --build build --parallel
