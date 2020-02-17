@@ -10,3 +10,6 @@
 [submodule "crossguid"]
 	path = crossguid
 	url = ../../graeme-hill/crossguid.git
+[submodule "concurrentqueue"]
+	path = concurrentqueue
+	url = ../../cameron314/concurrentqueue.git
