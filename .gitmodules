@@ -13,3 +13,6 @@
 [submodule "concurrentqueue"]
 	path = concurrentqueue
 	url = ../../cameron314/concurrentqueue.git
+[submodule "dynamic_bitset"]
+	path = dynamic_bitset
+	url = ../../pinam45/dynamic_bitset.git
