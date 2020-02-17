@@ -21,6 +21,7 @@ Features to work on:
  |Ingame Command: /tps - Print the Delta TPS of the last Second
  
 |-Low
+ |Anti Wallhack - Hide all Ores that are not touching 0(air)
  |Automatic Updater with restart
  |Support for Spigot Plugins
  |Forgemod Modloader Support
