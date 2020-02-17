@@ -1,0 +1,4 @@
+#pragma once
+#include "enum.h"
+
+BETTER_ENUM(SoundCategory, uint8_t, MASTER, MUSIC, RECORDS, WEATHER, BLOCKS, HOSTILE, NEUTRAL, PLAYERS, AMBIENT, VOICE);

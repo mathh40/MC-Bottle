@@ -1,0 +1,7 @@
+file(GLOB_RECURSE source_list "*.cpp" "*.h" )
+include(Flags)
+add_library(village STATIC ${source_list})
+target_compile_features(village PRIVATE cxx_std_20)
+target_include_directories(village PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+FLAGS(village)
+target_link_libraries(village PRIVATE nbt util block spdlog)
