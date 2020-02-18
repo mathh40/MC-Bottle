@@ -2,10 +2,10 @@ Features to work on:
 |-Critical
 
 |-High
- |Create Server Base compatible to the latest Java/Win10 Client
+ |Create Server Base compatible to the latest 1.12.2 Java/Win10 Client
  
 |-Normal
- |Create an Keyvalue based Config System
+ |Create an Json based Config System
  |Basic Dos Protection
  |Rcon Support
  |Lua Scripting Support + Basic Plugins as Samples
