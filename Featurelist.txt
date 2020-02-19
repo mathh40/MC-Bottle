@@ -30,6 +30,7 @@ Features to work on:
  |Forgemod Modloader Support
  
  |-Very Low
+  |Generate new Chunks near existing Chunks automatically when the Server contains less then 4 Players and the CPU Usage is below 50% (Option in the Config how much Chunks to generate per Tick (0 = Off))(Autostop when the Amount of total Chunks reaches X)
   |Create an Multiserver management Webinterface
   |Create a Subserver which starts before the main Server and automatically redirects the Players once the main Server is done loading
   |LiteLoader Modloader Support (runs fine along with Forge)
