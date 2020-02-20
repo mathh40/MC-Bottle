@@ -1,3 +1,4 @@
+#pragma once
 #include "IStatType.h"
 #include <string>
 #include "text/ITextComponent.h"

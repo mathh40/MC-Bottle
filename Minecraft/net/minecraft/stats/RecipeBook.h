@@ -1,3 +1,4 @@
+#pragma once
 #include <dynamic_bitset.hpp>
 
 class IRecipe;

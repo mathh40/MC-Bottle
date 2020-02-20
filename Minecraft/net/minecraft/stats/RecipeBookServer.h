@@ -1,3 +1,4 @@
+#pragma once
 #include "RecipeBook.h"
 #include "spdlog/logger.h"
 #include "NBTTagCompound.h"

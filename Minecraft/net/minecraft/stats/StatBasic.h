@@ -1,3 +1,4 @@
+#pragma once
 #include "StatBase.h"
 
 class StatBasic :public StatBase
