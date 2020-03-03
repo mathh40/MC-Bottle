@@ -1,7 +1,4 @@
 file(GLOB_RECURSE source_list "*.cpp" "*.h" )
-include(Flags)
 add_library(scoreboard STATIC ${source_list})
-target_compile_features(scoreboard PRIVATE cxx_std_20)
 target_include_directories(scoreboard PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-FLAGS(scoreboard)
-target_link_libraries(scoreboard PRIVATE nbt util spdlog)
+target_link_libraries(scoreboard PRIVATE project_options project_warnings nbt util spdlog)

@@ -1,7 +1,4 @@
 file(GLOB_RECURSE source_list "*.cpp" "*.h" )
-include(Flags)
 add_library(world STATIC ${source_list})
-target_compile_features(world PRIVATE cxx_std_20)
 target_include_directories(world PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-FLAGS(world)
-target_link_libraries(world PRIVATE nbt util block concurrentqueue nlohmann_json::nlohmann_json spdlog)
+target_link_libraries(world PRIVATE project_options project_warnings nbt util block concurrentqueue nlohmann_json::nlohmann_json spdlog)

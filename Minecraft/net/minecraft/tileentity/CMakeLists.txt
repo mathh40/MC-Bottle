@@ -1,7 +1,4 @@
 file(GLOB_RECURSE source_list "*.cpp" "*.h" )
-include(Flags)
 add_library(tileentity STATIC ${source_list})
-target_compile_features(tileentity PRIVATE cxx_std_20)
 target_include_directories(tileentity PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-FLAGS(tileentity)
-target_link_libraries(tileentity PRIVATE nbt util block spdlog)
+target_link_libraries(tileentity PRIVATE project_options project_warnings nbt util block spdlog)
