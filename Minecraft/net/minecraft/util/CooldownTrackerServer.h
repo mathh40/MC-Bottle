@@ -1,6 +1,8 @@
 #pragma once
 #include "CooldownTracker.h"
 
+class EntityPlayerMP;
+
 class CooldownTrackerServer : public CooldownTracker
 {
 public:

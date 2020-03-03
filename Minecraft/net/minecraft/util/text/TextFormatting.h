@@ -14,7 +14,7 @@ public:
 	std::string getFriendlyName() const;
 	std::string toString() const;
 	std::optional<std::string> getTextWithoutFormattingCodes(std::optional<std::string> text) const;
-	static std::optional<std::string> getValueByName(std::optional<std::string> friendlyName);
+	static std::optional <TextFormatting> getValueByName(std::optional<std::string> friendlyName);
 	static std::optional <TextFormatting> fromColorIndex(int32_t index);
 	static std::vector<std::string> getValidValues(bool isColor, bool isFancyStyling);
 

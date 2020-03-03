@@ -64,9 +64,9 @@ std::optional<std::string> TextFormatting::getTextWithoutFormattingCodes(std::op
 	return text.has_value() ? std::optional<std::string>(sm) : std::nullopt;
 }
 
-std::optional<std::string> TextFormatting::getValueByName(std::optional<std::string> friendlyName)
+std::optional<TextFormatting> TextFormatting::getValueByName(std::optional<std::string> friendlyName)
 {
-	return friendlyName.has_value() ? std::optional<std::string>(NAME_MAPPING[lowercaseAlpha(friendlyName.value())]->name) : std::nullopt;
+	return friendlyName.has_value() ? std::optional<TextFormatting>(*NAME_MAPPING[lowercaseAlpha(friendlyName.value())]) : std::nullopt;
 }
 
 std::optional<TextFormatting> TextFormatting::fromColorIndex(int32_t index)

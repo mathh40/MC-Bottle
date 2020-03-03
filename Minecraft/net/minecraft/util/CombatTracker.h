@@ -3,13 +3,15 @@
 #include <vector>
 #include "CombatEntry.h"
 
+class EntityLivingBase;
+
 class CombatTracker
 {
 public:
 	CombatTracker(const EntityLivingBase &fighterIn);
 	void calculateFallSuffix();
-	void trackDamage(const DamageSource &damageSrc, const float healthIn, const float damageAmount);
-	ITextComponent getDeathMessage();
+	void trackDamage(const DamageSource::DamageSource &damageSrc, const float healthIn, const float damageAmount);
+	ITextComponent* getDeathMessage();
 	EntityLivingBase getBestAttacker();
 	
 	int getCombatDuration();

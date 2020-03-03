@@ -1,6 +1,8 @@
 #pragma once
 #include <unordered_map>
 
+class Item;
+
 class CooldownTracker
 {
 public:
