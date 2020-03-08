@@ -1,7 +1,10 @@
 #pragma once
+#include <array>
 #include <unordered_map>
 #include "Score.h"
 
+class ScoreObjective;
+class ScorePlayerTeam;
 class Entity;
 class IScoreCriteria;
 
@@ -24,9 +27,9 @@ public:
 	ScoreObjective getObjectiveInDisplaySlot(int32_t slotIn);
 	ScorePlayerTeam getTeam(std::string_view teamName);
 	ScorePlayerTeam createTeam(std::string_view name);
-	void removeTeam(ScorePlayerTeam playerTeam);
+	void removeTeam(ScorePlayerTeam* playerTeam);
 	bool addPlayerToTeam(std::string_view player, std::string_view newTeam);
-	void removePlayerFromTeam(std::string_view username, ScorePlayerTeam playerTeam);
+	void removePlayerFromTeam(std::string_view username, ScorePlayerTeam* playerTeam);
 	std::vector<std::string> getTeamNames();
 	std::vector<ScorePlayerTeam> getTeams();
 	ScorePlayerTeam getPlayersTeam(std::string_view username);
@@ -36,9 +39,9 @@ public:
 	void onScoreUpdated(Score scoreIn);
 	void broadcastScoreUpdate(std::string_view scoreName);
 	void broadcastScoreUpdate(std::string_view scoreName, ScoreObjective objective);
-	void broadcastTeamCreated(ScorePlayerTeam playerTeam);
-	void broadcastTeamInfoUpdate(ScorePlayerTeam playerTeam);
-	void broadcastTeamRemove(ScorePlayerTeam playerTeam);
+	void broadcastTeamCreated(ScorePlayerTeam* playerTeam);
+	void broadcastTeamInfoUpdate(ScorePlayerTeam* playerTeam);
+	void broadcastTeamRemove(ScorePlayerTeam* playerTeam);
 	static std::string getObjectiveDisplaySlot(int32_t id);
 	static int32_t getObjectiveDisplaySlotNumber(std::string_view name);
 	static std::vector<std::string> getDisplaySlotStrings();

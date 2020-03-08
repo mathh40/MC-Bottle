@@ -6,7 +6,6 @@
 class Team
 {
 public:
-
    class EnumVisible
    {
    public:
@@ -21,11 +20,30 @@ public:
 
       std::string internalName;
       int32_t id;
-   private:
 
       EnumVisible(std::string_view nameIn, int32_t idIn);
-
+   private:
       static std::unordered_map<std::string,Team::EnumVisible> nameMap;
+   };
+
+  class CollisionRule
+   {
+  public:
+     static CollisionRule ALWAYS;
+     static CollisionRule NEVER;
+     static CollisionRule HIDE_FOR_OTHER_TEAMS;
+     static CollisionRule HIDE_FOR_OWN_TEAM;
+
+     static std::vector<std::string> getNames();
+     static Team::CollisionRule getByName(std::string_view nameIn);
+
+
+     std::string name;
+     int32_t id;
+
+     CollisionRule(std::string_view nameIn, int32_t idIn);
+   private:
+     static std::unordered_map<std::string,Team::CollisionRule> nameMap;
    };
 
 
@@ -33,7 +51,7 @@ public:
 
    virtual std::string getName() = 0;
 
-   virtual std::string formatString(std::string_view var1) = 0;
+   virtual std::string formatString(const std::string& input) = 0;
 
    virtual bool getSeeFriendlyInvisiblesEnabled() = 0;
 
