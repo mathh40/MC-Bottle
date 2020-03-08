@@ -135,17 +135,16 @@ jobs:
               -D CMAKE_MAKE_PROGRAM=ninja
               -D CMAKE_C_COMPILER_LAUNCHER=ccache
               -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
-              -D CMAKE_BUILD_TYPE:STRING="Debug"
-              -D DYNAMICBITSET_HEADERS_TARGET_IDE:BOOL="1"
-              -D ARGS_BUILD_UNITTESTS:BOOL="0"
-              -D CROSSGUID_TESTS:BOOL="0"
-              -D SPDLOG_INSTALL:BOOL="1"
-              -D BUILD_TESTING:BOOL="0"
-              -D ARGS_BUILD_EXAMPLE:BOOL="0"
-              -D ENABLE_TESTING:BOOL="0" 
-              -D WARNINGS_AS_ERRORS:BOOL="0" 
-              -D DYNAMICBITSET_FORMAT_TARGET:BOOL="1" 
-              -D ENABLE_DOXYGEN:BOOL="0" 
+              -D DYNAMICBITSET_HEADERS_TARGET_IDE:BOOL=1
+              -D ARGS_BUILD_UNITTESTS:BOOL=0
+              -D CROSSGUID_TESTS:BOOL=0
+              -D SPDLOG_INSTALL:BOOL=1
+              -D BUILD_TESTING:BOOL=0
+              -D ARGS_BUILD_EXAMPLE:BOOL=0
+              -D ENABLE_TESTING:BOOL=0 
+              -D WARNINGS_AS_ERRORS:BOOL=0
+              -D DYNAMICBITSET_FORMAT_TARGET:BOOL=1
+              -D ENABLE_DOXYGEN:BOOL=0
             RESULT_VARIABLE result
           )
           if (NOT result EQUAL 0)
