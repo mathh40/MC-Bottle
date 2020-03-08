@@ -33,5 +33,6 @@ Features to work on:
   |Generate new Chunks near existing Chunks automatically when the Server contains less then 4 Players and the CPU Usage is below 50% (Option in the Config how much Chunks to generate per Tick (0 = Off))(Autostop when the Amount of total Chunks reaches X)
   |Create an Multiserver management Webinterface
   |Create a Subserver which starts before the main Server and automatically redirects the Players once the main Server is done loading
+  |Create and Process that checks if the Server is responding. If not, it does start the Server again with an CMD Line Argument that will make the freshly started Server takeover all relevant Data from the Memory of the hanging Server before closing it. This way it will continue to work without letting the Players time out.
   |LiteLoader Modloader Support (runs fine along with Forge)
   |Fabric Modloader Support (may not run fine along with Forge)
