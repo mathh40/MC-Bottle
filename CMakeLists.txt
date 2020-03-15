@@ -88,6 +88,7 @@ add_subdirectory(Minecraft/net/minecraft/tileentity)
 add_subdirectory(Minecraft/net/minecraft/stats)
 add_subdirectory(Minecraft/net/minecraft/scoreboard)
 add_subdirectory(Minecraft/net/minecraft/profiler)
+add_subdirectory(Minecraft/net/minecraft/potion)
 #add_subdirectory(Minecraft/net/minecraft/client)
 
 target_link_libraries(Minecraft PRIVATE project_options project_warnings args nlohmann_json::nlohmann_json util block world)

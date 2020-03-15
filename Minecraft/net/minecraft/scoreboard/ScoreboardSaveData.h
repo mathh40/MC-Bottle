@@ -26,7 +26,7 @@ protected:
    NBTTagList* scoresToNbt();
 
 private:
-   static std::shared_ptr<spdlog::logger> LOGGER;;
+   static std::shared_ptr<spdlog::logger> LOGGER;
    Scoreboard* scoreboard;
    std::shared_ptr<NBTTagCompound> delayedInitNbt;
 };
