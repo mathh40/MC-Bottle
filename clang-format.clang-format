@@ -1,9 +1,0 @@
-﻿---
-BasedOnStyle: LLVM
-BreakBeforeBraces: Allman
-Language: Cpp
-ObjCBinPackProtocolList: Auto
-ObjCBlockIndentWidth: '0'
-PenaltyBreakBeforeFirstCallParameter: '0'
-
-...
