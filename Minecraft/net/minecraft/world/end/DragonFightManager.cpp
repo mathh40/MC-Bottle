@@ -14,7 +14,7 @@ auto VALID_PLAYER = [](const Entity& lhs) { return EntitySelectors::IS_ALIVE(lhs
 std::shared_ptr<spdlog::logger> Chunk::LOGGER = spdlog::get("Minecraft")->clone("DragonFightManager");
 
 DragonFightManager::DragonFightManager(WorldServer* worldIn, NBTTagCompound* compound)
-	: bossInfo(std::make_unique<TextComponentTranslation>("entity.EnderDragon.name"), BossInfo::Color::PINK, BossInfo::Overlay::PROGRESS)
+	: bossInfo(std::make_unique<TextComponentTranslation>("entity->EnderDragon.name"), BossInfo::Color::PINK, BossInfo::Overlay::PROGRESS)
 	  , scanForLegacyFight(true), world(worldIn)
 {
 	bossInfo.setPlayEndBossMusic(true).setCreateFog(true);

@@ -1228,7 +1228,7 @@ std::optional<std::vector<AxisAlignedBB>> World::getCollisionBoxes(Entity* entit
 		{
 			if (!entityIn->isRidingSameEntity(entity)) 
 			{
-				auto axisalignedbb = entity.getCollisionBoundingBox();
+				auto axisalignedbb = entity->getCollisionBoundingBox();
 				if (axisalignedbb && axisalignedbb.intersects(aabb)) 
 				{
 					list->emplace_back(axisalignedbb);

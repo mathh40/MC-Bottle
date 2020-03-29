@@ -164,7 +164,7 @@ label67:
 
 							entity = (Entity)var8.next();
 						} 
-						while (!entity.getEntityBoundingBox().intersects(aabb));
+						while (!entity->getEntityBoundingBox().intersects(aabb));
 					}
 					while (entity == entityIn);
 
@@ -173,7 +173,7 @@ label67:
 						listToFill.add(entity);
 					}
 
-					aentity = entity.getParts();
+					aentity = entity->getParts();
 				} 
 				while (aentity == null);
 

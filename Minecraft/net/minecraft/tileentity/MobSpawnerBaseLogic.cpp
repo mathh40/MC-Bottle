@@ -76,7 +76,7 @@ void MobSpawnerBaseLogic::updateSpawner()
                return;
             }
 
-            int k = world.getEntitiesWithinAABB(entity.getClass(),(AxisAlignedBB((double)blockpos.getx(), (double)blockpos.gety(), (double)blockpos.getz(), (double)(blockpos.getx() + 1), (double)(blockpos.gety() + 1), (double)(blockpos.getz() + 1))).grow((double)spawnRange)).size();
+            int k = world.getEntitiesWithinAABB(entity->getClass(),(AxisAlignedBB((double)blockpos.getx(), (double)blockpos.gety(), (double)blockpos.getz(), (double)(blockpos.getx() + 1), (double)(blockpos.gety() + 1), (double)(blockpos.getz() + 1))).grow((double)spawnRange)).size();
             if (k >= maxNearbyEntities) 
             {
                resetTimer();
@@ -84,7 +84,7 @@ void MobSpawnerBaseLogic::updateSpawner()
             }
 
             auto entityliving = Util::instanceof<EntityLiving>(entity) ? (EntityLiving)entity : nullptr;
-            entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, world.rand.nextFloat() * 360.0F, 0.0F);
+            entity->setLocationAndAngles(entity->posX, entity->posY, entity->posZ, world.rand.nextFloat() * 360.0F, 0.0F);
             if (entityliving == nullptr || entityliving.getCanSpawnHere() && entityliving.isNotColliding()) 
             {
                if (spawnData.getNbt()->getSize() == 1 && spawnData.getNbt()->hasKey("id", 8) && Util::instanceof<EntityLiving>(entity)) 

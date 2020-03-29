@@ -548,7 +548,7 @@ void WorldServer::tickPlayers()
 
 	for (auto entity : playerEntities)
 	{
-		auto entity1 = entity.getRidingEntity();
+		auto entity1 = entity->getRidingEntity();
 		if (entity1 != nullptr) 
 		{
 			if (!entity1.isDead && entity1.isPassenger(entity)) 
@@ -556,11 +556,11 @@ void WorldServer::tickPlayers()
 				continue;
 			}
 
-			entity.dismountRidingEntity();
+			entity->dismountRidingEntity();
 		}
 
 		profiler.startSection("tick");
-		if (!entity.isDead) 
+		if (!entity->isDead) 
 		{
 			try {
 				updateEntity(entity);
@@ -568,18 +568,18 @@ void WorldServer::tickPlayers()
 			catch (Throwable var7) {
 				CrashReport crashreport = CrashReport.makeCrashReport(var7, "Ticking player");
 				CrashReportCategory crashreportcategory = crashreport.makeCategory("Player being ticked");
-				entity.addEntityCrashInfo(crashreportcategory);
+				entity->addEntityCrashInfo(crashreportcategory);
 				throw ReportedException(crashreport);
 			}
 		}
 
 		profiler.endSection();
 		profiler.startSection("remove");
-		if (entity.isDead) 
+		if (entity->isDead) 
 		{
-			auto j = entity.chunkCoordX;
-			auto k = entity.chunkCoordZ;
-			if (entity.addedToChunk && isChunkLoaded(j, k, true)) 
+			auto j = entity->chunkCoordX;
+			auto k = entity->chunkCoordZ;
+			if (entity->addedToChunk && isChunkLoaded(j, k, true)) 
 			{
 				getChunk(j, k).removeEntity(entity);
 			}
@@ -807,7 +807,7 @@ void WorldServer::onEntityAdded(Entity* entityIn)
 		for (auto var5 = 0; var5 < var4; ++var5) 
 		{
 			Entity entity = var3[var5];
-			entitiesById.emplace(entity.getEntityId(), entity);
+			entitiesById.emplace(entity->getEntityId(), entity);
 		}
 	}
 }
@@ -826,7 +826,7 @@ void WorldServer::onEntityRemoved(Entity* entityIn)
 		for (int var5 = 0; var5 < var4; ++var5) 
 		{
 			Entity entity = var3[var5];
-			entitiesById.removeObject(entity.getEntityId());
+			entitiesById.removeObject(entity->getEntityId());
 		}
 	}
 }

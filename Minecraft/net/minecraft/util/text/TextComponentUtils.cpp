@@ -8,17 +8,17 @@ ITextComponent TextComponentUtils::processComponent(ICommandSender commandSender
 		TextComponentScore textcomponentscore = (TextComponentScore)component;
 		String s = textcomponentscore.getName();
 		if (EntitySelector.isSelector(s)) {
-			List list = EntitySelector.matchEntities(commandSender, s, Entity.class);
+			List list = EntitySelector.matchEntities(commandSender, s, entity->class);
 			if (list.size() != 1) {
 				throw new EntityNotFoundException("commands.generic.selector.notFound", new Object[]{ s });
 			}
 
 			Entity entity = (Entity)list.get(0);
 			if (entity instanceof EntityPlayer) {
-				s = entity.getName();
+				s = entity->getName();
 			}
 			else {
-				s = entity.getCachedUniqueIdString();
+				s = entity->getCachedUniqueIdString();
 			}
 		}
 

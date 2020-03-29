@@ -18,8 +18,6 @@ Vec3i::Vec3i(double x, double y, double z)
 
 }
 
-Vec3i::~Vec3i() = default;
-
 Vec3i Vec3i::crossProduct(Vec3i vec) const
 {
 	return Vec3i(y * vec.getz() - z * vec.gety(), z * vec.getx() - x * vec.getz(), x * vec.gety() - y * vec.getx());

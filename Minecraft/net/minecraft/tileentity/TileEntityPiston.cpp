@@ -205,13 +205,13 @@ void TileEntityPiston::moveCollidedEntities(float p_184322_1_)
 						switch(enumfacing.getAxis())
 						{
 						case Axis::X:
-							entity.motionX = (double)enumfacing.getXOffset();
+							entity->motionX = (double)enumfacing.getXOffset();
 							break;
 						case Axis::Y:
-							entity.motionY = (double)enumfacing.getYOffset();
+							entity->motionY = (double)enumfacing.getYOffset();
 							break;
 						case Axis::Z:
-							entity.motionZ = (double)enumfacing.getZOffset();
+							entity->motionZ = (double)enumfacing.getZOffset();
 						}
 					}
 

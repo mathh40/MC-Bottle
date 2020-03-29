@@ -13,7 +13,7 @@ Chunk::Chunk(World* worldIn, int32_t xIn, int32_t zIn)
 
 	for (auto i = 0; i < entityLists.length; ++i) 
 	{
-		entityLists[i] = new ClassInheritanceMultiMap(Entity.class);
+		entityLists[i] = new ClassInheritanceMultiMap(entity->class);
 	}
 
 	std::fill(precipitationHeightMap.begin(), precipitationHeightMap.end(), -999);

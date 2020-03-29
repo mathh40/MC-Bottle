@@ -8,14 +8,13 @@ public:
 
 	Vec3i(int32_t x, int32_t y, int32_t z);
 	Vec3i(double x, double y, double z);
-	~Vec3i();
 	Vec3i(const Vec3i& lhs) = default;
 	
 	Vec3i crossProduct(Vec3i vec) const;
-
 	int32_t getx()const;
 	int32_t gety()const;
 	int32_t getz()const;
+
 
 	double getDistance(int xIn, int yIn, int zIn) const;
 	double distanceSq(double toX, double toY, double toZ) const;

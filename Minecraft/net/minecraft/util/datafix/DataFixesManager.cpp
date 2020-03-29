@@ -50,7 +50,7 @@ namespace DataFixesManager
 		AnvilChunkLoader.registerFixes(datafixer);
 		ItemStack.registerFixes(datafixer);
 		Template.registerFixes(datafixer);
-		Entity.registerFixes(datafixer);
+		entity->registerFixes(datafixer);
 		EntityArmorStand.registerFixesArmorStand(datafixer);
 		EntityArrow.registerFixesArrow(datafixer);
 		EntityBat.registerFixesBat(datafixer);

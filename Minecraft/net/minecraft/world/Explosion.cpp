@@ -73,32 +73,32 @@ void Explosion::doExplosionA()
 
 	for(auto entity : list)
 	{
-		if (!entity.isImmuneToExplosions()) 
+		if (!entity->isImmuneToExplosions()) 
 		{
-			double d12 = entity.getDistance(x, y, z) / f3;
+			double d12 = entity->getDistance(x, y, z) / f3;
 			if (d12 <= 1.0) 
 			{
-				double d5 = entity.posX - x;
-				double d7 = entity.posY + entity.getEyeHeight() - y;
-				double d9 = entity.posZ - z;
+				double d5 = entity->posX - x;
+				double d7 = entity->posY + entity->getEyeHeight() - y;
+				double d9 = entity->posZ - z;
 				double d13 = MathHelper::sqrt(d5 * d5 + d7 * d7 + d9 * d9);
 				if (d13 != 0.0) 
 				{
 					d5 /= d13;
 					d7 /= d13;
 					d9 /= d13;
-					double d14 = world->getBlockDensity(vec3d, entity.getEntityBoundingBox());
+					double d14 = world->getBlockDensity(vec3d, entity->getEntityBoundingBox());
 					double d10 = (1.0 - d12) * d14;
-					entity.attackEntityFrom(DamageSource::DamageSource.causeExplosionDamage(this),(d10 * d10 + d10) / 2.0 * 7.0 * f3 + 1.0);
+					entity->attackEntityFrom(DamageSource::DamageSource.causeExplosionDamage(this),(d10 * d10 + d10) / 2.0 * 7.0 * f3 + 1.0);
 					double d11 = d10;
 					if (Util::instanceof<EntityLivingBase>(entity))
 					{
 						d11 = EnchantmentProtection.getBlastDamageReduction((EntityLivingBase)entity, d10);
 					}
 
-					entity.motionX += d5 * d11;
-					entity.motionY += d7 * d11;
-					entity.motionZ += d9 * d11;
+					entity->motionX += d5 * d11;
+					entity->motionY += d7 * d11;
+					entity->motionZ += d9 * d11;
 					if (Util::instanceof<EntityPlayer>(entity)) 
 					{
 						EntityPlayer* entityplayer = reinterpret_cast<EntityPlayer*>(entity);
