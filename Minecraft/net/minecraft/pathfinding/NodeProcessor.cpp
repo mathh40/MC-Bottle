@@ -46,7 +46,7 @@ bool NodeProcessor::getCanSwim() const
   return canSwim;
 }
 
-PathPoint NodeProcessor::openPoint(int32_t x, int32_t y, int32_t z)
+std::optional<PathPoint> NodeProcessor::openPoint(int32_t x, int32_t y, int32_t z)
 {
   auto i = PathPoint::makeHash(x, y, z);
   auto ite = pointMap.find(i);

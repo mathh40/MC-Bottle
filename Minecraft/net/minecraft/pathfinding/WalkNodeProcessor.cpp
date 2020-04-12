@@ -68,7 +68,7 @@ PathPoint WalkNodeProcessor::getPathPointToCoords(double x, double y, double z)
     return openPoint(MathHelper::floor(x), MathHelper::floor(y), MathHelper::floor(z));
 }
 
-int32_t WalkNodeProcessor::findPathOptions(const std::vector<PathPoint> &pathOptions, PathPoint currentPoint,
+int32_t WalkNodeProcessor::findPathOptions(std::vector<PathPoint> &pathOptions, PathPoint currentPoint,
     PathPoint targetPoint, float maxDistance)
 {
     int32_t i = 0;
@@ -189,6 +189,157 @@ PathNodeType WalkNodeProcessor::getPathNodeType(IBlockAccess *blockaccessIn, int
     }
 }
 
+PathNodeType WalkNodeProcessor::getPathNodeType(IBlockAccess* p_193577_1_, int32_t x, int32_t y, int32_t z, int32_t xSize, int32_t ySize, int32_t zSize, bool canOpenDoorsIn, bool canEnterDoorsIn, EnumSet p_193577_10_, PathNodeType p_193577_11_, BlockPos p_193577_12_)
+{
+    for(int32_t i = 0; i < xSize; ++i) 
+    {
+        for(int32_t j = 0; j < ySize; ++j) 
+        {
+            for(int32_t k = 0; k < zSize; ++k) 
+            {
+                int32_t l = i + x;
+                int32_t i1 = j + y;
+                int32_t j1 = k + z;
+                PathNodeType pathnodetype = getPathNodeType(p_193577_1_, l, i1, j1);
+                if (pathnodetype == PathNodeType::DOOR_WOOD_CLOSED && canOpenDoorsIn && canEnterDoorsIn) {
+                    pathnodetype = PathNodeType::WALKABLE;
+                }
+
+                if (pathnodetype == PathNodeType::DOOR_OPEN && !canEnterDoorsIn) {
+                    pathnodetype = PathNodeType::BLOCKED;
+                }
+
+                if (pathnodetype == PathNodeType::RAIL && !(p_193577_1_.getBlockState(p_193577_12_).getBlock() instanceof BlockRailBase) && !(p_193577_1_.getBlockState(p_193577_12_.down()).getBlock() instanceof BlockRailBase)) {
+                    pathnodetype = PathNodeType::FENCE;
+                }
+
+                if (i == 0 && j == 0 && k == 0) {
+                    p_193577_11_ = pathnodetype;
+                }
+
+                p_193577_10_.add(pathnodetype);
+            }
+        }
+    }
+
+    return p_193577_11_;
+}
+
+PathNodeType WalkNodeProcessor::getPathNodeType(IBlockAccess *blockaccessIn, int32_t x, int32_t y, int32_t z)
+{
+    PathNodeType pathnodetype = getPathNodeTypeRaw(blockaccessIn, x, y, z);
+    if (pathnodetype == PathNodeType::OPEN && y >= 1) 
+    {
+        Block block = blockaccessIn->getBlockState(BlockPos(x, y - 1, z)).getBlock();
+        PathNodeType pathnodetype1 = getPathNodeTypeRaw(blockaccessIn, x, y - 1, z);
+        pathnodetype = pathnodetype1 != PathNodeType::WALKABLE && pathnodetype1 != PathNodeType::OPEN && pathnodetype1 != PathNodeType::WATER && pathnodetype1 != PathNodeType::LAVA ? PathNodeType::WALKABLE : PathNodeType::OPEN;
+        if (pathnodetype1 == PathNodeType::DAMAGE_FIRE || block == Blocks::MAGMA) 
+        {
+            pathnodetype = PathNodeType::DAMAGE_FIRE;
+        }
+
+        if (pathnodetype1 == PathNodeType::DAMAGE_CACTUS) 
+        {
+            pathnodetype = PathNodeType::DAMAGE_CACTUS;
+        }
+    }
+
+    pathnodetype = checkNeighborBlocks(blockaccessIn, x, y, z, pathnodetype);
+    return pathnodetype;
+}
+
+PathNodeType WalkNodeProcessor::checkNeighborBlocks(IBlockAccess *p_193578_1_, int32_t p_193578_2_, int32_t p_193578_3_,
+    int32_t p_193578_4_, PathNodeType p_193578_5_)
+{
+    BlockPos blockpos$pooledmutableblockpos;
+    if (p_193578_5_ == PathNodeType::WALKABLE) 
+    {
+        for(int32_t i = -1; i <= 1; ++i) 
+        {
+            for(int32_t j = -1; j <= 1; ++j) 
+            {
+                if (i != 0 || j != 0) 
+                {
+                    auto block = p_193578_1_->getBlockState(blockpos$pooledmutableblockpos.setPos(i + p_193578_2_, p_193578_3_, j + p_193578_4_)).getBlock();
+                    if (block == Blocks::CACTUS) 
+                    {
+                        p_193578_5_ = PathNodeType::DANGER_CACTUS;
+                    } else if (block == Blocks::FIRE) 
+                    {
+                        p_193578_5_ = PathNodeType::DANGER_FIRE;
+                    }
+                }
+            }
+        }
+    }
+
+    blockpos$pooledmutableblockpos.release();
+    return p_193578_5_;
+}
+
+PathNodeType WalkNodeProcessor::getPathNodeTypeRaw(IBlockAccess *p_189553_1_, int32_t p_189553_2_, int32_t p_189553_3_,
+    int32_t p_189553_4_)
+{
+    BlockPos blockpos = BlockPos(p_189553_2_, p_189553_3_, p_189553_4_);
+    IBlockState* iblockstate = p_189553_1_->getBlockState(blockpos);
+    Block* block = iblockstate->getBlock();
+    Material material = iblockstate->getMaterial();
+    if (material == Material::AIR) 
+    {
+        return PathNodeType::OPEN;
+    }
+    else if (block != Blocks::TRAPDOOR && block != Blocks::IRON_TRAPDOOR && block != Blocks::WATERLILY) 
+    {
+        if (block == Blocks::FIRE) 
+        {
+            return PathNodeType::DAMAGE_FIRE;
+        }
+        else if (block == Blocks::CACTUS) 
+        {
+            return PathNodeType::DAMAGE_CACTUS;
+        }
+        else if (Util::instanceof< BlockDoor>(block) && material == Material::WOOD && !iblockstate->getValue(BlockDoor::OPEN)) 
+        {
+            return PathNodeType::DOOR_WOOD_CLOSED;
+        }
+        else if (instanceof<BlockDoor>(block) && material == Material::IRON && !iblockstate->getValue(BlockDoor::OPEN)) 
+        {
+            return PathNodeType::DOOR_IRON_CLOSED;
+        }
+        else if (instanceof<BlockDoor>(block) && iblockstate->getValue(BlockDoorM::OPEN)) 
+        {
+            return PathNodeType::DOOR_OPEN;
+        }
+        else if (instanceof<BlockRailBase>(block)) 
+        {
+            return PathNodeType::RAIL;
+        }
+        else if (!(instanceof<BlockFence>(block)) && !(instanceof<BlockWall>(block)) && (!(instanceof<BlockFenceGate>(block)) || iblockstate->getValue(BlockFenceGate::OPEN))) 
+        {
+            if (material == Material::WATER) 
+            {
+                return PathNodeType::WATER;
+            }
+            else if (material == Material::LAVA) 
+            {
+                return PathNodeType::LAVA;
+            }
+            else 
+            {
+                return block->isPassable(p_189553_1_, blockpos) ? PathNodeType::OPEN : PathNodeType::BLOCKED;
+            }
+        }
+        else 
+        {
+            return PathNodeType::FENCE;
+        }
+    }
+    else 
+    {
+        return PathNodeType::TRAPDOOR;
+    }
+}
+
 std::optional<PathPoint> WalkNodeProcessor::getSafePoint(int32_t x, int32_t y, int32_t z, int32_t p_186332_4_,
                                                          double p_186332_5_, EnumFacing facing)
 {
@@ -280,4 +431,14 @@ std::optional<PathPoint> WalkNodeProcessor::getSafePoint(int32_t x, int32_t y, i
             return pathpoint;
         }
     }
+}
+
+PathNodeType WalkNodeProcessor::getPathNodeType(EntityLiving *entitylivingIn, BlockPos pos)
+{
+    return getPathNodeType(entitylivingIn, pos.getx(), pos.gety(), pos.getz());
+}
+
+PathNodeType WalkNodeProcessor::getPathNodeType(EntityLiving *entitylivingIn, int32_t x, int32_t y, int32_t z)
+{
+    return getPathNodeType(blockaccess, x, y, z, entitylivingIn, entitySizeX, entitySizeY, entitySizeZ, getCanOpenDoors(), getCanEnterDoors());
 }
