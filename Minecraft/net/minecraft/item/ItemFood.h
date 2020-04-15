@@ -12,8 +12,8 @@ public:
     int32_t getMaxItemUseDuration(ItemStack stack) override;
     EnumAction getItemUseAction(ItemStack stack) override;
     ActionResult onItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand handIn) override;
-    int32_t getHealAmount(ItemStack stack) const;
-    float getSaturationModifier(ItemStack stack) const;
+    virtual int32_t getHealAmount(ItemStack stack) const;
+    virtual float getSaturationModifier(ItemStack stack) const;
     bool isWolfsFavoriteMeat();
     ItemFood* setPotionEffect(PotionEffect effect, float probability);
     ItemFood* setAlwaysEdible();
