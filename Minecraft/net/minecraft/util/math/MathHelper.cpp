@@ -141,7 +141,7 @@ namespace MathHelper
 		return minimum >= maximum ? minimum : uniform_dist(random) * (maximum - minimum) + minimum;
 	}
 
-	double average(const std::vector<long>& values)
+    double average(const std::vector<long>& values)
 	{
 		long i = 0L;
 

@@ -37,7 +37,7 @@ public:
     virtual bool hitEntity(ItemStack stack, EntityLivingBase* target, EntityLivingBase* attacker);
     virtual bool onBlockDestroyed(ItemStack stack, World* worldIn, IBlockState* state, BlockPos pos, EntityLivingBase* entityLiving);
     bool canHarvestBlock(IBlockState* blockIn);
-    bool itemInteractionForEntity(ItemStack stack, EntityPlayer* playerIn, EntityLivingBase* target, EnumHand hand);
+    virtual bool itemInteractionForEntity(ItemStack stack, EntityPlayer* playerIn, EntityLivingBase* target, EnumHand hand);
     Item* setFull3D();
     virtual bool isFull3D() const;
     virtual bool shouldRotateAroundWhenRendering();
@@ -51,7 +51,7 @@ public:
     bool hasContainerItem() const;
     void onUpdate(ItemStack stack, World* worldIn, Entity* entityIn, int32_t itemSlot, bool isSelected);
     void onCreated(ItemStack stack, World* worldIn, EntityPlayer* playerIn);
-    bool isMap();
+    virtual bool isMap();
     virtual EnumAction getItemUseAction(ItemStack stack);
     virtual int32_t getMaxItemUseDuration(ItemStack stack);
     virtual void onPlayerStoppedUsing(ItemStack stack, World* worldIn, EntityLivingBase* entityLiving, int32_t timeLeft);

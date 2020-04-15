@@ -82,6 +82,16 @@ namespace MathHelper
 	int64_t nextLong(pcg32& random, int64_t minimum = 0, int64_t maximum = std::numeric_limits<int64_t>::max());
 	float nextFloat(pcg32 & random, float minimum = 0.0f, float maximum = 1.0f);
 	double nextDouble(pcg32 & random, double minimum = 0.0, double maximum = 1.0);
+    float nextFloat(pcg32& random, float minimum, float maximum);
+	double nextDouble(pcg32& random, double minimum, double maximum);
+	template<typename T>
+    T nextGaussian(pcg32& random)
+	{
+	    std::normal_distribution<T> distribution(0.0,1.0);
+		return distribution(random);
+	}
+
+
 	double average(const std::vector<long> &values);
 	bool epsilonEquals(float p_180185_0_, float p_180185_1_);
 	int64_t normalizeAngle(int64_t p_180184_0_, int64_t p_180184_1_);
