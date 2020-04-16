@@ -19,6 +19,7 @@ public:
     int32_t getHarvestLevel() const;
     int32_t getEnchantability() const;
     Item* getRepairItem();
+    std::string toString() const;
 private:
     int32_t harvestLevel;
     int32_t maxUses;

@@ -62,3 +62,8 @@ Item * ToolMaterial::getRepairItem()
         return this == DIAMOND ? Items::DIAMOND : nullptr;
     }
 }
+
+std::string ToolMaterial::toString() const
+{
+    return typeid(*this).name();
+}

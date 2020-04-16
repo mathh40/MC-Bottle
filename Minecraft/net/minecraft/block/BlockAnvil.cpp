@@ -4,7 +4,7 @@
 #include "../util/Util.h"
 #include "../../../../spdlog/include/spdlog/spdlog.h"
 
-std::shared_ptr<spdlog::logger> BlockAnvil::LOGGER = spdlog::get("Minecraft")->clone("Registry");
+spdlog::logger> std::shared_ptr<BlockAnvil::LOGGER = spdlog::get("Minecraft")->clone("Registry");
 PropertyDirection BlockAnvil::FACING = BlockHorizontal::FACING;
 PropertyInteger BlockAnvil::DAMAGE = PropertyInteger.create("damage", 0, 2);
 AxisAlignedBB BlockAnvil::X_AXIS_AABB(0.0, 0.0, 0.125, 1.0, 1.0, 0.875);
