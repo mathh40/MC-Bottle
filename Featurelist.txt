@@ -8,19 +8,19 @@ Features to work on:
  |Create an Json based Config System
  |Basic Dos Protection
  |Rcon Support
- |Lua Scripting Support + Basic Plugins as Samples
- |Create an Banlist that uses the Players ID. The IP will also be banned if set in the Config
- |Console Command: kick <Name/ID/IP> - Kicks an specific Player by Name, ID or IP
- |Console Command: ban <Time(0=Permanent)> <Name/ID/IP> - bans an specific Player by Name, ID or IP over the specified Time
- |Console Command: tps - Print the Delta TPS of the last Second
- |Console Command: worlds - Print all Active and Inactive World along with their Dimensions and 1sec Delta TPS
- |Console Command: memdebug - Get detailed Memory Usage Information about the Plugins, Mods and Server
- |Console Command: online - Print all Players Names along with their IDs and IPs
- |Console Command: help - Show all Cmds at once
- |Ingame Command: /help - Show all available commands to the pPayer
- |Ingame Command: /online - Print all Players Names
- |Ingame Command: /ping - Make 4 Ping Tests and Print the Output
- |Ingame Command: /tps - Print the Delta TPS of the last Second
+ |Lua Scripting Support
+ |-Create Basic Plugins for basic Functionality and as Samples
+  |Create an Banlist that uses the Players ID. The IP will also be banned if set in the Config
+  |Console/Ingame Command: kick <Name/ID/IP> - Kicks an specific Player by Name, ID or IP
+  |Console/Ingame Command: ban <Time(0=Permanent)> <Name/ID/IP> - bans an specific Player by Name, ID or IP over the specified Time
+  |Console/Ingame Command: tps - Print the Delta TPS of the last Second
+  |Console Command: worlds - Print all Active and Inactive World along with their Dimensions and 1sec Delta TPS
+  |Console Command: memdebug - Get detailed Memory Usage Information about the Plugins, Mods and Server
+  |Console/Ingame Command: online - Print all Players Names along with their IDs and IPs
+  |Console/Ingame Command: help - Show all Cmds at once
+  |Level based Permission System
+  |Ingame Command: /ping - Make 4 Ping Tests against the Server Print the Output (Add Spam Protection)
+  |Console Command: ping - Read out the past Pings of a Client, calculate the Delta and Print (do not make new pings)
  
 |-Low
  |Server Setting: /help does only show commands the Player has access to (maybe make an plugin out of that?)
