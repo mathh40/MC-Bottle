@@ -1,3 +1,4 @@
+#pragma once
 #include "TileEntity.h"
 #include "ITickable.h"
 

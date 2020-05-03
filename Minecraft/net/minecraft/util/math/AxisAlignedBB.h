@@ -9,6 +9,7 @@ class Vec3d;
 class AxisAlignedBB
 {
 public:
+	AxisAlignedBB() = default;
 	AxisAlignedBB(double x1, double y1, double z1, double x2, double y2, double z2);
 	AxisAlignedBB(BlockPos pos);
 	AxisAlignedBB(BlockPos pos1, BlockPos pos2);
@@ -67,21 +68,21 @@ private:
 namespace std {
 	template <> struct hash<AxisAlignedBB>
 	{
-		size_t operator()(const AxisAlignedBB & x) const noexcept
-		{
-			auto i = static_cast<int64_t>(x.getminX());
-			auto j = i ^ i >> 32;
-			i = static_cast<int64_t>(x.getminY());
-			j = 31 * j + (i ^ i >> 32);
-			i = static_cast<int64_t>(x.getminZ());
-			j = 31 * j + (i ^ i >> 32);
-			i = static_cast<int64_t>(x.getmaxX());
-			j = 31 * j + (i ^ i >> 32);
-			i = static_cast<int64_t>(x.getmaxY());
-			j = 31 * j + (i ^ i >> 32);
-			i = static_cast<int64_t>(x.getmaxZ());
-			j = 31 * j + (i ^ i >> 32);
-			return j;
-		}
+        size_t operator()(const AxisAlignedBB & x) const noexcept
+        {
+            auto i = static_cast<int64_t>(x.getminX());
+            auto j = i ^ i >> 32;
+            i = static_cast<int64_t>(x.getminY());
+            j = 31 * j + (i ^ i >> 32);
+            i = static_cast<int64_t>(x.getminZ());
+            j = 31 * j + (i ^ i >> 32);
+            i = static_cast<int64_t>(x.getmaxX());
+            j = 31 * j + (i ^ i >> 32);
+            i = static_cast<int64_t>(x.getmaxY());
+            j = 31 * j + (i ^ i >> 32);
+            i = static_cast<int64_t>(x.getmaxZ());
+            j = 31 * j + (i ^ i >> 32);
+            return j;
+        }
 	};
 }

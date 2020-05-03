@@ -6,6 +6,8 @@ class ItemArrow :public Item
 {
 public:
     ItemArrow();
-    EntityArrow* createArrow(World *worldIn, ItemStack stack, EntityLivingBase* shooter);
+    virtual EntityArrow* createArrow(World *worldIn, ItemStack stack, EntityLivingBase* shooter);
+
+
 private:
 };

@@ -7,7 +7,7 @@ public:
     ItemBlock(Block* block);
     EnumActionResult onItemUse(EntityPlayer* player, World* worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) override;
     static bool setTileEntityNBT(World* worldIn, EntityPlayer* player, BlockPos pos, ItemStack stackIn);
-    bool canPlaceBlockOnSide(World* worldIn, BlockPos pos, EnumFacing side, EntityPlayer* player, ItemStack stack);
+    virtual bool canPlaceBlockOnSide(World* worldIn, BlockPos pos, EnumFacing side, EntityPlayer* player, ItemStack stack);
     std::string getTranslationKey(ItemStack stack) const override;
     std::string getTranslationKey() const override;
     CreativeTabs& getCreativeTab() override;
