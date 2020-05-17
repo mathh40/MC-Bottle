@@ -78,4 +78,13 @@ namespace Util
 	std::vector<std::string> split(std::string_view s, std::string_view delimiter);
 	bool endsWith(std::string_view s, std::string_view suffix);
 
+	template<typename T, typename G>
+    void KeySet(T& KeySet, G maps)
+	{
+	    for(auto& entry : maps)
+	    {
+	        KeySet.emplace(entry.first);
+	    }
+	}
+
 }

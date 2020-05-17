@@ -5,6 +5,7 @@
 #include "EnumAction.h"
 #include "EnumActionResult.h"
 #include "EnumRarity.h"
+#include "ItemCompass.h"
 #include "NBTTagCompound.h"
 #include "../block/Block.h"
 #include "text/ITextComponent.h"
@@ -15,15 +16,15 @@ class DataFixer;
 class ItemStack
 {
 public:
-    ItemStack(Block* blockIn);
-    ItemStack(Block* blockIn, int32_t amount);
-    ItemStack(Block blockIn, int32_t amount, int32_t meta);
-    ItemStack(Item* itemIn);
-    ItemStack(Item* itemIn, int32_t amount);
-    ItemStack(Item* itemIn, int32_t amount, int32_t meta);
+    ItemStack(const Block* blockIn);
+    ItemStack(const Block* blockIn, int32_t amount);
+    ItemStack(const Block* blockIn, int32_t amount, int32_t meta);
+    ItemStack(const Item* itemIn);
+    ItemStack(const Item* itemIn, int32_t amount);
+    ItemStack(const Item* itemIn, int32_t amount, int32_t meta);
 
     ItemStack(NBTTagCompound* compound);
-    bool isEmpty();
+    bool isEmpty() const;
     static void registerFixes(DataFixer fixer);
     ItemStack splitStack(int32_t amount);
     Item* getItem();
@@ -107,13 +108,13 @@ private:
 
     int32_t stackSize;
     int32_t animationsToGo;
-    Item* item;
+    const Item* item;
     NBTTagCompound* stackTagCompound;
     bool bisEmpty;
     int32_t itemDamage;
     EntityItemFrame* itemFrame;
-    Block* canDestroyCacheBlock;
+    const Block* canDestroyCacheBlock;
     bool canDestroyCacheResult;
-    Block* canPlaceOnCacheBlock;
+    const Block* canPlaceOnCacheBlock;
     bool canPlaceOnCacheResult;
 };

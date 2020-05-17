@@ -12,32 +12,32 @@
 #include "text/event/HoverEvent.h"
 #include "text/translation/I18n.h"
 
-ItemStack::ItemStack(Block *blockIn)
+ItemStack::ItemStack(const Block *blockIn)
     :ItemStack(blockIn,1)
 {
 }
 
-ItemStack::ItemStack(Block *blockIn, int32_t amount)
+ItemStack::ItemStack(const Block *blockIn, int32_t amount)
     :ItemStack(blockIn, amount, 0)
 {
 }
 
-ItemStack::ItemStack(Block blockIn, int32_t amount, int32_t meta)
+ItemStack::ItemStack(const Block blockIn, int32_t amount, int32_t meta)
     :ItemStack(Item::getItemFromBlock(blockIn), amount, meta)
 {
 }
 
-ItemStack::ItemStack(Item *itemIn)
+ItemStack::ItemStack(const Item *itemIn)
     :ItemStack(itemIn, 1)
 {
 }
 
-ItemStack::ItemStack(Item *itemIn, int32_t amount)
+ItemStack::ItemStack(const Item *itemIn, int32_t amount)
     :ItemStack(itemIn, amount, 0)
 {
 }
 
-ItemStack::ItemStack(Item *itemIn, int32_t amount, int32_t meta)
+ItemStack::ItemStack(const Item *itemIn, int32_t amount, int32_t meta)
     :item(itemIn),itemDamage(meta),stackSize(amount)
 {
     if (itemDamage < 0) 
@@ -65,9 +65,9 @@ ItemStack::ItemStack(NBTTagCompound *compound)
     updateEmptyState();
 }
 
-bool ItemStack::isEmpty()
+bool ItemStack::isEmpty() const
 {
-    if (this == EMPTY) 
+    if (*this == EMPTY) 
     {
         return true;
     }

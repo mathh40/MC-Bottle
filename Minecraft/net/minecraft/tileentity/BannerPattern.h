@@ -1,3 +1,5 @@
+#pragma once
+#include "../item/ItemStack.h"
 #include "state/BlockWorldState.h"
 
 class BannerPattern
