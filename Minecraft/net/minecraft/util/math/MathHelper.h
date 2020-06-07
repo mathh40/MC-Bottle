@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <cstring>
 #include <vector>
-#include "pcg_random.hpp"
 
+#include "pcg_random.hpp"
 
 class Vec3i;
 
@@ -75,7 +75,7 @@ namespace MathHelper
 	template<typename T>
 	T getInt(pcg32& random, T minimum, T maximum)
 	{
-		std::uniform_int_distribution<T> uniform_dist(0, (maximum - minimum + 1));
+		static std::uniform_int_distribution<T> uniform_dist(0, (maximum - minimum + 1));
 		return minimum >= maximum ? minimum : uniform_dist(random) + minimum;
 	}
 
@@ -87,7 +87,7 @@ namespace MathHelper
 	template<typename T>
     T nextGaussian(pcg32& random)
 	{
-	    std::normal_distribution<T> distribution(0.0,1.0);
+	    static std::normal_distribution<T> distribution(0.0,1.0);
 		return distribution(random);
 	}
 

@@ -29,22 +29,22 @@ MerchantRecipe::MerchantRecipe(ItemStack buy1, Item sellItem)
 {
 }
 
-ItemStack MerchantRecipe::getItemToBuy()
+ItemStack MerchantRecipe::getItemToBuy() const
 {
 	return itemToBuy;
 }
 
-ItemStack MerchantRecipe::getSecondItemToBuy()
+ItemStack MerchantRecipe::getSecondItemToBuy() const
 {
 	return secondItemToBuy;
 }
 
-bool MerchantRecipe::hasSecondItemToBuy()
+bool MerchantRecipe::hasSecondItemToBuy() const
 {
 	return !secondItemToBuy.isEmpty();
 }
 
-ItemStack MerchantRecipe::getItemToSell()
+ItemStack MerchantRecipe::getItemToSell() const
 {
 	return itemToSell;
 }

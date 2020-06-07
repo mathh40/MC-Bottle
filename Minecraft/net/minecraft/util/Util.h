@@ -87,4 +87,15 @@ namespace Util
 	    }
 	}
 
+	template<typename T,typename G>
+	void erase(T& v,G predig)
+	{
+	    v.erase(std::remove(v.begin(), v.end(), predig), v.end());
+	}
+
+    template<typename T,typename G>
+	void erase_if(T& v,G predig)
+	{
+	    v.erase(std::remove_if(v.begin(), v.end(), predig), v.end());
+	}
 }

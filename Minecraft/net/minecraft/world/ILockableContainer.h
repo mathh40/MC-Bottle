@@ -1,5 +1,6 @@
 #pragma once
 #include "IInteractionObject.h"
+#include "IInventory.h"
 
 class LockCode;
 

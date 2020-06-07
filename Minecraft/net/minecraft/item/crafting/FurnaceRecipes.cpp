@@ -4,7 +4,7 @@
 #include "../EnumFishType.h"
 #include "../ItemStack.h"
 
-FurnaceRecipes FurnaceRecipes::instance()
+FurnaceRecipes& FurnaceRecipes::instance()
 {
     return SMELTING_BASE;
 }

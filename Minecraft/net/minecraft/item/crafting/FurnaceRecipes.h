@@ -8,7 +8,7 @@ class ItemStack;
 class FurnaceRecipes
 {
 public:
-    static FurnaceRecipes instance();
+    static FurnaceRecipes& instance();
 
     void addSmeltingRecipeForBlock(Block* input, ItemStack stack, float experience);
     void addSmelting(Item* input, ItemStack stack, float experience);

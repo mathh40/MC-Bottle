@@ -1,7 +1,9 @@
+#pragma once
 #include <cstdint>
+
+#include "../item/ItemStack.h"
 class Item;
 class NBTTagCompound;
-class ItemStack;
 class MerchantRecipe
 {
 public:
@@ -10,10 +12,10 @@ public:
 	MerchantRecipe(ItemStack buy1, ItemStack buy2, ItemStack sell, int32_t toolUsesIn, int32_t maxTradeUsesIn);
 	MerchantRecipe(ItemStack buy1, ItemStack sell);
 	MerchantRecipe(ItemStack buy1, Item sellItem);
-	ItemStack getItemToBuy();
-	ItemStack getSecondItemToBuy();
-	bool hasSecondItemToBuy();
-	ItemStack getItemToSell();
+	ItemStack getItemToBuy() const;
+	ItemStack getSecondItemToBuy() const;
+	bool hasSecondItemToBuy() const;
+	ItemStack getItemToSell() const;
 	int32_t getToolUses() const;
 	int32_t getMaxTradeUses() const;
 	void incrementToolUses();

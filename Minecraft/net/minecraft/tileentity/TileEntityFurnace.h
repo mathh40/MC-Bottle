@@ -1,7 +1,10 @@
 #include "TileEntityLockable.h"
 #include "ITickable.h"
+#include "../inventory/ISidedInventory.h"
 
+class InventoryPlayer;
 class DataFixer;
+class Container;
 
 class TileEntityFurnace :public TileEntityLockable , ITickable, ISidedInventory
 {
@@ -26,7 +29,7 @@ public:
 	int32_t getCookTime(ItemStack stack) const;
 	void smeltItem();
 	int32_t getItemBurnTime(ItemStack stack);
-	bool isItemFuel(ItemStack stack);
+	static bool isItemFuel(ItemStack stack);
 	bool isUsableByPlayer(EntityPlayer* player);
 	void openInventory(EntityPlayer* player);
 	void closeInventory(EntityPlayer* player);
@@ -35,7 +38,7 @@ public:
 	bool canInsertItem(int32_t index, ItemStack itemStackIn, EnumFacing direction);
 	bool canExtractItem(int32_t index, ItemStack stack, EnumFacing direction);
 	std::string getGuiID() const;
-	Container createContainer(InventoryPlayer* playerInventory, EntityPlayer* playerIn);
+	Container* createContainer(InventoryPlayer* playerInventory, EntityPlayer* playerIn);
 	int32_t getField(int32_t id) const;
 	void setField(int32_t id, int32_t value);
 	int32_t getFieldCount() const;

@@ -91,6 +91,7 @@ add_subdirectory(Minecraft/net/minecraft/profiler)
 add_subdirectory(Minecraft/net/minecraft/potion)
 add_subdirectory(Minecraft/net/minecraft/pathfinding)
 add_subdirectory(Minecraft/net/minecraft/item)
+add_subdirectory(Minecraft/net/minecraft/inventory)
 #add_subdirectory(Minecraft/net/minecraft/client)
 
 target_link_libraries(Minecraft PRIVATE project_options project_warnings args nlohmann_json::nlohmann_json util block world)
