@@ -87,6 +87,15 @@ namespace Util
 	    }
 	}
 
+    template<typename T, typename G>
+    void Collection(T& Collection, G maps)
+	{
+	    for(auto& entry : maps)
+	    {
+	        KeySet.emplace(entry.first);
+	    }
+	}
+
 	template<typename T,typename G>
 	void erase(T& v,G predig)
 	{

@@ -189,7 +189,7 @@ namespace MathHelper
 
 	double wrapDegrees(double value)
 	{
-		value = fmod(value, 360.0F);
+		value = fmod(value, 360.0);
 		if (value >= 180.0F) {
 			value -= 360.0F;
 		}
