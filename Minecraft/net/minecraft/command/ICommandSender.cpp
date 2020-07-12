@@ -1,4 +1,6 @@
 #include "ICommandSender.h"
+
+#include "CommandResultStats.h"
 #include "text/TextComponentString.h"
 
 ITextComponent* ICommandSender::getDisplayName()

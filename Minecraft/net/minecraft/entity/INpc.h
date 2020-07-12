@@ -1,0 +1,3 @@
+class INpc :public IAnimals
+{
+};

@@ -6,7 +6,7 @@ class EntityAIBase
 public:
     virtual bool shouldExecute() = 0;
     virtual bool shouldContinueExecuting();
-    bool isInterruptible();
+    virtual bool isInterruptible();
     virtual void startExecuting();
     virtual void resetTask();
     virtual void updateTask();

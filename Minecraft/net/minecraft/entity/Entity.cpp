@@ -1,22 +1,43 @@
 #include "Entity.h"
 
+#include <typeindex>
+
+
 
 #include "DamageSource.h"
+#include "Explosion.h"
+#include "Mirror.h"
 #include "ReportedException.h"
+#include "Rotation.h"
+#include "SoundCategory.h"
 #include "World.h"
 #include "WorldProvider.h"
 #include "WorldServer.h"
 #include "../../../../spdlog/include/spdlog/spdlog-inl.h"
 #include "../../../../spdlog/include/spdlog/fmt/bundled/format.h"
+#include "../item/ItemStack.h"
 #include "../nbt/NBTTagDouble.h"
 #include "../nbt/NBTTagFloat.h"
 #include "../nbt/NBTTagString.h"
+#include "../scoreboard/ScorePlayerTeam.h"
+#include "../scoreboard/Team.h"
 #include "datafix/DataFixer.h"
 #include "datafix/FixTypes.h"
 #include "datafix/IDataWalker.h"
 #include "math/MathHelper.h"
+#include "math/Vec2f.h"
+#include "text/TextComponentString.h"
+#include "text/translation/I18n.h"
 
 std::shared_ptr<spdlog::logger> Entity::LOGGER = spdlog::get("Minecraft")->clone("EntityAIFindEntityNearestPlayer");
+
+DataParameter Entity::FLAGS = EntityDataManager.createKey(Entity.class, DataSerializers.BYTE);
+DataParameter Entity::AIR = EntityDataManager.createKey(Entity.class, DataSerializers.VARINT);
+DataParameter Entity::CUSTOM_NAME = EntityDataManager.createKey(Entity.class, DataSerializers.STRING);
+DataParameter Entity::CUSTOM_NAME_VISIBLE = EntityDataManager.createKey(Entity.class, DataSerializers.BOOLEAN);
+DataParameter Entity::SILENT = EntityDataManager.createKey(Entity.class, DataSerializers.BOOLEAN);
+DataParameter Entity::NO_GRAVITY = EntityDataManager.createKey(Entity.class, DataSerializers.BOOLEAN);
+
 
 class EntityDataWalker :public IDataWalker
 {
@@ -145,6 +166,301 @@ void Entity::onUpdate()
     }
 
     onEntityUpdate();
+}
+
+ void Entity::notifyDataManagerChange(DataParameter key)
+{
+    
+}
+
+EnumFacing Entity::getHorizontalFacing() const
+{
+    return EnumFacing::byHorizontalIndex(MathHelper::floor((rotationYaw * 4.0F / 360.0F) + 0.5) & 3);
+}
+
+EnumFacing Entity::getAdjustedHorizontalFacing() const
+{
+    return getHorizontalFacing();
+}
+
+bool Entity::isSpectatedByPlayer(EntityPlayerMP *player)
+{
+    return true;
+}
+
+AxisAlignedBB Entity::getEntityBoundingBox() const
+{
+    return boundingBox;
+}
+
+AxisAlignedBB Entity::getRenderBoundingBox() const
+{
+    return getEntityBoundingBox();
+}
+
+void Entity::setEntityBoundingBox(AxisAlignedBB bb)
+{
+    boundingBox = bb;
+}
+
+float Entity::getEyeHeight() const
+{
+    return height * 0.85F;
+}
+
+bool Entity::isOutsideBorder() const
+{
+    return OutsideBorder;
+}
+
+void Entity::setOutsideBorder(bool outsideBorder)
+{
+    OutsideBorder = outsideBorder;
+}
+
+bool Entity::replaceItemInInventory(int32_t inventorySlot, ItemStack itemStackIn)
+{
+    return false;
+}
+
+void Entity::sendMessage(ITextComponent *component)
+{
+
+}
+
+bool Entity::canUseCommand(int32_t permLevel, std::string_view commandName)
+{
+    return true;
+}
+
+BlockPos Entity::getPosition()
+{
+    return BlockPos(posX, posY + 0.5, posZ);
+}
+
+Vec3d Entity::getPositionVector()
+{
+    return Vec3d(posX, posY, posZ);
+}
+
+World * Entity::getEntityWorld()
+{
+    return world;
+}
+
+Entity * Entity::getCommandSenderEntity()
+{
+    return this;
+}
+
+bool Entity::sendCommandFeedback()
+{
+    return false;
+}
+
+void Entity::setCommandStat(const CommandResultStatsType &type, int32_t amount)
+{
+    if (world != nullptr && !world->isRemote) 
+    {
+        cmdResultStats.setCommandStatForSender(world->getMinecraftServer(), this, type, amount);
+    }
+}
+
+MinecraftServer * Entity::getServer()
+{
+    return world->getMinecraftServer();
+}
+
+CommandResultStats Entity::getCommandStats() const
+{
+    return cmdResultStats;
+}
+
+void Entity::setCommandStats(Entity *entityIn)
+{
+    cmdResultStats.addAllStats(entityIn->getCommandStats());
+}
+
+EnumActionResult Entity::applyPlayerInteraction(EntityPlayer *player, Vec3d vec, EnumHand hand)
+{
+    return EnumActionResult::PASS;
+}
+
+bool Entity::isImmuneToExplosions()
+{
+    return false;
+}
+
+void Entity::addTrackingPlayer(EntityPlayerMP *player)
+{
+
+}
+
+void Entity::removeTrackingPlayer(EntityPlayerMP *player)
+{
+
+}
+
+float Entity::getRotatedYaw(Rotation transformRotation) const
+{
+    float f = MathHelper::wrapDegrees(rotationYaw);
+    switch(transformRotation)
+    {
+    case Rotation::CLOCKWISE_180:
+        return f + 180.0F;
+    case Rotation::COUNTERCLOCKWISE_90:
+        return f + 270.0F;
+    case Rotation::CLOCKWISE_90:
+        return f + 90.0F;
+    default:
+        return f;
+    }
+}
+
+float Entity::getMirroredYaw(Mirror transformMirror) const
+{
+    float f = MathHelper::wrapDegrees(rotationYaw);
+    switch(transformMirror)
+    {
+    case Mirror::LEFT_RIGHT:
+        return -f;
+    case Mirror::FRONT_BACK:
+        return 180.0F - f;
+    default:
+        return f;
+    }
+}
+
+bool Entity::ignoreItemEntityData()
+{
+    return false;
+}
+
+bool Entity::setPositionNonDirty()
+{
+    bool flag = isPositionDirty;
+    isPositionDirty = false;
+    return flag;
+}
+
+Entity * Entity::getControllingPassenger()
+{
+    return nullptr;
+}
+
+std::vector<Entity *> Entity::getPassengers() const
+{
+    return (riddenByEntities.empty() ? std::vector<Entity *>{} : riddenByEntities);
+}
+
+bool Entity::isPassenger(Entity *entityIn) const
+{
+    if(getPassengers().empty())
+    {
+        return false;
+    }
+
+    for(auto entity : getPassengers())
+    {
+        if (entity == entityIn) 
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+std::unordered_set<Entity *> Entity::getRecursivePassengers() const
+{
+    std::unordered_set<Entity *> set;
+    getRecursivePassengersByType(typeid(Entity), set);
+    return set;
+}
+
+std::unordered_set<Entity *> Entity::getRecursivePassengersByType(std::type_index entityClass) const
+{
+    std::unordered_set<Entity *> set;
+    getRecursivePassengersByType(entityClass, set);
+    return set;
+}
+
+Entity * Entity::getLowestRidingEntity()
+{
+    Entity* entity;
+    for(entity = this; entity->isRiding(); entity = entity->getRidingEntity()) 
+    {
+    }
+
+    return entity;
+}
+
+bool Entity::isRidingSameEntity(Entity *entityIn)
+{
+    return getLowestRidingEntity() == entityIn->getLowestRidingEntity();
+}
+
+bool Entity::isRidingOrBeingRiddenBy(Entity *entityIn) const
+{
+    const auto var2 = getPassengers().begin();
+
+    Entity* entity;
+    do 
+    {
+        if (var2 == getPassengers().end()) 
+        {
+            return false;
+        }
+
+        entity = *var2;
+        if (entity == entityIn) 
+        {
+            return true;
+        }
+    } while(!entity->isRidingOrBeingRiddenBy(entityIn));
+
+    return true;
+}
+
+bool Entity::canPassengerSteer()
+{
+    Entity* entity = getControllingPassenger();
+    if (Util::instanceof<EntityPlayer>(entity)) 
+    {
+        return ((EntityPlayer*)entity)->isUser();
+    }
+    else 
+    {
+        return !world->isRemote;
+    }
+}
+
+Entity * Entity::getRidingEntity() const
+{
+    return ridingEntity;
+}
+
+EnumPushReaction Entity::getPushReaction()
+{
+    return EnumPushReaction::NORMAL;
+}
+
+SoundCategory Entity::getSoundCategory()
+{
+    return SoundCategory::NEUTRAL;
+}
+
+void Entity::getRecursivePassengersByType(std::type_index entityClass, std::unordered_set<Entity *> theSet) const
+{
+    Entity* entity;
+    for(auto ite = getPassengers().begin(); ite != getPassengers().end(); entity->getRecursivePassengersByType(entityClass, theSet)) 
+    {
+        entity = *ite;
+        if (entityClass == typeid(entity)) 
+        {
+            theSet.emplace(entity);
+        }
+    }
 }
 
 void Entity::onEntityUpdate()
@@ -1540,6 +1856,122 @@ bool Entity::canFitPassenger(Entity *passenger)
     return getPassengers().size() < 1;
 }
 
+bool Entity::getFlag(int32_t flag)
+{
+    return ((std::byte)dataManager.get(FLAGS) & 1 << flag) != 0;
+}
+
+void Entity::setFlag(int32_t flag, bool set)
+{
+    std::byte b0 = dataManager.get(FLAGS);
+    if (set) 
+    {
+        dataManager.set(FLAGS, (b0 | 1 << flag));
+    }
+    else 
+    {
+        dataManager.set(FLAGS, (b0 & ~(1 << flag)));
+    }
+}
+
+bool Entity::pushOutOfBlocks(double x, double y, double z)
+{
+    BlockPos blockpos(x, y, z);
+    double d0 = x - blockpos.getx();
+    double d1 = y - blockpos.gety();
+    double d2 = z - blockpos.getz();
+    if (!world->collidesWithAnyBlock(getEntityBoundingBox())) 
+    {
+        return false;
+    }
+    else 
+    {
+        EnumFacing enumfacing = EnumFacing::UP;
+        double d3 = std::numeric_limits<double>::max();
+        if (!world->isBlockFullCube(blockpos.west()) && d0 < d3) 
+        {
+            d3 = d0;
+            enumfacing = EnumFacing::WEST;
+        }
+
+        if (!world->isBlockFullCube(blockpos.east()) && 1.0 - d0 < d3) 
+        {
+            d3 = 1.0 - d0;
+            enumfacing = EnumFacing::EAST;
+        }
+
+        if (!world->isBlockFullCube(blockpos.north()) && d2 < d3) 
+        {
+            d3 = d2;
+            enumfacing = EnumFacing::NORTH;
+        }
+
+        if (!world->isBlockFullCube(blockpos.south()) && 1.0 - d2 < d3) 
+        {
+            d3 = 1.0 - d2;
+            enumfacing = EnumFacing::SOUTH;
+        }
+
+        if (!world->isBlockFullCube(blockpos.up()) && 1.0 - d1 < d3) 
+        {
+            d3 = 1.0 - d1;
+            enumfacing = EnumFacing::UP;
+        }
+
+        float f = MathHelper::nextFloat(rand) * 0.2F + 0.1F;
+        float f1 = enumfacing.getAxisDirection().getOffset();
+        if (enumfacing.getAxis() == Axis::X) 
+        {
+            motionX = (f1 * f);
+            motionY *= 0.75;
+            motionZ *= 0.75;
+        }
+        else if (enumfacing.getAxis() == Axis::Y) 
+        {
+            motionX *= 0.75;
+            motionY = (f1 * f);
+            motionZ *= 0.75;
+        }
+        else if (enumfacing.getAxis() == Axis::Z) 
+        {
+            motionX *= 0.75;
+            motionY *= 0.75;
+            motionZ = (f1 * f);
+        }
+
+        return true;
+    }
+}
+
+HoverEvent Entity::getHoverEvent()
+{
+    NBTTagCompound* nbttagcompound = new NBTTagCompound();
+    ResourceLocation resourcelocation = EntityList.getKey(this);
+    nbttagcompound->setString("id", getCachedUniqueIdString());
+    if (resourcelocation != nullptr) 
+    {
+        nbttagcompound->setString("type", resourcelocation.to_string());
+    }
+
+    nbttagcompound->setString("name", getName());
+    return HoverEvent(Action::SHOW_ENTITY, new TextComponentString(nbttagcompound->to_string()));
+}
+
+void Entity::applyEnchantments(EntityLivingBase *entityLivingBaseIn, Entity *entityIn)
+{
+    if (Util::instanceof<EntityLivingBase>(entityIn)) 
+    {
+        EnchantmentHelper::applyThornEnchantments((EntityLivingBase*)entityIn, entityLivingBaseIn);
+    }
+
+    EnchantmentHelper::applyArthropodEnchantments(entityLivingBaseIn, entityIn);
+}
+
+int32_t Entity::getFireImmuneTicks()
+{
+     return 1;
+}
+
 void Entity::dismountRidingEntity()
 {
     if (ridingEntity != nullptr) 
@@ -1560,6 +1992,75 @@ void Entity::setPositionAndRotationDirect(double x, double y, double z, float ya
 float Entity::getCollisionBorderSize()
 {
     return 0.0F;
+}
+
+Vec3d Entity::getLookVec()
+{
+    return getVectorForRotation(rotationPitch, rotationYaw);
+}
+
+Vec2f Entity::getPitchYaw() const
+{
+    return Vec2f(rotationPitch, rotationYaw);
+}
+
+Vec3d Entity::getForward() const
+{
+    return Vec3dfromPitchYaw(getPitchYaw());
+}
+
+void Entity::setPortal(const BlockPos &pos)
+{
+    if (timeUntilPortal > 0) 
+    {
+        timeUntilPortal = getPortalCooldown();
+    }
+    else 
+    {
+        if (!world->isRemote && !(pos == lastPortalPos)) 
+        {
+            lastPortalPos = pos;
+            BlockPattern::PatternHelper blockpattern$patternhelper = Blocks::PORTAL.createPatternHelper(world, lastPortalPos);
+            double d0 = blockpattern$patternhelper.getForwards().getAxis() == Axis::X ? blockpattern$patternhelper.getFrontTopLeft().getZ() : blockpattern$patternhelper.getFrontTopLeft().getX();
+            double d1 = blockpattern$patternhelper.getForwards().getAxis() == Axis::X ? posZ : posX;
+            d1 = MathHelper::abs(MathHelper::pct(d1 - (blockpattern$patternhelper.getForwards().rotateY().getAxisDirection() == AxisDirection::NEGATIVE ? 1 : 0), d0, d0 - blockpattern$patternhelper.getWidth()));
+            double d2 = MathHelper::pct(posY - 1.0, blockpattern$patternhelper.getFrontTopLeft().getY(), (blockpattern$patternhelper.getFrontTopLeft().getY() - blockpattern$patternhelper.getHeight()));
+            lastPortalVec = Vec3d(d1, d2, 0.0);
+            teleportDirection = blockpattern$patternhelper.getForwards();
+        }
+
+        inPortal = true;
+    }
+}
+
+int32_t Entity::getPortalCooldown()
+{
+    return 300;
+}
+
+void Entity::setVelocity(double x, double y, double z)
+{
+    motionX = x;
+    motionY = y;
+    motionZ = z;
+}
+
+void Entity::handleStatusUpdate(std::byte id)
+{
+}
+
+void Entity::performHurtAnimation()
+{
+}
+
+std::vector<> Entity::getHeldEquipment()
+{
+    return EMPTY_EQUIPMENT;
+}
+
+std::vector<> Entity::getArmorInventoryList()
+{
+    return EMPTY_EQUIPMENT;
 }
 
 Vec3d Entity::getVectorForRotation(float pitch, float yaw)
@@ -1608,6 +2109,442 @@ NBTTagList * Entity::newFloatNBTList(std::initializer_list<float> numbers)
 bool Entity::canBeRidden(Entity *entityIn)
 {
     return rideCooldown <= 0;
+}
+
+std::vector<> Entity::getEquipmentAndArmor()
+{
+    return getHeldEquipment() + getArmorInventoryList();
+}
+
+void Entity::setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)
+{
+}
+
+bool Entity::isBurning()
+{
+    bool flag = world != nullptr && world->isRemote;
+    return !isImmuneToFire && (fire > 0 || flag && getFlag(0));
+}
+
+bool Entity::isRiding()
+{
+    return getRidingEntity() != nullptr;
+}
+
+bool Entity::isBeingRidden()
+{
+    return !getPassengers().isEmpty();
+}
+
+bool Entity::isSneaking()
+{
+    return getFlag(1);
+}
+
+void Entity::setSneaking(bool sneaking)
+{
+    setFlag(1, sneaking);
+}
+
+bool Entity::isSprinting()
+{
+    return getFlag(3);
+}
+
+void Entity::setSprinting(bool sprinting)
+{
+    setFlag(3, sprinting);
+}
+
+bool Entity::isGlowing()
+{
+    return glowing || world->isRemote && getFlag(6);
+}
+
+void Entity::setGlowing(bool glowingIn)
+{
+    glowing = glowingIn;
+    if (!world->isRemote) 
+    {
+        setFlag(6, glowing);
+    }
+}
+
+bool Entity::isInvisible()
+{
+    return getFlag(5);
+}
+
+bool Entity::isInvisibleToPlayer(EntityPlayer *player)
+{
+    if (player->isSpectator()) 
+    {
+        return false;
+    }
+    else 
+    {
+        Team* team = getTeam();
+        return team != nullptr && player != nullptr && player->getTeam() == team && team->getSeeFriendlyInvisiblesEnabled() ? false : isInvisible();
+    }
+}
+
+Team * Entity::getTeam()
+{
+    return world->getScoreboard().getPlayersTeam(getCachedUniqueIdString());
+}
+
+bool Entity::isOnSameTeam(Entity *entityIn)
+{
+    return isOnScoreboardTeam(entityIn->getTeam());
+}
+
+bool Entity::isOnScoreboardTeam(Team *teamIn)
+{
+    return getTeam() != nullptr ? getTeam()->isSameTeam(teamIn) : false;
+}
+
+void Entity::setInvisible(bool invisible)
+{
+    setFlag(5, invisible);
+}
+
+int32_t Entity::getAir()
+{
+    return dataManager.get(AIR);
+}
+
+void Entity::setAir(int32_t air)
+{
+    dataManager.set(AIR, air);
+}
+
+void Entity::onStruckByLightning(EntityLightningBolt *lightningBolt)
+{
+    attackEntityFrom(DamageSource::LIGHTNING_BOLT, 5.0F);
+    ++fire;
+    if (fire == 0) 
+    {
+        setFire(8);
+    }
+}
+
+void Entity::onKillEntity(EntityLivingBase *entityLivingIn)
+{
+
+}
+
+void Entity::setInWeb()
+{
+    isInWeb = true;
+    fallDistance = 0.0F;
+}
+
+std::string Entity::getName()
+{
+    if (hasCustomName()) 
+    {
+        return getCustomNameTag();
+    }
+    else 
+    {
+        std::string s = EntityList.getEntityString(this);
+        if (s.empty()) 
+        {
+            s = "generic";
+        }
+
+        return I18n::translateToLocal("entity." + s + ".name");
+    }
+}
+
+std::vector<Entity*> Entity::getParts()
+{
+    return {};
+}
+
+bool Entity::isEntityEqual(Entity *entityIn)
+{
+    return this == entityIn;
+}
+
+float Entity::getRotationYawHead()
+{
+    return 0.0F;
+}
+
+void Entity::setRotationYawHead(float rotation)
+{
+
+}
+
+void Entity::setRenderYawOffset(float offset)
+{
+
+}
+
+bool Entity::canBeAttackedWithItem()
+{
+    return true;
+}
+
+bool Entity::hitByEntity(Entity *entityIn)
+{
+    return false;
+}
+
+std::string Entity::toString()
+{
+    return fmt::format("%s['%s'/%d, l='%s', x=%.2f, y=%.2f, z=%.2f]", getClass().getSimpleName(), getName(), entityId, world == nullptr ? "~NULL~" : world->getWorldInfo().getWorldName(), posX, posY, posZ);
+}
+
+bool Entity::isEntityInvulnerable(DamageSource source)
+{
+    return invulnerable && source != DamageSource::OUT_OF_WORLD && !source.isCreativePlayer();
+}
+
+bool Entity::getIsInvulnerable() const
+{
+    return invulnerable;
+}
+
+void Entity::setEntityInvulnerable(bool isInvulnerable)
+{
+    invulnerable = isInvulnerable;
+}
+
+void Entity::copyLocationAndAnglesFrom(Entity *entityIn)
+{
+    setLocationAndAngles(entityIn->posX, entityIn->posY, entityIn->posZ, entityIn->rotationYaw, entityIn->rotationPitch);
+}
+
+Entity * Entity::changeDimension(int32_t dimensionIn)
+{
+    if (!world->isRemote && !isDead) 
+    {
+        world->profiler.startSection("changeDimension");
+        auto minecraftserver = getServer();
+        int32_t i = dimension;
+        WorldServer* worldserver = minecraftserver->getWorld(i);
+        WorldServer* worldserver1 = minecraftserver->getWorld(dimensionIn);
+        dimension = dimensionIn;
+        if (i == 1 && dimensionIn == 1) 
+        {
+            worldserver1 = minecraftserver->getWorld(0);
+            dimension = 0;
+        }
+
+        world->removeEntity(this);
+        isDead = false;
+        world->profiler.startSection("reposition");
+        BlockPos blockpos;
+        if (dimensionIn == 1) 
+        {
+            blockpos = worldserver1->getSpawnCoordinate();
+        }
+        else 
+        {
+            double d0 = posX;
+            double d1 = posZ;
+            double d2 = 8.0;
+            if (dimensionIn == -1) 
+            {
+                d0 = MathHelper::clamp(d0 / 8.0, worldserver1->getWorldBorder().minX() + 16.0, worldserver1->getWorldBorder().maxX() - 16.0);
+                d1 = MathHelper::clamp(d1 / 8.0, worldserver1->getWorldBorder().minZ() + 16.0, worldserver1->getWorldBorder().maxZ() - 16.0);
+            }
+            else if (dimensionIn == 0) 
+            {
+                d0 = MathHelper::clamp(d0 * 8.0, worldserver1->getWorldBorder().minX() + 16.0, worldserver1->getWorldBorder().maxX() - 16.0);
+                d1 = MathHelper::clamp(d1 * 8.0, worldserver1->getWorldBorder().minZ() + 16.0, worldserver1->getWorldBorder().maxZ() - 16.0);
+            }
+
+            d0 = MathHelper::clamp((int)d0, -29999872, 29999872);
+            d1 = MathHelper::clamp((int)d1, -29999872, 29999872);
+            float f = rotationYaw;
+            setLocationAndAngles(d0, posY, d1, 90.0F, 0.0F);
+            Teleporter teleporter = worldserver1->getDefaultTeleporter();
+            teleporter.placeInExistingPortal(this, f);
+            blockpos = BlockPos(this);
+        }
+
+        worldserver->updateEntityWithOptionalForce(this, false);
+        world->profiler.endStartSection("reloading");
+        Entity* entity = EntityList.newEntity(getClass(), worldserver1);
+        if (entity != nullptr) 
+        {
+            entity.copyDataFromOld(this);
+            if (i == 1 && dimensionIn == 1) 
+            {
+                BlockPos blockpos1 = worldserver1->getTopSolidOrLiquidBlock(worldserver1->getSpawnPoint());
+                entity->moveToBlockPosAndAngles(blockpos1, entity.rotationYaw, entity.rotationPitch);
+            }
+            else 
+            {
+                entity->moveToBlockPosAndAngles(blockpos, entity.rotationYaw, entity.rotationPitch);
+            }
+
+            bool flag = entity.forceSpawn;
+            entity->forceSpawn = true;
+            worldserver1->spawnEntity(entity);
+            entity->forceSpawn = flag;
+            worldserver1->updateEntityWithOptionalForce(entity, false);
+        }
+
+        isDead = true;
+        world->profiler.endSection();
+        worldserver->resetUpdateEntityTick();
+        worldserver1->resetUpdateEntityTick();
+        world->profiler.endSection();
+        return entity;
+    }
+    else 
+    {
+        return nullptr;
+    }
+}
+
+bool Entity::isNonBoss()
+{
+    return true;
+}
+
+float Entity::getExplosionResistance(Explosion explosionIn, World *worldIn, BlockPos pos, IBlockState *blockStateIn)
+{
+    return blockStateIn->getBlock()->getExplosionResistance(this);
+}
+
+bool Entity::canExplosionDestroyBlock(Explosion explosionIn, World *worldIn, BlockPos pos, IBlockState *blockStateIn,
+    float p_174816_5_)
+{
+    return true;
+}
+
+int32_t Entity::getMaxFallHeight()
+{
+    return 3;
+}
+
+Vec3d Entity::getLastPortalVec() const
+{
+    return lastPortalVec;
+}
+
+EnumFacing Entity::getTeleportDirection() const
+{
+    return teleportDirection;
+}
+
+bool Entity::doesEntityNotTriggerPressurePlate()
+{
+    return false;
+}
+
+void Entity::addEntityCrashInfo(CrashReportCategory &category)
+{
+    category.addDetail("Entity Type", new ICrashReportDetail() {
+        public std::string call() throws Exception {
+            return EntityList.getKey(Entity.this) + " (" + Entity.this.getClass().getCanonicalName() + ")";
+        }
+    });
+    category.addCrashSection("Entity ID", this.entityId);
+    category.addDetail("Entity Name", new ICrashReportDetail() {
+        public std::string call() throws Exception {
+            return Entity.this.getName();
+        }
+    });
+    category.addCrashSection("Entity's Exact location", fmt::format("%.2f, %.2f, %.2f", this.posX, this.posY, this.posZ));
+    category.addCrashSection("Entity's Block location", CrashReportCategory.getCoordinateInfo(MathHelper.floor(this.posX), MathHelper.floor(this.posY), MathHelper.floor(this.posZ)));
+    category.addCrashSection("Entity's Momentum", fmt::format("%.2f, %.2f, %.2f", this.motionX, this.motionY, this.motionZ));
+    category.addDetail("Entity's Passengers", new ICrashReportDetail() {
+        public std::string call() throws Exception {
+            return Entity.this.getPassengers().toString();
+        }
+    });
+    category.addDetail("Entity's Vehicle", new ICrashReportDetail() {
+        public std::string call() throws Exception {
+            return Entity.this.getRidingEntity().toString();
+        }
+    });
+}
+
+bool Entity::canRenderOnFire()
+{
+    return isBurning();
+}
+
+void Entity::setUniqueId(xg::Guid uniqueIdIn)
+{
+    entityUniqueID = uniqueIdIn;
+    cachedUniqueIdString = entityUniqueID.str();
+}
+
+xg::Guid Entity::getUniqueID() const
+{
+    return entityUniqueID;
+}
+
+std::string_view Entity::getCachedUniqueIdString() const
+{
+    return cachedUniqueIdString;
+}
+
+bool Entity::isPushedByWater()
+{
+    return true;
+}
+
+double Entity::getRenderDistanceWeight()
+{
+    return renderDistanceWeight;
+}
+
+void Entity::setRenderDistanceWeight(double renderDistWeight)
+{
+    renderDistanceWeight = renderDistWeight;
+}
+
+ITextComponent * Entity::getDisplayName()
+{
+    TextComponentString* textcomponentstring = new TextComponentString(ScorePlayerTeam::formatPlayerName(getTeam(), getName()));
+    textcomponentstring.getStyle().setHoverEvent(getHoverEvent());
+    textcomponentstring.getStyle().setInsertion(getCachedUniqueIdString());
+    return textcomponentstring;
+}
+
+void Entity::setCustomNameTag(std::string name)
+{
+    dataManager.set(CUSTOM_NAME, name);
+}
+
+std::string Entity::getCustomNameTag()
+{
+    return dataManager.get(CUSTOM_NAME);
+}
+
+bool Entity::hasCustomName()
+{
+    return !(dataManager.get(CUSTOM_NAME)).isEmpty();
+}
+
+void Entity::setAlwaysRenderNameTag(bool alwaysRenderNameTag)
+{
+    dataManager.set(CUSTOM_NAME_VISIBLE, alwaysRenderNameTag);
+}
+
+bool Entity::getAlwaysRenderNameTag()
+{
+    return dataManager.get(CUSTOM_NAME_VISIBLE);
+}
+
+void Entity::setPositionAndUpdate(double x, double y, double z)
+{
+    isPositionDirty = true;
+    setLocationAndAngles(x, y, z, rotationYaw, rotationPitch);
+    world->updateEntityWithOptionalForce(this, false);
+}
+
+bool Entity::getAlwaysRenderNameTagForRender()
+{
+    return getAlwaysRenderNameTag();
 }
 
 void Entity::preparePlayerToSpawn()
@@ -1845,6 +2782,17 @@ void Entity::markVelocityChanged()
 bool Entity::isLiquidPresentInAABB(const AxisAlignedBB &bb)
 {
     return world->getCollisionBoxes(this, bb).isEmpty() && !world->containsAnyLiquid(bb);
+}
+
+void Entity::copyDataFromOld(Entity *entityIn)
+{
+    NBTTagCompound* nbttagcompound = entityIn->writeToNBT(new NBTTagCompound());
+    nbttagcompound->removeTag("Dimension");
+    readFromNBT(nbttagcompound);
+    timeUntilPortal = entityIn->timeUntilPortal;
+    lastPortalPos = entityIn->lastPortalPos;
+    lastPortalVec = entityIn->lastPortalVec;
+    teleportDirection = entityIn->teleportDirection;
 }
 
 bool operator==(const Entity &lhs, const Entity &rhs)
