@@ -1,5 +1,7 @@
 #include "TileEntityCommandBlock.h"
 
+#include "ByteBuffer.h"
+
 NBTTagCompound* TileEntityCommandBlock::writeToNBT(NBTTagCompound* compound)
 {
 	TileEntity::writeToNBT(compound);
@@ -174,11 +176,11 @@ void TileEntityCommandBlock::CommandBlockLogic::updateCommand()
 	block->getWorld()->notifyBlockUpdate(block->getPos(), iblockstate, iblockstate, 3);
 }
 
-void TileEntityCommandBlock::CommandBlockLogic::fillInInfo(ByteBuf buf)
+void TileEntityCommandBlock::CommandBlockLogic::fillInInfo(ByteBuffer& buf)
 {
-	buf.writeInt(block->getPos().getx());
-	buf.writeInt(block->getPos().gety());
-	buf.writeInt(block->getPos().getz());
+	buf.putInt(block->getPos().getx());
+	buf.putInt(block->getPos().gety());
+	buf.putInt(block->getPos().getz());
 }
 
 MinecraftServer* TileEntityCommandBlock::CommandBlockLogic::getServer()

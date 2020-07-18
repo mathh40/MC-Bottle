@@ -1,7 +1,13 @@
+#pragma once
+
 #include <string>
 #include <text\ITextComponent.h>
 #include <NBTTagCompound.h>
 
+#include "../command/CommandResultStats.h"
+#include "../command/ICommandSender.h"
+
+class ByteBuffer;
 class EntityPlayer;
 class World;
 
@@ -31,7 +37,7 @@ public:
 	
 	virtual void updateCommand() = 0;
 	virtual int32_t getCommandBlockType() = 0;
-	virtual void fillInInfo(std::vector<uint8_t> var1) = 0;
+	virtual void fillInInfo(ByteBuffer& var1) = 0;
 
 private:
 	static const SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("HH:mm:ss");

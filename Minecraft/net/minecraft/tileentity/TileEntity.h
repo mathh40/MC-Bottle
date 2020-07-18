@@ -3,6 +3,8 @@
 #include "spdlog/logger.h"
 #include "../world/World.h"
 
+class CrashReportCategory;
+
 class TileEntity
 {
 public:

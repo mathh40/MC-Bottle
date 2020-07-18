@@ -1,5 +1,8 @@
 #include "TileEntity.h"
 #include "CommandBlockBaseLogic.h"
+#include "../command/CommandResultStats.h"
+
+class ByteBuffer;
 
 class TileEntityCommandBlock :public TileEntity
 {
@@ -45,7 +48,7 @@ private:
 		void setCommand(std::string_view command) override;
 		void updateCommand() override;
 		int32_t getCommandBlockType() override;
-		void fillInInfo(ByteBuf buf) override;
+		void fillInInfo(ByteBuffer& buf) override;
 		MinecraftServer* getServer();
 	private:
 		TileEntityCommandBlock* block;
