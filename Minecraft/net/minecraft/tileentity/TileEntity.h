@@ -1,4 +1,4 @@
-
+#pragma once
 #include "registry/RegistryNamespaced.h"
 #include "spdlog/logger.h"
 #include "../world/World.h"

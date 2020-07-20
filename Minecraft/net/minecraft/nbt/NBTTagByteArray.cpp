@@ -4,7 +4,7 @@
 #include <istream>
 #include <sstream>
 
-NBTTagByteArray::NBTTagByteArray(std::vector<uint8_t> data)
+NBTTagByteArray::NBTTagByteArray(const ByteBuffer& data)
 	:data(std::move(data))
 {
 
@@ -49,7 +49,7 @@ std::string NBTTagByteArray::to_string() const
 	return  stringbuilder.str();
 }
 
-const std::vector<uint8_t> NBTTagByteArray::getByteArray() const
+const ByteBuffer NBTTagByteArray::getByteArray() const
 {
 	return data;
 }

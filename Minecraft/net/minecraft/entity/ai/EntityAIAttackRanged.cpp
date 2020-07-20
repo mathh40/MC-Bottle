@@ -5,6 +5,7 @@
 
 #include "Util.h"
 #include "biome/Biome.h"
+#include "math/MathHelper.h"
 
 EntityAIAttackRanged::EntityAIAttackRanged(IRangedAttackMob *attacker, double movespeed, int32_t maxAttackTime,
                                            float maxAttackDistanceIn)

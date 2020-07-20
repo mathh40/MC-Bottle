@@ -1,3 +1,5 @@
+#pragma once
+#include "VillageDoorInfo.h"
 #include "../world/World.h"
 
 class Village

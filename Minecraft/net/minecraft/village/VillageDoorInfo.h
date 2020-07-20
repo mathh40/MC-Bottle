@@ -1,3 +1,4 @@
+#pragma once
 #include "EnumFacing.h"
 #include "math/BlockPos.h"
 
