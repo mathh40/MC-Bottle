@@ -9,6 +9,7 @@
 #include "../command/ICommandSender.h"
 #include "../nbt/NBTTagList.h"
 #include "../tileentity/TileEntityHopper.h"
+#include "../util/text/event/HoverEvent.h"
 #include "math/AxisAlignedBB.h"
 #include "text/event/HoverEvent.h"
 
@@ -91,15 +92,15 @@ public:
     std::unordered_set<std::string> getTags() const;
     bool addTag(std::string_view tag);
     bool removeTag(std::string_view tag);
-    void onKillCommand();
+    virtual void onKillCommand();
     EntityDataManager getDataManager();
     friend bool operator==(const Entity& lhs , const Entity& rhs);
     void setDead();
     virtual void setDropItemsWhenDead(bool dropWhenDead);
     void setPosition(double x, double y, double z);
     void turn(float yaw, float pitch);
-    void onUpdate();
-    void onEntityUpdate();
+    virtual void onUpdate();
+    virtual void onEntityUpdate();
     int32_t getMaxInPortalTime() const;
     void setFire(int32_t seconds);
     void extinguish();
@@ -238,7 +239,7 @@ public:
     bool getAlwaysRenderNameTag();
     void setPositionAndUpdate(double x, double y, double z);
     bool getAlwaysRenderNameTagForRender();
-    void notifyDataManagerChange(DataParameter key);
+    virtual void notifyDataManagerChange(DataParameter key);
     EnumFacing getHorizontalFacing() const;
     EnumFacing getAdjustedHorizontalFacing() const;
     bool isSpectatedByPlayer(EntityPlayerMP* player);
@@ -278,7 +279,7 @@ public:
     bool isRidingOrBeingRiddenBy(Entity* entityIn) const;
     bool canPassengerSteer();
     Entity* getRidingEntity() const;
-    EnumPushReaction getPushReaction();
+    virtual EnumPushReaction getPushReaction();
     SoundCategory getSoundCategory();
 
 
@@ -299,7 +300,7 @@ protected:
     float playFlySound(float p_191954_1_);
     bool makeFlySound();
     bool canTriggerWalking();
-    void updateFallState(double y, bool onGroundIn, IBlockState* state, BlockPos pos);
+    virtual void updateFallState(double y, bool onGroundIn, IBlockState* state, const BlockPos& pos);
     void dealFireDamage(int32_t amount);
     void doWaterSplashEffect();
     void createRunningParticles();
@@ -321,6 +322,7 @@ protected:
     HoverEvent getHoverEvent();
     void applyEnchantments(EntityLivingBase* entityLivingBaseIn, Entity* entityIn);
     int32_t getFireImmuneTicks();
+
 
     int32_t rideCooldown;
     bool isInWeb;

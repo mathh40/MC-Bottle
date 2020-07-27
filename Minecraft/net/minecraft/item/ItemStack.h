@@ -27,7 +27,7 @@ public:
     bool isEmpty() const;
     static void registerFixes(DataFixer fixer);
     ItemStack splitStack(int32_t amount);
-    Item* getItem();
+    Item* getItem() const;
     EnumActionResult onItemUse(EntityPlayer* playerIn, World* worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ);
     float getDestroySpeed(IBlockState* blockIn);
     ActionResult useItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand hand);

@@ -96,6 +96,12 @@ namespace MathHelper
 		return value > (double)i ? i + 1 : i;
 	}
 
+    int32_t random()
+    {
+		static pcg32 rand;
+		return rand();
+    }
+
 	double clampedLerp(double lowerBnd, double upperBnd, double slide)
 	{
 		if (slide < 0.0) {

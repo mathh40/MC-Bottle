@@ -5,6 +5,7 @@
 
 
 #include "DamageSource.h"
+#include "EntityLivingBase.h"
 #include "Explosion.h"
 #include "Mirror.h"
 #include "ReportedException.h"
@@ -19,8 +20,10 @@
 #include "../nbt/NBTTagDouble.h"
 #include "../nbt/NBTTagFloat.h"
 #include "../nbt/NBTTagString.h"
+#include "../potion/PotionUtils.h"
 #include "../scoreboard/ScorePlayerTeam.h"
 #include "../scoreboard/Team.h"
+#include "../util/text/TextComponentString.h"
 #include "datafix/DataFixer.h"
 #include "datafix/FixTypes.h"
 #include "datafix/IDataWalker.h"

@@ -1,8 +1,10 @@
 #include "CombatTracker.h"
 #include "math/BlockPos.h"
 #include "DamageSource.h"
+#include "../block/Block.h"
+#include "text/TextComponentTranslation.h"
 
-CombatTracker::CombatTracker(const EntityLivingBase &fighterIn)
+CombatTracker::CombatTracker(EntityLivingBase* fighterIn)
 	:fighter(fighterIn)
 {
 }
@@ -10,16 +12,16 @@ CombatTracker::CombatTracker(const EntityLivingBase &fighterIn)
 void CombatTracker::calculateFallSuffix()
 {
 	resetFallSuffix();
-	if (fighter.isOnLadder()) {
-		Block block = fighter.world.getBlockState(BlockPos(fighter.posX, fighter.getEntityBoundingBox().minY, fighter.posZ)).getBlock();
-		if (block == Blocks.LADDER) {
+	if (fighter->isOnLadder()) {
+		Block block = fighter->world.getBlockState(BlockPos(fighter->posX, fighter->getEntityBoundingBox().minY, fighter->posZ)).getBlock();
+		if (block == Blocks::LADDER) {
 			fallSuffix = "ladder";
 		}
-		else if (block == Blocks.VINE) {
+		else if (block == Blocks::VINE) {
 			fallSuffix = "vines";
 		}
 	}
-	else if (fighter.isInWater()) {
+	else if (fighter->isInWater()) {
 		fallSuffix = "water";
 	}
 }
@@ -28,19 +30,19 @@ void CombatTracker::trackDamage(const DamageSource::DamageSource & damageSrc, co
 {
 	reset();
 	calculateFallSuffix();
-	std::shared_ptr<CombatEntry> combatentry = std::make_shared<CombatEntry>(damageSrc, fighter.ticksExisted, healthIn, damageAmount, fallSuffix, fighter.fallDistance);
+	std::shared_ptr<CombatEntry> combatentry = std::make_shared<CombatEntry>(damageSrc, fighter->ticksExisted, healthIn, damageAmount, fallSuffix, fighter->fallDistance);
 	combatEntries.push_back(combatentry);
-	lastDamageTime = fighter.ticksExisted;
+	lastDamageTime = fighter->ticksExisted;
 	takingDamage = true;
-	if (combatentry->isLivingDamageSrc() && !inCombat && fighter.isEntityAlive()) {
+	if (combatentry->isLivingDamageSrc() && !inCombat && fighter->isEntityAlive()) {
 		inCombat = true;
-		combatStartTime = fighter.ticksExisted;
+		combatStartTime = fighter->ticksExisted;
 		combatEndTime = combatStartTime;
-		fighter.sendEnterCombat();
+		fighter->sendEnterCombat();
 	}
 }
 
-ITextComponent CombatTracker::getDeathMessage()
+ITextComponent* CombatTracker::getDeathMessage()
 {
 	if (combatEntries.empty()) {
 		return new TextComponentTranslation("death.attack.generic", new Object[]{ this.fighter.getDisplayName() });
@@ -51,7 +53,7 @@ ITextComponent CombatTracker::getDeathMessage()
 		ITextComponent itextcomponent1 = combatentry1.getDamageSrcDisplayName();
 		Entity entity = combatentry1.getDamageSrc().getTrueSource();
 		Object itextcomponent;
-		if (combatentry != null && combatentry1.getDamageSrc() == DamageSource.FALL) {
+		if (combatentry != nullptr && combatentry1.getDamageSrc() == DamageSource.FALL) {
 			ITextComponent itextcomponent2 = combatentry.getDamageSrcDisplayName();
 			if (combatentry.getDamageSrc() != DamageSource.FALL && combatentry.getDamageSrc() != DamageSource.OUT_OF_WORLD) {
 				if (itextcomponent2 == null || itextcomponent1 != null && itextcomponent2.equals(itextcomponent1)) {
@@ -91,10 +93,10 @@ ITextComponent CombatTracker::getDeathMessage()
 	}
 }
 
-EntityLivingBase CombatTracker::getBestAttacker()
+EntityLivingBase* CombatTracker::getBestAttacker()
 {
-	EntityLivingBase entitylivingbase;
-	EntityPlayer entityplayer;
+	EntityLivingBase* entitylivingbase;
+	EntityPlayer* entityplayer;
 	float f = 0.0F;
 	float f1 = 0.0F;
 	Iterator var5 = combatEntries.iterator();
@@ -104,7 +106,7 @@ EntityLivingBase CombatTracker::getBestAttacker()
 		do {
 			do {
 				if (!var5.hasNext()) {
-					if (entityplayer != null && f1 >= f / 3.0F) {
+					if (entityplayer != nullptr && f1 >= f / 3.0F) {
 						return entityplayer;
 					}
 
@@ -124,28 +126,28 @@ EntityLivingBase CombatTracker::getBestAttacker()
 	}
 }
 
-int CombatTracker::getCombatDuration()
+int32_t CombatTracker::getCombatDuration() const
 {
-	return inCombat ? fighter.ticksExisted - combatStartTime : combatEndTime - combatStartTime;
+	return inCombat ? fighter->ticksExisted - combatStartTime : combatEndTime - combatStartTime;
 }
 
 void CombatTracker::reset()
 {
-	int i = inCombat ? 300 : 100;
-	if (takingDamage && (!fighter.isEntityAlive() || fighter.ticksExisted - lastDamageTime > i)) {
+	int32_t i = inCombat ? 300 : 100;
+	if (takingDamage && (!fighter->isEntityAlive() || fighter->ticksExisted - lastDamageTime > i)) {
 		bool flag = inCombat;
 		takingDamage = false;
 		inCombat = false;
-		combatEndTime = fighter.ticksExisted;
+		combatEndTime = fighter->ticksExisted;
 		if (flag) {
-			fighter.sendEndCombat();
+			fighter->sendEndCombat();
 		}
 
 		combatEntries.clear();
 	}
 }
 
-EntityLivingBase CombatTracker::getFighter()
+EntityLivingBase* CombatTracker::getFighter() const
 {
 	return fighter;
 }

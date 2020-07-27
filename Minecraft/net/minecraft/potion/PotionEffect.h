@@ -30,6 +30,7 @@ public:
   void setPotionDurationMax(bool maxDuration);
   bool getIsPotionDurationMax() const;
 
+
 private:
 
   int32_t deincrementDuration();

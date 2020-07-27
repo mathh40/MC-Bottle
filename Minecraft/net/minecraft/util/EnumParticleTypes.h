@@ -62,10 +62,10 @@ public:
 
 	static std::vector<int> getParticleNames();
 
-	std::string getParticleName();
-	int getParticleID();
-	int getArgumentCount();
-	bool getShouldIgnoreRange();
+	std::string getParticleName() const;
+	int getParticleID() const;
+	int getArgumentCount() const;
+	bool getShouldIgnoreRange() const;
 	static std::optional<EnumParticleTypes> getParticleFromId(int particleId);
 	static std::optional<EnumParticleTypes> getByName(std::string nameIn);
 	friend void initParticle();

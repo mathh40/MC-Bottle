@@ -75,22 +75,22 @@ std::vector<int> EnumParticleTypes::getParticleNames()
 	return keys;
 }
 
-std::string EnumParticleTypes::getParticleName()
+std::string EnumParticleTypes::getParticleName() const
 {
 	return particleName;
 }
 
-int EnumParticleTypes::getParticleID()
+int EnumParticleTypes::getParticleID() const
 {
 	return particleID;
 }
 
-int EnumParticleTypes::getArgumentCount()
+int EnumParticleTypes::getArgumentCount() const
 {
 	return argumentCount;
 }
 
-bool EnumParticleTypes::getShouldIgnoreRange()
+bool EnumParticleTypes::getShouldIgnoreRange() const
 {
 	return shouldIgnoreRange;
 }

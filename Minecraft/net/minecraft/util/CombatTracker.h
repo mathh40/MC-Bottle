@@ -8,27 +8,27 @@ class EntityLivingBase;
 class CombatTracker
 {
 public:
-	CombatTracker(const EntityLivingBase &fighterIn);
+	CombatTracker(EntityLivingBase* fighterIn);
 	void calculateFallSuffix();
 	void trackDamage(const DamageSource::DamageSource &damageSrc, const float healthIn, const float damageAmount);
 	ITextComponent* getDeathMessage();
-	EntityLivingBase getBestAttacker();
+	EntityLivingBase* getBestAttacker();
 	
-	int getCombatDuration();
+	int32_t getCombatDuration() const;
 	void reset();
-	EntityLivingBase getFighter();
+	EntityLivingBase* getFighter() const;
 
 private:
 	std::vector< std::shared_ptr<CombatEntry>> combatEntries;
-	EntityLivingBase fighter;
-	int lastDamageTime;
-	int combatStartTime;
-	int combatEndTime;
+	EntityLivingBase* fighter;
+	int32_t lastDamageTime;
+	int32_t combatStartTime;
+	int32_t combatEndTime;
 	bool inCombat;
 	bool takingDamage;
 	std::string fallSuffix;
 
 	CombatEntry getBestCombatEntry();
-	std::string getFallSuffix(CombatEntry entry);
+    static std::string getFallSuffix(CombatEntry entry);
 	void resetFallSuffix();
 };

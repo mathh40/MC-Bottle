@@ -68,6 +68,8 @@ namespace MathHelper
 		}
 	}
 
+	int32_t random();
+
 	double clampedLerp(double lowerBnd, double upperBnd, double slide);
 	double absMax(double p_76132_0_, double p_76132_2_);
 	int32_t intFloorDiv(int32_t p_76137_0_, int32_t p_76137_1_);

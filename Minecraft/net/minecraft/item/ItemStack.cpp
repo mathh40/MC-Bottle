@@ -103,7 +103,7 @@ ItemStack ItemStack::splitStack(int32_t amount)
     return itemstack;
 }
 
-Item * ItemStack::getItem()
+Item * ItemStack::getItem() const
 {
     return isEmpty ? Item::getItemFromBlock(Blocks::AIR) : item;
 }
