@@ -12,8 +12,8 @@ RayTraceResult::RayTraceResult(Vec3d hitVecIn, EnumFacing sideHitIn)
 
 }
 
-RayTraceResult::RayTraceResult(Entity entityIn)
-	: RayTraceResult(entityIn, Vec3d(entityIn.posX, entityIn.posY, entityIn.posZ))
+RayTraceResult::RayTraceResult(Entity* entityIn)
+	: RayTraceResult(entityIn, Vec3d(entityIn->posX, entityIn.posY, entityIn.posZ))
 {
 	
 }
@@ -24,7 +24,7 @@ RayTraceResult::RayTraceResult(Type typeIn, Vec3d hitVecIn, EnumFacing sideHitIn
 
 }
 
-RayTraceResult::RayTraceResult(Entity entityHitIn, Vec3d hitVecIn)
+RayTraceResult::RayTraceResult(Entity* entityHitIn, Vec3d hitVecIn)
 	: typeOfHit(Type::ENTITY), entityHit(entityHitIn), hitVec(hitVecIn)
 {
 	
@@ -37,5 +37,5 @@ BlockPos RayTraceResult::getBlockPos() const
 
 std::string to_string(const RayTraceResult& a)
 {
-	return "HitResult{type=" + to_string(a.typeOfHit) + ", blockpos=" + to_string(a.getBlockPos) + ", f=" + to_string(a.sideHit) + ", pos=" + to_string(a.hitVec) + ", entity=" + a.entityHit + '}';
+	return "HitResult{type=" + std::to_string(a.typeOfHit) + ", blockpos=" + std::to_string(a.getBlockPos) + ", f=" +std:: to_string(a.sideHit) + ", pos=" + std::to_string(a.hitVec) + ", entity=" + a.entityHit + '}';
 }

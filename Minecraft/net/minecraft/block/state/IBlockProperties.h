@@ -1,15 +1,19 @@
 #pragma once
-#include "../material/Material.h"
-#include <vector>
-#include <optional>
 #include "../../util/math/RayTraceResult.h"
+#include "../material/Material.h"
 #include "BlockFaceShape.h"
+#include <EnumBlockRenderType.h>
+#include <Mirror.h>
+#include <optional>
+#include <vector>
 
 class AxisAlignedBB;
 class World;
 class BlockPos;
 class IBlockAccess;
 class Entity;
+class IBlockState;
+class EntityPlayer;
 
 class IBlockProperties
 {
@@ -23,8 +27,8 @@ public:
 	virtual bool isTranslucent() = 0;
 	virtual bool useNeighborBrightness() = 0;
 	virtual MapColor& getMapColor(IBlockAccess& var1, BlockPos& var2) = 0;
-	virtual IBlockState& withRotation(Rotation& var1) = 0;
-	virtual IBlockState& withMirror(Mirror& var1) = 0;
+	virtual IBlockState* withRotation(Rotation& var1) = 0;
+	virtual IBlockState* withMirror(Mirror& var1) = 0;
 	virtual bool isFullCube() = 0;
 	virtual bool hasCustomBreakingProgress() = 0;
 	virtual EnumBlockRenderType getRenderType() = 0;
@@ -37,10 +41,10 @@ public:
 	virtual bool hasComparatorInputOverride() = 0;
 	virtual int32_t getComparatorInputOverride(World& var1, BlockPos& var2) = 0;
 	virtual float getBlockHardness(World& var1, BlockPos& var2) = 0;
-	virtual float getPlayerRelativeBlockHardness(EntityPlayer& var1, World& var2, BlockPos& var3) = 0;
+	virtual float getPlayerRelativeBlockHardness(EntityPlayer* var1, World& var2, BlockPos& var3) = 0;
 	virtual int32_t getStrongPower(IBlockAccess& var1, BlockPos& var2, EnumFacing& var3) = 0;
 	virtual EnumPushReaction& getPushReaction() = 0;
-	virtual IBlockState& getActualState(IBlockAccess& var1, BlockPos& var2) = 0;
+	virtual IBlockState* getActualState(IBlockAccess& var1, BlockPos& var2) = 0;
 	virtual AxisAlignedBB& getSelectedBoundingBox(World& var1, BlockPos& var2)  = 0;
 	virtual bool shouldSideBeRendered(IBlockAccess& var1, BlockPos& var2, EnumFacing& var3) = 0;
 	virtual bool isOpaqueCube() = 0;

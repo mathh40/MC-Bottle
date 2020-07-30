@@ -1,4 +1,5 @@
 #pragma once
+#include "../../item/EnumDyeColor.h"
 #include <array>
 #include <cstdint>
 class MapColor

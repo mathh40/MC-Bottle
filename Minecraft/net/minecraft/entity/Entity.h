@@ -114,7 +114,7 @@ public:
     void setNoGravity(bool noGravity);
     std::optional<AxisAlignedBB> getCollisionBoundingBox();
     bool isImmuneToFire() const;
-    void fall(float distance, float damageMultiplier);
+    virtual void fall(float distance, float damageMultiplier);
     bool isWet();
     bool isInWater();
     bool isOverWater();
@@ -139,7 +139,7 @@ public:
     void applyEntityCollision(Entity* entityIn);
     void addVelocity(double x, double y, double z);
     bool attackEntityFrom(DamageSource::DamageSource source, float amount);
-    Vec3d getLook(float partialTicks);
+    virtual Vec3d getLook(float partialTicks);
     Vec3d getPositionEyes(float partialTicks);
     std::optional<RayTraceResult> rayTrace(double blockReachDistance, float partialTicks);
     virtual bool canBeCollidedWith();
@@ -159,7 +159,7 @@ public:
     bool isEntityInsideOpaqueBlock();
     bool processInitialInteract(EntityPlayer* player, EnumHand hand);
     std::optional<AxisAlignedBB> getCollisionBox(Entity* entityIn);
-    void updateRidden();
+    virtual void updateRidden();
     void updatePassenger(Entity* passenger);
     virtual void applyOrientationToEntity(Entity* entityToUpdate);
     double getYOffset();
@@ -167,8 +167,8 @@ public:
     bool startRiding(Entity* entityIn);
     bool startRiding(Entity* entityIn, bool force);
     void removePassengers();
-    void dismountRidingEntity();
-    void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int32_t posRotationIncrements, bool teleport);
+    virtual void dismountRidingEntity();
+    virtual void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int32_t posRotationIncrements, bool teleport);
     float getCollisionBorderSize();
     Vec3d getLookVec();
     Vec2f getPitchYaw() const;
@@ -188,7 +188,7 @@ public:
     bool isSneaking();
     void setSneaking(bool sneaking);
     bool isSprinting();
-    void setSprinting(bool sprinting);
+    virtual void setSprinting(bool sprinting);
     bool isGlowing();
     void setGlowing(bool glowingIn);
     bool isInvisible();
@@ -205,13 +205,13 @@ public:
     std::string getName() override;
     std::vector<Entity*> getParts();
     bool isEntityEqual(Entity* entityIn);
-    float getRotationYawHead();
-    void setRotationYawHead(float rotation);
-    void setRenderYawOffset(float offset);
+    virtual float getRotationYawHead();
+    virtual void setRotationYawHead(float rotation);
+    virtual void setRenderYawOffset(float offset);
     bool canBeAttackedWithItem();
     bool hitByEntity(Entity* entityIn);
     std::string toString();
-    bool isEntityInvulnerable(DamageSource source);
+    bool isEntityInvulnerable(DamageSource::DamageSource source);
     bool getIsInvulnerable() const;
     void setEntityInvulnerable(bool isInvulnerable);
     void copyLocationAndAnglesFrom(Entity* entityIn);
@@ -238,7 +238,7 @@ public:
     void setAlwaysRenderNameTag(bool alwaysRenderNameTag);
     bool getAlwaysRenderNameTag();
     void setPositionAndUpdate(double x, double y, double z);
-    bool getAlwaysRenderNameTagForRender();
+    virtual bool getAlwaysRenderNameTagForRender();
     virtual void notifyDataManagerChange(DataParameter key);
     EnumFacing getHorizontalFacing() const;
     EnumFacing getAdjustedHorizontalFacing() const;
@@ -291,7 +291,7 @@ protected:
     void setRotation(float yaw, float pitch);
     void decrementTimeUntilPortal();
     void setOnFireFromLava();
-    void outOfWorld();
+    virtual void outOfWorld();
     SoundEvent getSwimSound();
     SoundEvent getSplashSound();
     virtual void doBlockCollisions();
@@ -304,7 +304,7 @@ protected:
     void dealFireDamage(int32_t amount);
     void doWaterSplashEffect();
     void createRunningParticles();
-    void markVelocityChanged();
+    virtual void markVelocityChanged();
     Vec3d getVectorForRotation(float pitch, float yaw);
     virtual bool shouldSetPosAfterLoading();
     std::string getEntityString();

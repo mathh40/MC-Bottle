@@ -53,12 +53,12 @@ namespace std {
 	{
 		size_t operator()(const Vec3d & vec) const noexcept
 		{
-			long j = static_cast<long>(vec.getx());
-			int i = (int)(j ^ j >> 32);
-			j = static_cast<long>(vec.gety());
-			i = 31 * i + (int)(j ^ j >> 32);
-			j = static_cast<long>(vec.getz());
-			i = 31 * i + (int)(j ^ j >> 32);
+			int64_t j = static_cast<int64_t>(vec.getx());
+            int64_t i = (int64_t)(j ^ j >> 32);
+			j = static_cast<int64_t>(vec.gety());
+			i = 31 * i + (int64_t)(j ^ j >> 32);
+			j = static_cast<int64_t>(vec.getz());
+			i = 31 * i + (int64_t)(j ^ j >> 32);
 			return i;
 		}
 	};

@@ -1,11 +1,14 @@
 #pragma once
-#include "CombatTracker.h"
-#include "Entity.h"
 #include "../item/ItemStack.h"
 #include "../potion/PotionEffect.h"
 #include "../util/CombatTracker.h"
+#include "Entity.h"
+#include "EnumHandSide.h"
 #include "ai/attributes/AttributeModifier.h"
+#include <DamageSource.h>
+class IAttribute;
 class AbstractAttributeMap;
+class IAttributeInstance;
 class EntityLivingBase :public Entity
 {
 public:
@@ -37,11 +40,79 @@ public:
     void heal(float healAmount);
     float getHealth();
     void setHealth(float health);
-    bool attackEntityFrom(DamageSource source, float amount);
-    DamageSource getLastDamageSource();
+    bool attackEntityFrom(DamageSource::DamageSource source, float amount);
+    DamageSource::DamageSource getLastDamageSource();
     void renderBrokenItemStack(const ItemStack& stack);
-    void onDeath(DamageSource cause);
-
+    void onDeath(DamageSource::DamageSource cause);
+    void knockBack(Entity* entityIn, float strength, double xRatio, double zRatio);
+    bool isOnLadder();
+    bool isEntityAlive();
+    void fall(float distance, float damageMultiplier) override;
+    void performHurtAnimation() override;
+    int32_t getTotalArmorValue();
+    CombatTracker getCombatTracker() const;
+    EntityLivingBase* getAttackingEntity();
+    float getMaxHealth();
+    int32_t getArrowCountInEntity();
+    void setArrowCountInEntity(int32_t count);
+    void swingArm(EnumHand hand);
+    void handleStatusUpdate(std::byte id) override;
+    IAttributeInstance* getEntityAttribute(IAttribute* attribute);
+    AbstractAttributeMap* getAttributeMap();
+    EnumCreatureAttribute getCreatureAttribute();
+    ItemStack getHeldItemMainhand();
+    ItemStack getHeldItemOffhand();
+    ItemStack getHeldItem(EnumHand hand);
+    void setHeldItem(EnumHand hand, ItemStack stack);
+    bool hasItemInSlot(EntityEquipmentSlot p_190630_1_);
+    virtual std::vector<ItemStack>& getArmorInventoryList() = 0;
+    virtual ItemStack getItemStackFromSlot(EntityEquipmentSlot var1) = 0;
+    virtual void setItemStackToSlot(EntityEquipmentSlot var1, ItemStack var2) = 0;
+    void setSprinting(bool sprinting) override;
+    void dismountEntity(Entity* entityIn);
+    bool getAlwaysRenderNameTagForRender() override;
+    void travel(float strafe, float vertical, float forward);
+    float getAIMoveSpeed() const;
+    void setAIMoveSpeed(float speedIn);
+    bool attackEntityAsMob(Entity* entityIn);
+    bool isPlayerSleeping();
+    void onUpdate() override;
+    void onLivingUpdate();
+    void dismountRidingEntity() override;
+    void updateRidden() override;
+    void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int32_t posRotationIncrements, bool teleport) override;
+    void setJumping(bool jumping);
+    void onItemPickup(Entity* entityIn, int32_t quantity);
+    bool canEntityBeSeen(Entity* entityIn);
+    Vec3d getLook(float partialTicks) override;
+    float getSwingProgress(float partialTickTime) const;
+    bool isServerWorld() const;
+    bool canBeCollidedWith() override;
+    bool canBePushed() override;
+    float getRotationYawHead() override;
+    void setRotationYawHead(float rotation) override;
+    void setRenderYawOffset(float offset) override;
+    float getAbsorptionAmount() const;
+    void setAbsorptionAmount(float amount);
+    void sendEnterCombat();
+    void sendEndCombat();
+    virtual EnumHandSide getPrimaryHand() = 0;
+    bool isHandActive();
+    EnumHand getActiveHand();
+    void setActiveHand(EnumHand hand);
+    void notifyDataManagerChange(DataParameter key) override;
+    ItemStack getActiveItemStack() const;
+    int32_t getItemInUseCount() const;
+    int32_t getItemInUseMaxCount();
+    void stopActiveHand();
+    void resetActiveHand();
+    bool isActiveItemStackBlocking();
+    bool isElytraFlying();
+    int32_t getTicksElytraFlying() const;
+    bool attemptTeleport(double x, double y, double z);
+    bool canBeHitWithPotion();
+    bool attackable();
+    void setPartying(BlockPos pos, bool isPartying);
 
     bool isSwingInProgress;
     EnumHand swingingHand;
@@ -88,7 +159,39 @@ protected:
     void onChangedPotionEffect(PotionEffect id, bool p_70695_2_);
     void onFinishedPotionEffect(PotionEffect effect);
     void blockUsingShield(EntityLivingBase* p_190629_1_);
-    void playHurtSound(DamageSource source);
+    void playHurtSound(DamageSource::DamageSource source);
+    void dropLoot(bool wasRecentlyHit, int32_t lootingModifier, DamageSource::DamageSource source);
+    void dropEquipment(bool wasRecentlyHit, int32_t lootingModifier);
+    SoundEvent getHurtSound(DamageSource::DamageSource damageSourceIn);
+    SoundEvent getDeathSound();
+    SoundEvent getFallSound(int32_t heightIn);
+    void dropFewItems(bool wasRecentlyHit, int32_t lootingModifier);
+    void damageArmor(float damage);
+    void damageShield(float damage);
+    float applyArmorCalculations(DamageSource::DamageSource source, float damage);
+    float applyPotionDamageCalculations(DamageSource::DamageSource source, float damage);
+    void damageEntity(DamageSource::DamageSource damageSrc, float damageAmount);
+    void outOfWorld() override;
+    void updateArmSwingProgress();
+    float getSoundVolume();
+    float getSoundPitch();
+    bool isMovementBlocked();
+    float getJumpUpwardsMotion();
+    void jump();
+    void handleJumpWater();
+    void handleJumpLava();
+    float getWaterSlowDown();
+    float updateDistance(float p_110146_1_, float p_110146_2_);
+    void updateEntityActionState();
+    void collideWithNearbyEntities();
+    void collideWithEntity(Entity* entityIn);
+    void markVelocityChanged() override;
+    void markPotionsDirty();
+    void updateActiveHand();
+    void updateItemUse(ItemStack stack, int32_t eatingParticleCount);
+    void onItemUseFinish();
+
+
 
     static DataParameter HAND_STATES;
     int32_t ticksSinceLastSwing;
@@ -114,8 +217,14 @@ protected:
     int32_t activeItemStackUseCount;
     int32_t ticksElytraFlying;
 private:
-    bool checkTotemDeathProtection(DamageSource p_190628_1_);
-    bool canBlockDamageSource(DamageSource damageSourceIn);
+    bool checkTotemDeathProtection(DamageSource::DamageSource p_190628_1_);
+    bool canBlockDamageSource(DamageSource::DamageSource damageSourceIn);
+    bool canGoThroughtTrapDoorOnLadder(BlockPos pos, IBlockState* state);
+    int32_t getArmSwingAnimationEnd();
+    void updateElytra();
+
+
+
 
     static std::shared_ptr<spdlog::logger> LOGGER;
     static xg::Guid SPRINTING_SPEED_BOOST_ID;
@@ -138,6 +247,6 @@ private:
     int32_t jumpTicks;
     float absorptionAmount;
     BlockPos prevBlockpos;
-    DamageSource lastDamageSource;
+    DamageSource::DamageSource lastDamageSource;
     int64_t lastDamageStamp;
 };

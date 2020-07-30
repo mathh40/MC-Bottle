@@ -1,55 +1,57 @@
 #include "DamageSource.h"
 #include <spdlog/fmt/bundled/format.h>
-#include "instanceof.h"
 #include "EntityDamageSource.h"
 #include "EntityDamageSourceIndirect.h"
+#include "../entity/Entity.h"
+#include "text/TextComponentTranslation.h"
+#include "text/translation/I18n.h"
 
 namespace DamageSource
 {
-	DamageSource::DamageSource(std::string damageTypeIn)
+	DamageSource::DamageSource(std::string_view damageTypeIn)
 		:damageType(damageTypeIn)
 	{
 
 	}
-	DamageSource DamageSource::causeMobDamage(EntityLivingBase mob)
+	DamageSource DamageSource::causeMobDamage(EntityLivingBase* mob)
 	{
 		return EntityDamageSource("mob", mob);
 	}
-	DamageSource DamageSource::causeIndirectDamage(Entity source, EntityLivingBase indirectEntityIn)
+	DamageSource DamageSource::causeIndirectDamage(Entity* source, EntityLivingBase* indirectEntityIn)
 	{
 		return EntityDamageSourceIndirect("mob", source, indirectEntityIn);
 	}
-	DamageSource DamageSource::causePlayerDamage(EntityPlayer player)
+	DamageSource DamageSource::causePlayerDamage(EntityPlayer* player)
 	{
 		return EntityDamageSource("player", player);
 	}
-	DamageSource DamageSource::causeArrowDamage(EntityArrow arrow, std::optional<Entity> indirectEntityIn)
+	DamageSource DamageSource::causeArrowDamage(EntityArrow* arrow, Entity* indirectEntityIn)
 	{
 		return EntityDamageSourceIndirect("arrow", arrow, indirectEntityIn).setProjectile();
 	}
-	DamageSource DamageSource::causeFireballDamage(EntityFireball fireball, std::optional<Entity> indirectEntityIn)
+	DamageSource DamageSource::causeFireballDamage(EntityFireball* fireball, Entity* indirectEntityIn)
 	{
-		return !indirectEntityIn.has_value() ? EntityDamageSourceIndirect("onFire", fireball, fireball).setFireDamage().setProjectile() : EntityDamageSourceIndirect("fireball", fireball, indirectEntityIn).setFireDamage().setProjectile();
+		return !indirectEntityIn->has_value() ? EntityDamageSourceIndirect("onFire", fireball, fireball).setFireDamage().setProjectile() : EntityDamageSourceIndirect("fireball", fireball, indirectEntityIn).setFireDamage().setProjectile();
 	}
-	DamageSource DamageSource::causeThrownDamage(Entity source, std::optional<Entity> indirectEntityIn)
+	DamageSource DamageSource::causeThrownDamage(Entity* source, Entity* indirectEntityIn)
 	{
 		return EntityDamageSourceIndirect("thrown", source, indirectEntityIn).setProjectile();
 	}
-	DamageSource DamageSource::causeIndirectMagicDamage(Entity source, std::optional<Entity> indirectEntityIn)
+	DamageSource DamageSource::causeIndirectMagicDamage(Entity* source, Entity* indirectEntityIn)
 	{
 		return EntityDamageSourceIndirect("indirectMagic", source, indirectEntityIn).setDamageBypassesArmor().setMagicDamage();
 	}
-	DamageSource DamageSource::causeThornsDamage(Entity source)
+	DamageSource DamageSource::causeThornsDamage(Entity* source)
 	{
 		return EntityDamageSource("thorns", source).setIsThornsDamage().setMagicDamage();
 	}
-	DamageSource DamageSource::causeExplosionDamage(std::optional<Explosion> explosionIn)
+	DamageSource DamageSource::causeExplosionDamage(Explosion* explosionIn)
 	{
-		return explosionIn.has_value() && explosionIn.getExplosivePlacedBy() != nullptr ? EntityDamageSource("explosion.player", explosionIn.getExplosivePlacedBy()).setDifficultyScaled().setExplosion() : DamageSource("explosion").setDifficultyScaled().setExplosion();
+		return explosionIn->has_value() && explosionIn->getExplosivePlacedBy() != nullptr ? EntityDamageSource("explosion.player", explosionIn->getExplosivePlacedBy()).setDifficultyScaled().setExplosion() : DamageSource("explosion").setDifficultyScaled().setExplosion();
 	}
-	DamageSource DamageSource::causeExplosionDamage(std::optional<EntityLivingBase> entityLivingBaseIn)
+	DamageSource DamageSource::causeExplosionDamage(EntityLivingBase* entityLivingBaseIn)
 	{
-		entityLivingBaseIn.has_value() ? EntityDamageSource("explosion.player", entityLivingBaseIn).setDifficultyScaled().setExplosion() : DamageSource("explosion").setDifficultyScaled().setExplosion();
+		entityLivingBaseIn->has_value() ? EntityDamageSource("explosion.player", entityLivingBaseIn).setDifficultyScaled().setExplosion() : DamageSource("explosion").setDifficultyScaled().setExplosion();
 	}
 	bool DamageSource::isProjectile() const
 	{
@@ -73,23 +75,23 @@ namespace DamageSource
 	{
 		return Unblockable;
 	}
-	float DamageSource::getHungerDamage()
-	{
+	float DamageSource::getHungerDamage() const
+    {
 		return hungerDamage;
 	}
 	bool DamageSource::canHarmInCreative() const
 	{
 		return DamageAllowedInCreativeMode;
 	}
-	bool DamageSource::isDamageAbsolute()
-	{
+	bool DamageSource::isDamageAbsolute() const
+    {
 		return damageIsAbsolute;
 	}
-	std::optional<Entity> DamageSource::getImmediateSource()
+	Entity* DamageSource::getImmediateSource()
 	{
 		return getTrueSource();
 	}
-	std::optional<Entity> DamageSource::getTrueSource()
+	Entity* DamageSource::getTrueSource()
 	{
 		return {};
 	}
@@ -115,19 +117,19 @@ namespace DamageSource
 		fireDamage = true;
 		return *this;
 	}
-	ITextComponent DamageSource::getDeathMessage(EntityLivingBase entityLivingBaseIn)
+	ITextComponent* DamageSource::getDeathMessage(EntityLivingBase* entityLivingBaseIn)
 	{
-		EntityLivingBase entitylivingbase = entityLivingBaseIn.getAttackingEntity();
+		EntityLivingBase* entitylivingbase = entityLivingBaseIn->getAttackingEntity();
 		std::string s = "death.attack." + damageType;
 		std::string s1 = s + ".player";
-		return I18n.canTranslate(s1) ? new TextComponentTranslation(s1, new Object[]{ entityLivingBaseIn.getDisplayName(), entitylivingbase.getDisplayName() }) : new TextComponentTranslation(s, new Object[]{ entityLivingBaseIn.getDisplayName() });
+		return I18n::canTranslate(s1) ? new TextComponentTranslation(s1, new Object[]{ entityLivingBaseIn->getDisplayName(), entitylivingbase.getDisplayName() }) : new TextComponentTranslation(s, new Object[]{ entityLivingBaseIn->getDisplayName() });
 	}
 	bool DamageSource::isFireDamage() const
 	{
 		return fireDamage;
 	}
-	std::string DamageSource::getDamageType()
-	{
+	std::string DamageSource::getDamageType() const
+    {
 		return damageType;
 	}
 	DamageSource DamageSource::setDifficultyScaled()
@@ -135,8 +137,8 @@ namespace DamageSource
 		difficultyScaled = true;
 		return *this;
 	}
-	bool DamageSource::isDifficultyScaled()
-	{
+	bool DamageSource::isDifficultyScaled() const
+    {
 		return difficultyScaled;
 	}
 	bool DamageSource::isMagicDamage() const
@@ -151,7 +153,7 @@ namespace DamageSource
 	bool DamageSource::isCreativePlayer()
 	{
 		auto entity = getTrueSource();
-		return instanceof<EntityPlayer>(entity) && ((EntityPlayer)entity).capabilities.isCreativeMode;
+		return Util::instanceof<EntityPlayer>(entity) && ((EntityPlayer*)entity)->capabilities.isCreativeMode;
 	}
 	std::optional<Vec3d> DamageSource::getDamageLocation()
 	{

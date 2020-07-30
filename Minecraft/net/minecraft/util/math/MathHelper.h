@@ -1,10 +1,9 @@
 #pragma once
+#include "pcg_random.hpp"
 #include "../../../../../crossguid/include/crossguid/guid.hpp"
 #include <cstdint>
 #include <cstring>
 #include <vector>
-
-#include "pcg_random.hpp"
 
 class Vec3i;
 

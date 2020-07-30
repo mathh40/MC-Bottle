@@ -1,49 +1,55 @@
 #pragma once
+#include "../world/Explosion.h"
+
 #include <string>
-#include <unordered_map>
 #include <optional>
+
+class EntityArrow;
+class EntityPlayer;
+class Entity;
+class EntityLivingBase;
+class EntityFireball;
 
 namespace DamageSource
 {
-
 	class DamageSource
 	{
 	public:
-		explicit DamageSource(std::string damageTypeIn);
+		explicit DamageSource(std::string_view damageTypeIn);
 		std::string damageType;
-		DamageSource causeMobDamage(EntityLivingBase mob);
-		DamageSource causeIndirectDamage(Entity source, EntityLivingBase indirectEntityIn);
-		DamageSource causePlayerDamage(EntityPlayer player);
-		DamageSource causeArrowDamage(EntityArrow arrow, std::optional<Entity> indirectEntityIn);
-		DamageSource causeFireballDamage(EntityFireball fireball, std::optional<Entity> indirectEntityIn);
-		DamageSource causeThrownDamage(Entity source, std::optional<Entity> indirectEntityIn);
-		DamageSource causeIndirectMagicDamage(Entity source, std::optional<Entity> indirectEntityIn);
-		DamageSource causeThornsDamage(Entity source);
+		DamageSource causeMobDamage(EntityLivingBase* mob);
+		DamageSource causeIndirectDamage(Entity* source, EntityLivingBase* indirectEntityIn);
+		DamageSource causePlayerDamage(EntityPlayer* player);
+		DamageSource causeArrowDamage(EntityArrow* arrow, Entity* indirectEntityIn);
+		DamageSource causeFireballDamage(EntityFireball* fireball,Entity* indirectEntityIn);
+		DamageSource causeThrownDamage(Entity* source, Entity* indirectEntityIn);
+		DamageSource causeIndirectMagicDamage(Entity* source, Entity* indirectEntityIn);
+		DamageSource causeThornsDamage(Entity* source);
 		DamageSource causeExplosionDamage(std::optional<Explosion> explosionIn);
-		DamageSource causeExplosionDamage(std::optional<EntityLivingBase> entityLivingBaseIn);
+		DamageSource causeExplosionDamage(EntityLivingBase* entityLivingBaseIn);
 		bool isProjectile() const;
 		DamageSource setProjectile();
 		bool isExplosion() const;
 		DamageSource setExplosion();
 		bool isUnblockable() const;
-		float getHungerDamage();
+		float getHungerDamage() const;
 		bool canHarmInCreative() const;
-		bool isDamageAbsolute();
-		std::optional<Entity> getImmediateSource();
-		std::optional<Entity> getTrueSource();
+		bool isDamageAbsolute() const;
+		Entity* getImmediateSource();
+		Entity* getTrueSource();
 		DamageSource setDamageBypassesArmor();
 		DamageSource setDamageAllowedInCreativeMode();
 		DamageSource setDamageIsAbsolute();
 		DamageSource setFireDamage();
-		ITextComponent getDeathMessage(EntityLivingBase entityLivingBaseIn);
+		ITextComponent* getDeathMessage(EntityLivingBase entityLivingBaseIn);
 		bool isFireDamage() const;
-		std::string getDamageType();
+		std::string getDamageType() const;
 		DamageSource setDifficultyScaled();
-		bool isDifficultyScaled();
+		bool isDifficultyScaled() const;
 		bool isMagicDamage() const;
 		DamageSource setMagicDamage();
 		bool isCreativePlayer();
-		std::optional<Vec3d> getDamageLocation();
+        std::optional<Vec3d> getDamageLocation();
 	private:
 		bool Unblockable = false;
 		bool DamageAllowedInCreativeMode = false;
