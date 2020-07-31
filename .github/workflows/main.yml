@@ -3,10 +3,10 @@ name: CMake Build Matrix
 on: [push, pull_request]
 
 env:
-  CMAKE_VERSION: 3.16.2
-  NINJA_VERSION: 1.9.0
+  CMAKE_VERSION: 3.18.0
+  NINJA_VERSION: 1.10.0
   BUILD_TYPE: Release
-  CCACHE_VERSION: 3.7.7
+  CCACHE_VERSION: 3.7.11
 
 jobs:
   build:
@@ -145,6 +145,7 @@ jobs:
               -D WARNINGS_AS_ERRORS:BOOL=0
               -D DYNAMICBITSET_FORMAT_TARGET:BOOL=1
               -D ENABLE_DOXYGEN:BOOL=0
+              -D ENABLE_CLANG_TIDY:BOOL=1
             RESULT_VARIABLE result
           )
           if (NOT result EQUAL 0)
