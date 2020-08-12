@@ -4,7 +4,7 @@
 class BlockStateBase :public IBlockState
 {
 public:
-	IBlockState& cycleProperty(IProperty& property);
+	IBlockState* cycleProperty(IProperty* property)override;
 	std::string toString();
 protected:
 	template<typename T>

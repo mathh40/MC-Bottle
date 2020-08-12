@@ -32,6 +32,8 @@ enum class EnumOffsetType {
 	XYZ
 };
 
+class CreativeTabs;
+class ITooltipFlag;
 class Block
 {
 public:
@@ -142,7 +144,7 @@ public:
 	Vec3d getOffset(IBlockState* state, IBlockAccess worldIn, BlockPos pos);
 	SoundType getSoundType();
 	std::string toString() const;
-	void addInformation(ItemStack stack, std::optional<World> worldIn, std::vector<> tooltip, ITooltipFlag flagIn);
+	void addInformation(ItemStack stack, std::optional<World> worldIn, std::vector<std::string> tooltip, ITooltipFlag* flagIn);
 	static void registerBlocks();
 
 	Block(Material blockMaterialIn, MapColor blockMapColorIn);

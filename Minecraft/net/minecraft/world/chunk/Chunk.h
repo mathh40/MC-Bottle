@@ -208,7 +208,7 @@ label33:
 
 		while (true) 
 		{
-			Entity t;
+			Entity* t;
 			do 
 			{
 				do 
@@ -218,9 +218,9 @@ label33:
 						goto label33;
 					}
 
-					t = (Entity)var8.next();
+					t = (Entity*)var8.next();
 				} 
-				while (!t.getEntityBoundingBox().intersects(aabb));
+				while (!t->getEntityBoundingBox().intersects(aabb));
 			} 
 			while (filter != null && !filter.apply(t));
 

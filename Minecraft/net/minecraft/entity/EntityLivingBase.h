@@ -73,11 +73,11 @@ public:
     bool getAlwaysRenderNameTagForRender() override;
     void travel(float strafe, float vertical, float forward);
     float getAIMoveSpeed() const;
-    void setAIMoveSpeed(float speedIn);
+    virtual void setAIMoveSpeed(float speedIn);
     bool attackEntityAsMob(Entity* entityIn);
     bool isPlayerSleeping();
     void onUpdate() override;
-    void onLivingUpdate();
+    virtual void onLivingUpdate();
     void dismountRidingEntity() override;
     void updateRidden() override;
     void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int32_t posRotationIncrements, bool teleport) override;
@@ -143,13 +143,13 @@ public:
     float randomYawVelocity;
 protected:
     void entityInit() override;
-    void applyEntityAttributes();
+    virtual void applyEntityAttributes();
     void updateFallState(double y, bool onGroundIn, IBlockState* state, const BlockPos& pos) override;
     void frostWalk(const BlockPos& pos);
     void onDeathUpdate();
     bool canDropLoot();
     int32_t decreaseAirSupply(int32_t air);
-    int32_t getExperiencePoints(EntityPlayer* player);
+    virtual int32_t getExperiencePoints(EntityPlayer* player);
     bool isPlayer();
     void playEquipSound(ItemStack stack);
     void updatePotionEffects();
@@ -159,13 +159,13 @@ protected:
     void onChangedPotionEffect(PotionEffect id, bool p_70695_2_);
     void onFinishedPotionEffect(PotionEffect effect);
     void blockUsingShield(EntityLivingBase* p_190629_1_);
-    void playHurtSound(DamageSource::DamageSource source);
-    void dropLoot(bool wasRecentlyHit, int32_t lootingModifier, DamageSource::DamageSource source);
+    virtual void playHurtSound(DamageSource::DamageSource source);
+    virtual void dropLoot(bool wasRecentlyHit, int32_t lootingModifier, DamageSource::DamageSource source);
     void dropEquipment(bool wasRecentlyHit, int32_t lootingModifier);
     SoundEvent getHurtSound(DamageSource::DamageSource damageSourceIn);
     SoundEvent getDeathSound();
     SoundEvent getFallSound(int32_t heightIn);
-    void dropFewItems(bool wasRecentlyHit, int32_t lootingModifier);
+    virtual void dropFewItems(bool wasRecentlyHit, int32_t lootingModifier);
     void damageArmor(float damage);
     void damageShield(float damage);
     float applyArmorCalculations(DamageSource::DamageSource source, float damage);
@@ -181,8 +181,8 @@ protected:
     void handleJumpWater();
     void handleJumpLava();
     float getWaterSlowDown();
-    float updateDistance(float p_110146_1_, float p_110146_2_);
-    void updateEntityActionState();
+    virtual float updateDistance(float p_110146_1_, float p_110146_2_);
+    virtual void updateEntityActionState();
     void collideWithNearbyEntities();
     void collideWithEntity(Entity* entityIn);
     void markVelocityChanged() override;

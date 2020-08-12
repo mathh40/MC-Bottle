@@ -178,7 +178,7 @@ public:
     void setVelocity(double x, double y, double z);
     virtual void handleStatusUpdate(std::byte id);
     virtual void performHurtAnimation();
-    std::vector<> getHeldEquipment();
+    virtual std::vector<> getHeldEquipment();
     std::vector<> getArmorInventoryList();
     std::vector<> getEquipmentAndArmor();
     void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack);
@@ -219,7 +219,7 @@ public:
     bool isNonBoss();
     float getExplosionResistance(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn);
     bool canExplosionDestroyBlock(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn, float p_174816_5_);
-    int32_t getMaxFallHeight();
+    virtual int32_t getMaxFallHeight();
     Vec3d getLastPortalVec() const;
     EnumFacing getTeleportDirection() const;
     bool doesEntityNotTriggerPressurePlate();

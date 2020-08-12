@@ -6,12 +6,13 @@
 #include "EnumActionResult.h"
 #include "EnumRarity.h"
 #include "ItemCompass.h"
-#include "NBTTagCompound.h"
 #include "../block/Block.h"
 #include "text/ITextComponent.h"
 
 class EntityPlayerMP;
 class DataFixer;
+class NBTTagList;
+class NBTBase;
 
 class ItemStack
 {
@@ -100,8 +101,7 @@ public:
     void shrink(int32_t quantity);
 
 
-    static ItemStack EMPTY = ItemStack(nullptr);
-    static DecimalFormat DECIMALFORMAT = DecimalFormat("#.##");
+    static ItemStack EMPTY;
 private:
     void updateEmptyState();
     bool isItemStackEqual(ItemStack other);

@@ -1,12 +1,12 @@
 #pragma once
-#include <crossguid/guid.hpp>
+#include "../../../../pcg-cpp/pcg_random.hpp"
+#include "../entity/ai/attributes/AttributeModifier.h"
+#include "../inventory/EntityEquipmentSlot.h"
 #include "ActionResult.h"
-#include "EnumAction.h"
 #include "EnumActionResult.h"
 #include "EnumRarity.h"
 #include "IItemPropertyGetter.h"
 #include "ResourceLocation.h"
-#include "../../../../pcg-cpp/pcg_random.hpp"
 #include "math/RayTraceResult.h"
 #include "registry/RegistryNamespaced.h"
 
@@ -19,6 +19,7 @@ class EnumFacing;
 class NBTTagCompound;
 class Block;
 
+class IRegistry;
 class Item
 {
 public:

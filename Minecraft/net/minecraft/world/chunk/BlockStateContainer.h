@@ -12,8 +12,8 @@ public:
 	int32_t onResize(int32_t bits, IBlockState* state) override;
 	void set(int32_t x, int32_t y, int32_t z, IBlockState* state);
 	IBlockState* get(int32_t x, int32_t y, int32_t z);
-	void read(PacketBuffer buf);
-	void write(PacketBuffer buf);
+	void read(const PacketBuffer& buf);
+	void write(const PacketBuffer& buf);
 	std::optional<NibbleArray> getDataForNBT(std::vector<unsigned char> blockIds, NibbleArray data);
 	void setDataFromNBT(std::vector<unsigned char> blockIds, NibbleArray data, std::optional<NibbleArray> blockIdExtension);
 	int32_t getSerializedSize();

@@ -712,3 +712,4 @@ void Container::slotChangedCraftingGrid(World *p_192389_1_, EntityPlayer *p_1923
         entityplayermp->connection.sendPacket(SPacketSetSlot(windowId, 0, itemstack));
     }
 }
+Container::~Container() {}

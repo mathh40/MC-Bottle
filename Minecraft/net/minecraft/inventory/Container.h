@@ -42,6 +42,7 @@ public:
     bool canDragIntoSlot(Slot slotIn);
     int32_t calcRedstone(TileEntity* te) const;
     int32_t calcRedstoneFromInventory(IInventory* inv) const;
+    virtual ~Container();
 
     std::vector<ItemStack> inventoryItemStacks;
     std::vector<std::optional<Slot>> inventorySlots;

@@ -11,6 +11,9 @@
 #include "EnumDifficulty.h"
 #include "WorldType.h"
 #include "WorldSettings.h"
+#include "../pathfinding/PathWorldListener.h"
+#include "../scoreboard/Scoreboard.h"
+#include "../tileentity/TileEntity.h"
 #include "biome/Biome.h"
 #include "biome/BiomeProvider.h"
 #include "chunk/Chunk.h"
@@ -21,6 +24,8 @@
 #include "../village/VillageCollection.h"
 
 
+class Profiler;
+class Packet;
 class StructureBoundingBox;
 class WorldSettings;
 class IWorldEventListener;
@@ -167,9 +172,9 @@ public:
 	template<class Class, typename Predicate>
 	std::vector<Entity*> getPlayers(Predicate filter);
 	template<class Class>
-	std::vector<Entity*> getEntitiesWithinAABB(AxisAlignedBB& bb);
+	std::vector<Class*> getEntitiesWithinAABB(const AxisAlignedBB& bb);
 	template<class Class, typename Predicate>
-	std::vector<Entity*> getEntitiesWithinAABB(AxisAlignedBB& aabb, std::optional<Predicate> filter);
+	std::vector<Class*> getEntitiesWithinAABB(const AxisAlignedBB& aabb, std::optional<Predicate> filter);
 	template<class Class>
 	Entity* findNearestEntityWithinAABB(AxisAlignedBB& aabb, Entity* closestTo);
 	Entity* getEntityByID(int32_t id);
@@ -344,13 +349,13 @@ std::vector<Entity*> World::getPlayers(Predicate filter)
 }
 
 template <class Class>
-std::vector<Entity*> World::getEntitiesWithinAABB(AxisAlignedBB& bb)
+std::vector<Class*> World::getEntitiesWithinAABB(const AxisAlignedBB& bb)
 {
 	return getEntitiesWithinAABB<Class>(bb, EntitySelectors::NOT_SPECTATING);
 }
 
 template <class Class, typename Predicate>
-std::vector<Entity*> World::getEntitiesWithinAABB(AxisAlignedBB& aabb, std::optional<Predicate> filter)
+std::vector<Class*> World::getEntitiesWithinAABB(const AxisAlignedBB& aabb, std::optional<Predicate> filter)
 {
 	auto j2 = MathHelper::floor((aabb.getminX() - 2.0) / 16.0);
 	auto k2 = MathHelper::ceil((aabb.getmaxX() + 2.0) / 16.0);
@@ -450,16 +455,16 @@ EntityPlayer* World::getNearestAttackablePlayer(double posX, double posY, double
 
 	for (auto entityplayer1 : playerEntities)
 	{
-		if (!entityplayer1.capabilities.disableDamage && entityplayer1.isEntityAlive() && !entityplayer1.isSpectator() && (!predicate || predicate(entityplayer1))) 
+		if (!entityplayer1->capabilities.disableDamage && entityplayer1->isEntityAlive() && !entityplayer1->isSpectator() && (!predicate || predicate(entityplayer1))) 
 		{
-			double d1 = entityplayer1.getDistanceSq(posX, entityplayer1.posY, posZ);
+			double d1 = entityplayer1->getDistanceSq(posX, entityplayer1->posY, posZ);
 			double d2 = maxXZDistance;
-			if (entityplayer1.isSneaking()) {
+			if (entityplayer1->isSneaking()) {
 				d2 = maxXZDistance * 0.800000011920929;
 			}
 
-			if (entityplayer1.isInvisible()) {
-				float f = entityplayer1.getArmorVisibility();
+			if (entityplayer1->isInvisible()) {
+				float f = entityplayer1->getArmorVisibility();
 				if (f < 0.1F) {
 					f = 0.1F;
 				}
@@ -471,7 +476,7 @@ EntityPlayer* World::getNearestAttackablePlayer(double posX, double posY, double
 				d2 *= (Double)MoreObjects.firstNonNull(playerToDouble(entityplayer1), 1.0);
 			}
 
-			if ((maxYDistance < 0.0 || MathHelper::abs(entityplayer1.posY - posY) < maxYDistance * maxYDistance) && (maxXZDistance < 0.0 || d1 < d2 * d2) && (d0 == -1.0 || d1 < d0)) 
+			if ((maxYDistance < 0.0 || MathHelper::abs(entityplayer1->posY - posY) < maxYDistance * maxYDistance) && (maxXZDistance < 0.0 || d1 < d2 * d2) && (d0 == -1.0 || d1 < d0)) 
 			{
 				d0 = d1;
 				entityplayer = entityplayer1;

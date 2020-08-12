@@ -12,6 +12,8 @@
 #include "text/event/HoverEvent.h"
 #include "text/translation/I18n.h"
 
+ItemStack ItemStack::EMPTY = ItemStack(nullptr);
+
 ItemStack::ItemStack(const Block *blockIn)
     :ItemStack(blockIn,1)
 {
@@ -662,16 +664,16 @@ std::vector<std::string> ItemStack::getTooltip(EntityPlayer* playerIn, ITooltipF
 
                 if (flag) 
                 {
-                    list.push_back(" " + I18n::translateToLocalFormatted("attribute.modifier.equals." + attributemodifier.getOperation(), DECIMALFORMAT.format(d1), I18n::translateToLocal("attribute.name." + entry.getKey())));
+                    list.push_back(" " + I18n::translateToLocalFormatted("attribute.modifier.equals." + attributemodifier.getOperation(), fmt::format("{:.{}f}",d1, 2), I18n::translateToLocal("attribute.name." + entry.getKey())));
                 }
                 else if (d0 > 0.0) 
                 {
-                    list.push_back(TextFormatting::BLUE + " " + I18n::translateToLocalFormatted("attribute.modifier.plus." + attributemodifier.getOperation(), DECIMALFORMAT.format(d1), I18n::translateToLocal("attribute.name." + entry.getKey())));
+                    list.push_back(TextFormatting::BLUE + " " + I18n::translateToLocalFormatted("attribute.modifier.plus." + attributemodifier.getOperation(),  fmt::format("{:.{}f}",d1, 2), I18n::translateToLocal("attribute.name." + entry.getKey())));
                 }
                 else if (d0 < 0.0) 
                 {
                     d1 *= -1.0;
-                    list.push_back(TextFormatting::RED + " " + I18n::translateToLocalFormatted("attribute.modifier.take." + attributemodifier.getOperation(), DECIMALFORMAT.format(d1), I18n::translateToLocal("attribute.name." + entry.getKey())));
+                    list.push_back(TextFormatting::RED + " " + I18n::translateToLocalFormatted("attribute.modifier.take." + attributemodifier.getOperation(),  fmt::format("{:.{}f}",d1, 2), I18n::translateToLocal("attribute.name." + entry.getKey())));
                 }
             }
         }

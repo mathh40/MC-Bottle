@@ -11,7 +11,7 @@ private:
     double rota;
     long lastUpdateTick;
     double wobble(World *worldIn, double p_185093_2_);
-    double CompassProperty::getFrameRotation(EntityItemFrame* p_185094_1_);
+    double getFrameRotation(EntityItemFrame* p_185094_1_);
     double getSpawnToAngle(World *p_185092_1_, Entity *p_185092_2_);
 };
 

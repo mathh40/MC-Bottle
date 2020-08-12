@@ -36,9 +36,9 @@ namespace std {
 	{
 		size_t operator()(const NBTTagList & x) const noexcept
 		{
-			auto hash = 0;
+			size_t hash = 0;
 
-			for (auto byte : x.getTagList()) {
+			for (const auto& byte : x.getTagList()) {
 				hash = hash * 31 + std::hash <NBTBase>{}(*byte);
 			}
 

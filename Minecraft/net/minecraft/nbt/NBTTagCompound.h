@@ -1,11 +1,12 @@
 #pragma once
+#include "NBTBase.h"
+#include "NBTTagByte.h"
+#include "NBTTagList.h"
+#include <ByteBuffer.h>
 #include <memory>
 #include <regex>
 #include <spdlog/logger.h>
 #include <unordered_map>
-#include "NBTBase.h"
-#include "NBTTagByte.h"
-#include "NBTTagList.h"
 
 
 namespace xg
@@ -84,7 +85,7 @@ namespace std
     {
         size_t operator()(const NBTTagCompound &x) const noexcept
         {
-            auto hash = 0;
+            size_t hash = 0;
 
             for (auto byte : x.getCompoundMap())
             {

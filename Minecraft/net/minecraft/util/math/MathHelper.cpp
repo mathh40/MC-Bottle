@@ -137,13 +137,13 @@ namespace MathHelper
 
 	float nextFloat(pcg32& random, float minimum, float maximum)
 	{
-		std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
+		static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
 		return minimum >= maximum ? minimum : uniform_dist(random) * (maximum - minimum) + minimum;
 	}
 
 	double nextDouble(pcg32& random, double minimum, double maximum)
 	{
-		std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
+		static std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
 		return minimum >= maximum ? minimum : uniform_dist(random) * (maximum - minimum) + minimum;
 	}
 
