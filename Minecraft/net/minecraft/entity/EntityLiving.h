@@ -7,6 +7,15 @@
 #include "ai/EntityLookHelper.h"
 #include "ai/EntityMoveHelper.h"
 
+class IEntityLivingData;
+
+enum SpawnPlacementType {
+    ON_GROUND,
+    IN_AIR,
+    IN_WATER
+};
+
+
 class EntityLiving :public EntityLivingBase {
 public:
     EntityLiving(World* worldIn);
@@ -38,13 +47,41 @@ public:
     int32_t getVerticalFaceSpeed();
     int32_t getHorizontalFaceSpeed();
     void faceEntity(Entity* entityIn, float maxYawIncrease, float maxPitchIncrease);
-    bool getCanSpawnHere();
+    virtual bool getCanSpawnHere();
     bool isNotColliding();
     float getRenderSizeModifier();
     int32_t getMaxSpawnedInChunk();
     int32_t getMaxFallHeight() override;
     std::vector<ItemStack>& getHeldEquipment() override;
     std::vector<ItemStack>& getArmorInventoryList() override; 
+    ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) override;
+    void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) override;
+    static EntityEquipmentSlot getSlotForItemStack(ItemStack stack);
+    static Item* getArmorByChance(EntityEquipmentSlot slotIn, int32_t chance);
+    IEntityLivingData* onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData* livingdata);
+    bool canBeSteered();
+    void enablePersistence();
+    void setDropChance(EntityEquipmentSlot slotIn, float chance);
+    bool canPickUpLoot() const;
+    void setCanPickUpLoot(bool canPickup);
+    bool isNoDespawnRequired() const;
+    bool processInitialInteract(EntityPlayer* player, EnumHand hand) final;
+    void clearLeashed(bool sendPacket, bool dropLead);
+    bool canBeLeashedTo(EntityPlayer* player);
+    bool getLeashed() const;
+    Entity* getLeashHolder() const;
+    void setLeashHolder(Entity* entityIn, bool sendAttachNotification);
+    bool startRiding(Entity* entityIn, bool force) override;
+    bool replaceItemInInventory(int32_t inventorySlot, ItemStack itemStackIn) override;
+    bool canPassengerSteer() override;
+    static bool isItemStackInSlot(EntityEquipmentSlot slotIn, ItemStack stack);
+    bool isServerWorld();
+    void setNoAI(bool disable);
+    void setLeftHanded(bool leftHanded);
+    bool isAIDisabled();
+    bool isLeftHanded();
+    EnumHandSide getPrimaryHand() override;
+
 
     int32_t livingSoundTime;
 protected:
@@ -67,7 +104,11 @@ protected:
     void despawnEntity();
     void updateEntityActionState() override;
     void updateAITasks();
-
+    void dropEquipment(bool wasRecentlyHit, int32_t lootingModifier) override;
+    void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty);
+    void setEnchantmentBasedOnDifficulty(DifficultyInstance difficulty);
+    virtual bool processInteract(EntityPlayer* player, EnumHand hand);
+    virtual void updateLeashedState();
 
 
     int32_t experienceValue;
@@ -81,6 +122,9 @@ protected:
 private:
     void applyEntityAI();
     float updateRotation(float angle, float targetAngle, float maxIncrease) const;
+    void recreateLeash();
+
+
 
     static DataParameter AI_FLAGS;
     EntityLookHelper lookHelper;
@@ -89,7 +133,7 @@ private:
     EntitySenses senses;
     std::vector<ItemStack> inventoryHands;
     std::vector<ItemStack> inventoryArmor;
-    bool canPickUpLoot;
+    bool bcanPickUpLoot;
     bool persistenceRequired;
     std::unordered_map<PathNodeType,float> mapPathPriority;
     std::optional<ResourceLocation> deathLootTable;

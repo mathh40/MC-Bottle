@@ -73,7 +73,7 @@ namespace Util
 
 	int64_t currentTimeMillis();
 
-	std::string_view toLowerCase(std::string_view str, std::locale& loc);
+	std::string_view toLowerCase(std::string_view str, const std::locale& loc);
 
 	std::vector<std::string> split(std::string_view s, std::string_view delimiter);
 	bool endsWith(std::string_view s, std::string_view suffix);

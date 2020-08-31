@@ -1,9 +1,13 @@
 #include "EnumFacing.h"
+
+#include "../entity/EntityLivingBase.h"
+
 #include <optional>
 #include <algorithm>
 #include <random>
 #include <array>
 #include "../world/chunk/Chunk.h"
+#include "math/MathHelper.h"
 
 
 Plane Plane::HORIZONTAL = Plane("HORIZONTAL");
@@ -24,8 +28,7 @@ EnumFacing EnumFacing::WEST = EnumFacing(4, 5, 1, "west", AxisDirection::NEGATIV
 EnumFacing EnumFacing::EAST = EnumFacing(5, 4, 3, "east", AxisDirection::POSITIVE, Axis::X, Vec3i(1, 0, 0));
 
 
-std::vector<EnumFacing> Plane::facings()
-{
+std::vector<EnumFacing> Plane::facings() const {
 	if(name == "HORIZONTAL")
 	{
 		return { EnumFacing::NORTH, EnumFacing::EAST, EnumFacing::SOUTH, EnumFacing::WEST };
@@ -45,16 +48,48 @@ Plane::Plane(const std::string& name)
 {
 }
 
-EnumFacing Plane::random(pcg32& rand)
-{
+EnumFacing Plane::random(pcg32& rand) const {
 	auto aenumfacing = facings();
-	std::uniform_int_distribution<int> pla(0, aenumfacin.size() - 1);
+	std::uniform_int_distribution<int> pla(0, aenumfacing.size() - 1);
 	return aenumfacing[pla(rand)];
 }
 
 Axis::Axis(std::string name, Plane plane)
 	:name(name), plane(plane)
 {
+}
+
+std::optional<Axis> Axis::byName(std::string_view name) {
+	std::string nam(Util::toLowerCase(name, std::locale()));
+	if(name.empty()) {
+	    return std::nullopt;
+	}
+
+	return NAME_LOOKUP[nam];
+}
+
+std::string Axis::getName2() {
+    return name;
+}
+
+bool Axis::isVertical() {
+    return plane == Plane::VERTICAL;
+}
+
+bool Axis::isHorizontal() {
+    return plane == Plane::HORIZONTAL;
+}
+
+std::string Axis::toString() {
+    return name;
+}
+
+Plane Axis::getPlane() {
+    return plane;
+}
+
+std::string Axis::getName() {
+    return name;
 }
 
 bool operator==(const Plane& lhs, const Plane& rhs)
@@ -77,23 +112,19 @@ AxisDirection::AxisDirection(int offset, std::string description)
 {
 }
 
-int AxisDirection::getOffset()
-{
+int32_t AxisDirection::getOffset() const {
 	return offset;
 }
 
-int EnumFacing::getIndex()
-{
+int32_t EnumFacing::getIndex() const {
 	return index;
 }
 
-int EnumFacing::getHorizontalIndex()
-{
+int32_t EnumFacing::getHorizontalIndex() const {
 	return horizontalIndex;
 }
 
-AxisDirection EnumFacing::getAxisDirection()
-{
+AxisDirection EnumFacing::getAxisDirection() const {
 	return axisDirection;
 }
 
@@ -101,25 +132,25 @@ EnumFacing EnumFacing::rotateAround(Axis axis)
 {
 	switch (axis) {
 	case Axis::X:
-		if (this != EnumFacing::WEST && this != EnumFacing::EAST) {
+		if (*this != EnumFacing::WEST && *this != EnumFacing::EAST) {
 			return rotateX();
 		}
 
-		return this;
+		return *this;
 	case Axis::Y:
-		if (this != EnumFacing::UP && this != EnumFacing::DOWN) {
+		if (*this != EnumFacing::UP && *this != EnumFacing::DOWN) {
 			return rotateY();
 		}
 
-		return this;
+		return *this;
 	case Axis::Z:
-		if (this != EnumFacing::NORTH && this != EnumFacing::SOUTH) {
+		if (*this != EnumFacing::NORTH && *this != EnumFacing::SOUTH) {
 			return rotateZ();
 		}
 
-		return this;
+		return *this;
 	default:
-		throw std::logic_error("Unable to get CW facing for axis " + axis);
+		throw std::logic_error("Unable to get CW facing for axis " + name);
 	}
 }
 
@@ -176,18 +207,15 @@ EnumFacing EnumFacing::rotateYCCW() const
 	}
 }
 
-int EnumFacing::getXOffset()
-{
+int EnumFacing::getXOffset() const {
 	return axis == Axis::X ? axisDirection.getOffset() : 0;
 }
 
-int EnumFacing::getYOffset()
-{
+int EnumFacing::getYOffset() const {
 	return axis == Axis::Y ? axisDirection.getOffset() : 0;
 }
 
-int EnumFacing::getZOffset()
-{
+int EnumFacing::getZOffset() const {
 	return axis == Axis::Z ? axisDirection.getOffset() : 0;
 }
 
@@ -235,8 +263,7 @@ EnumFacing EnumFacing::fromAngle(double angle)
 	return byHorizontalIndex(MathHelper::floor(angle / 90.0 + 0.5) & 3);
 }
 
-float EnumFacing::getHorizontalAngle()
-{
+float EnumFacing::getHorizontalAngle() const {
 	return (float)((horizontalIndex & 3) * 90);
 }
 
@@ -255,7 +282,7 @@ EnumFacing EnumFacing::getFacingFromVector(float x, float y, float z)
 
 	for (int var7 = 0; var7 < var6; ++var7) {
 		EnumFacing enumfacing1 = var5[var7];
-		float f1 = x * (float)enumfacing1.directionVec.getX() + y * (float)enumfacing1.directionVec.getY() + z * (float)enumfacing1.directionVec.getZ();
+		float f1 = x * (float)enumfacing1.directionVec.getx() + y * (float)enumfacing1.directionVec.gety() + z * (float)enumfacing1.directionVec.getz();
 		if (f1 > f) {
 			f = f1;
 			enumfacing = enumfacing1;
@@ -265,17 +292,15 @@ EnumFacing EnumFacing::getFacingFromVector(float x, float y, float z)
 	return enumfacing;
 }
 
-std::string EnumFacing::toString()
-{
+std::string EnumFacing::toString() const {
 	return name;
 }
 
-std::string EnumFacing::getName()
-{
+std::string EnumFacing::getName() const {
 	return name;
 }
 
-EnumFacing EnumFacing::getFacingFromAxis(AxisDirection axisDirectionIn, EnumFacing.Axis axisIn)
+EnumFacing EnumFacing::getFacingFromAxis(AxisDirection axisDirectionIn, Axis axisIn)
 {
 	auto var2 = VALUES;
 	auto var3 = VALUES.size();
@@ -290,20 +315,20 @@ EnumFacing EnumFacing::getFacingFromAxis(AxisDirection axisDirectionIn, EnumFaci
 	throw std::logic_error("No such direction: " + axisDirectionIn + " " + axisIn);
 }
 
-EnumFacing EnumFacing::getDirectionFromEntityLiving(BlockPos pos, EntityLivingBase placer)
+EnumFacing EnumFacing::getDirectionFromEntityLiving(BlockPos pos, EntityLivingBase* placer)
 {
-	if (Math::abs(placer.posX - (double)((float)pos.getX() + 0.5F)) < 2.0 && Math::abs(placer.posZ - (double)((float)pos.getZ() + 0.5F)) < 2.0) {
-		double d0 = placer.posY + (double)placer.getEyeHeight();
-		if (d0 - (double)pos.getY() > 2.0) {
+	if (MathHelper::abs(placer->posX - (double)((float)pos.getx() + 0.5F)) < 2.0 && MathHelper::abs(placer->posZ - (double)((float)pos.getz() + 0.5F)) < 2.0) {
+		double d0 = placer->posY + (double)placer->getEyeHeight();
+		if (d0 - (double)pos.gety() > 2.0) {
 			return UP;
 		}
 
-		if ((double)pos.getY() - d0 > 0.0) {
+		if ((double)pos.gety() - d0 > 0.0) {
 			return DOWN;
 		}
 	}
 
-	return placer.getHorizontalFacing().getOpposite();
+	return placer->getHorizontalFacing().getOpposite();
 }
 
 Vec3i EnumFacing::getDirectionVec() const
@@ -328,24 +353,13 @@ EnumFacing& EnumFacing::operator=(const EnumFacing& other)
 	return *this;
 }
 
-EnumFacing::EnumFacing(const EnumFacing& other)
-{
-	index = other.index;
-	opposite = other.opposite;
-	horizontalIndex = other.horizontalIndex;
-	name = other.name;
-	axisDirection = other.axisDirection;
-	directionVec = other.directionVec;
-}
-
-EnumFacing::EnumFacing(int indexIn, int oppositeIn, int horizontalIndexIn, std::string nameIn, EnumFacing.AxisDirection axisDirectionIn, EnumFacing.Axis axisIn, Vec3i directionVecIn)
+EnumFacing::EnumFacing(int32_t indexIn, int32_t oppositeIn, int32_t horizontalIndexIn, std::string_view nameIn, AxisDirection axisDirectionIn, Axis axisIn, Vec3i directionVecIn)
 	:index(indexIn), horizontalIndex(horizontalIndexIn), opposite(oppositeIn), name(nameIn), axis(axisIn), axisDirection(axisDirectionIn), directionVec(directionVecIn)
 {
 	
 }
 
-EnumFacing EnumFacing::rotateX()
-{
+EnumFacing EnumFacing::rotateX() const {
 	if (name == "north")
 	{
 		return DOWN;
@@ -376,8 +390,7 @@ EnumFacing EnumFacing::rotateX()
 	}
 }
 
-EnumFacing EnumFacing::rotateZ()
-{
+EnumFacing EnumFacing::rotateZ() const {
 	if (name == "up")
 	{
 		return EAST;
@@ -422,7 +435,7 @@ void initEnumFacing()
 		}
 		auto name = enumfacing.getName2();
 		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
-		EnumFacing::NAME_LOOKUP.insert(name, enumfacing);
+		EnumFacing::NAME_LOOKUP.emplace(name, enumfacing);
 	}
 }
 

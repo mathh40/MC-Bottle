@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../../pcg-cpp/pcg_random.hpp"
+#include "../creativetab/CreativeTabs.h"
 #include "../entity/ai/attributes/AttributeModifier.h"
 #include "../inventory/EntityEquipmentSlot.h"
 #include "ActionResult.h"
@@ -18,13 +19,15 @@ enum class EnumHand;
 class EnumFacing;
 class NBTTagCompound;
 class Block;
-
+class ITooltipFlag;
+class CreativeTabs;
 class IRegistry;
 class Item
 {
 public:
 
     Item();
+    virtual ~Item();
     Item* setMaxStackSize(int32_t maxStackSize);
     virtual EnumActionResult onItemUse(EntityPlayer* player, World* worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ);
     virtual float getDestroySpeed(ItemStack stack, IBlockState* state);

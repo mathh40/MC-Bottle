@@ -75,7 +75,7 @@ std::optional<TextFormatting> TextFormatting::fromColorIndex(int32_t index)
 		return RESET;
 	}
 	else {
-		for(auto textformatting : format)
+		for(auto *textformatting : format)
 		{
 			if (textformatting->getColorIndex() == index) {
 				return *textformatting;
@@ -89,7 +89,7 @@ std::optional<TextFormatting> TextFormatting::fromColorIndex(int32_t index)
 std::vector<std::string> TextFormatting::getValidValues(bool isColor, bool isFancyStyling)
 {
 	std::vector<std::string> list;
-	for (auto textformatting : format) {
+	for (auto *textformatting : format) {
 		if ((!textformatting->isColor() || isColor) && (!textformatting->isFancyStyling() || isFancyStyling)) {
 			list.push_back(textformatting->getFriendlyName());
 		}
@@ -110,7 +110,7 @@ TextFormatting::TextFormatting(std::string formattingName, char formattingCodeIn
 }
 
 TextFormatting::TextFormatting(std::string formattingName, char formattingCodeIn, bool fancyStylingIn, int32_t colorIndex)
-	: name(formattingName), formattingCode(formattingCodeIn), fancyStyling(fancyStylingIn), colorIndex(colorIndex), controlString("§")
+	: name(formattingName), formattingCode(formattingCodeIn), fancyStyling(fancyStylingIn), colorIndex(colorIndex), controlString("\u00A7")
 {
 	format.push_back(this);
 	NAME_MAPPING.emplace(name, this);

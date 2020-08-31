@@ -1,17 +1,20 @@
 #include "Block.h"
+#include "../item/ItemBlock.h"
+#include "../util/BlockRenderLayer.h"
+#include "../util/Mirror.h"
 #include "../util/Util.h"
-#include "../util/math/BlockPos.h"
-#include "../util/EnumFacing.h"
+#include "../util/math/AxisAlignedBB.h"
 #include "../util/text/translation/I18n.h"
-#include "../util/math/MathHelper.h"
-#include "BlockAir.h"
+#include "../world/IBlockAccess.h"
+#include "../world/chunk/BlockStateContainer.h"
+#include <material/Material.h>
 
 ResourceLocation Block::AIR_ID("air");
 
 RegistryNamespacedDefaultedByKey< ResourceLocation, Block> Block::REGISTRY(AIR_ID);
 AxisAlignedBB Block::FULL_BLOCK_AABB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
 
-int32_t Block::getIdFromBlock(Block blockIn)
+int32_t Block::getIdFromBlock(Block* blockIn)
 {
 	return REGISTRY.getIDForObject(blockIn);
 }
@@ -22,24 +25,24 @@ int32_t Block::getStateId(IBlockState* state)
 	return getIdFromBlock(block) + (block.getMetaFromState(state) << 12);
 }
 
-Block& Block::getBlockById(int32_t id)
+Block* Block::getBlockById(int32_t id)
 {
 	auto block = REGISTRY.getObjectById(id).value();
 	return block;
 }
-IBlockState& Block::getStateById(int32_t id)
+IBlockState* Block::getStateById(int32_t id)
 {
 	int32_t i = id & 4095;
 	int32_t j = id >> 12 & 15;
-	return getBlockById(i).getStateFromMeta(j);
+	return getBlockById(i)->getStateFromMeta(j);
 }
 
-Block& Block::getBlockFromItem(std::optional<Item> itemIn)
+Block* Block::getBlockFromItem(Item* itemIn)
 {
-	return Util::instanceof<ItemBlock>(itemIn) ? ((ItemBlock)itemIn).getBlock() : Blocks.AIR;
+	return Util::instanceof<ItemBlock>(itemIn) ? ((ItemBlock*)itemIn)->getBlock() : Blocks::AIR;
 }
 
-std::optional<Block> Block::getBlockFromName(std::string_view name)
+Block* Block::getBlockFromName(std::string_view name)
 {
 	ResourceLocation resourcelocation(name);
 	if (REGISTRY.containsKey(resourcelocation)) {
@@ -53,10 +56,10 @@ std::optional<Block> Block::getBlockFromName(std::string_view name)
 
 bool Block::isTopSolid(IBlockState* state)
 {
-	return state.getMaterial().isOpaque() && state.isFullCube();
+	return state->getMaterial().isOpaque() && state->isFullCube();
 }
 
-bool Block::isFullBlock(IBlockState* state)
+bool Block::isFullBlock(IBlockState* state) const
 {
 	return fullBlock;
 }
@@ -66,22 +69,22 @@ bool Block::canEntitySpawn(IBlockState* state, Entity* entityIn)
 	return true;
 }
 
-uint16_t Block::getLightOpacity(IBlockState* state)
+uint16_t Block::getLightOpacity(IBlockState* state) const
 {
 	return lightOpacity;
 }
 
-bool Block::isTranslucent(IBlockState* state)
+bool Block::isTranslucent(IBlockState* state) const
 {
 	return translucent;
 }
 
-uint16_t Block::getLightValue(IBlockState* state)
+uint16_t Block::getLightValue(IBlockState* state) const
 {
 	return lightValue;
 }
 
-bool Block::getUseNeighborBrightness(IBlockState* state)
+bool Block::getUseNeighborBrightness(IBlockState* state) const
 {
 	return useNeighborBrightness;
 }
@@ -91,19 +94,19 @@ Material& Block::getMaterial(IBlockState* state)
 	return material;
 }
 
-MapColor& Block::getMapColor(IBlockState* state, IBlockAccess* worldIn, BlockPos pos)
+MapColor& Block::getMapColor(IBlockState* state, IBlockAccess* worldIn, const BlockPos& pos)
 {
 	return blockMapColor;
 }
 
-IBlockState& Block::getStateFromMeta(uint16_t meta)
+IBlockState* Block::getStateFromMeta(uint16_t meta)
 {
 	return getDefaultState();
 }
 
 uint16_t Block::getMetaFromState(IBlockState* state)
 {
-	if (state.getPropertyKeys().isEmpty()) {
+	if (state->getPropertyKeys().empty()) {
 		return 0;
 	}
 	else {
@@ -111,22 +114,22 @@ uint16_t Block::getMetaFromState(IBlockState* state)
 	}
 }
 
-IBlockState& Block::getActualState(IBlockState* state, IBlockAccess worldIn, BlockPos pos)
+IBlockState* Block::getActualState(IBlockState* state, IBlockAccess* worldIn, const BlockPos& pos)
 {
 	return state;
 }
 
-IBlockState& Block::withRotation(IBlockState* state, Rotation rot)
+IBlockState* Block::withRotation(IBlockState* state, Rotation& rot)
 {
 	return state;
 }
 
-IBlockState& Block::withMirror(IBlockState* state, Mirror mirrorIn)
+IBlockState* Block::withMirror(IBlockState* state, Mirror& mirrorIn)
 {
 	return state;
 }
 
-int32_t Block::quantityDroppedWithBonus(int fortune, pcg32& random)
+int32_t Block::quantityDroppedWithBonus(int32_t fortune, pcg32& random)
 {
 	return quantityDropped(random);
 }
@@ -134,14 +137,14 @@ int32_t Block::quantityDroppedWithBonus(int fortune, pcg32& random)
 void Block::registerBlocks()
 {
 	registerBlock(0, (ResourceLocation)AIR_ID, (BlockAir()).setTranslationKey("air"));
-	registerBlock(1, "stone", (BlockStone()).setHardness(1.5F).setResistance(10.0F).setSoundType(SoundType.STONE).setTranslationKey("stone"));
-	registerBlock(2, "grass", (BlockGrass()).setHardness(0.6F).setSoundType(SoundType.PLANT).setTranslationKey("grass"));
-	registerBlock(3, "dirt", (BlockDirt()).setHardness(0.5F).setSoundType(SoundType.GROUND).setTranslationKey("dirt"));
-	Block block = (Block(Material.ROCK)).setHardness(2.0F).setResistance(10.0F).setSoundType(SoundType.STONE).setTranslationKey("stonebrick").setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+	registerBlock(1, "stone", (BlockStone()).setHardness(1.5F).setResistance(10.0F).setSoundType(SoundType::STONE).setTranslationKey("stone"));
+	registerBlock(2, "grass", (BlockGrass()).setHardness(0.6F).setSoundType(SoundType::PLANT).setTranslationKey("grass"));
+	registerBlock(3, "dirt", (BlockDirt()).setHardness(0.5F).setSoundType(SoundType::GROUND).setTranslationKey("dirt"));
+	Block block = (Block(Material::ROCK)).setHardness(2.0F).setResistance(10.0F).setSoundType(SoundType::STONE).setTranslationKey("stonebrick").setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 	registerBlock(4, "cobblestone", block);
-	Block block1 = (BlockPlanks()).setHardness(2.0F).setResistance(5.0F).setSoundType(SoundType.WOOD).setTranslationKey("wood");
+	Block block1 = (BlockPlanks()).setHardness(2.0F).setResistance(5.0F).setSoundType(SoundType::WOOD).setTranslationKey("wood");
 	registerBlock(5, "planks", block1);
-	registerBlock(6, "sapling", (BlockSapling()).setHardness(0.0F).setSoundType(SoundType.PLANT).setTranslationKey("sapling"));
+	registerBlock(6, "sapling", (BlockSapling()).setHardness(0.0F).setSoundType(SoundType::PLANT).setTranslationKey("sapling"));
 	registerBlock(7, "bedrock", (BlockEmptyDrops(Material.ROCK)).setBlockUnbreakable().setResistance(6000000.0F).setSoundType(SoundType.STONE).setTranslationKey("bedrock").disableStats().setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
 	registerBlock(8, "flowing_water", (BlockDynamicLiquid(Material.WATER)).setHardness(100.0F).setLightOpacity(3).setTranslationKey("water").disableStats());
 	registerBlock(9, "water", (BlockStaticLiquid(Material.WATER)).setHardness(100.0F).setLightOpacity(3).setTranslationKey("water").disableStats());
@@ -408,7 +411,7 @@ void Block::registerBlocks()
 		for(auto reg : REGISTRY)
 		{
 			auto& block15 = reg.second;
-			if (block15.material == Material.AIR) {
+			if (block15.material == Material::AIR) {
 				block15.useNeighborBrightness = false;
 			}
 			else {
@@ -458,14 +461,14 @@ void Block::registerBlocks()
 Block::Block(Material blockMaterialIn, MapColor blockMapColorIn)
 {
 	enableStats = true;
-	blockSoundType = SoundType.STONE;
+	blockSoundType = SoundType::STONE;
 	blockParticleGravity = 1.0F;
 	slipperiness = 0.6F;
 	material = blockMaterialIn;
 	blockMapColor = blockMapColorIn;
 	blockState = createBlockState();
 	setDefaultState(blockState.getBaseState());
-	fullBlock = getDefaultState().isOpaqueCube();
+	fullBlock = getDefaultState()->isOpaqueCube();
 	lightOpacity = fullBlock ? 255 : 0;
 	translucent = !blockMaterialIn.blocksLight();
 }
@@ -526,47 +529,47 @@ Block& Block::setBlockUnbreakable()
 	return *this;
 }
 
-bool Block::isBlockNormalCube(IBlockState state)
+bool Block::isBlockNormalCube(IBlockState* state)
 {
-	return state.getMaterial().blocksMovement() && state.isFullCube();
+	return state->getMaterial().blocksMovement() && state->isFullCube();
 }
 
-bool Block::isNormalCube(IBlockState state)
+bool Block::isNormalCube(IBlockState* state)
 {
-	return state.getMaterial().isOpaque() && state.isFullCube() && !state.canProvidePower();
+	return state->getMaterial().isOpaque() && state->isFullCube() && !state->canProvidePower();
 }
 
-bool Block::causesSuffocation(IBlockState state)
+bool Block::causesSuffocation(IBlockState* state)
 {
-	return material.blocksMovement() && getDefaultState().isFullCube();
+	return material.blocksMovement() && getDefaultState()->isFullCube();
 }
 
-bool Block::isFullCube(IBlockState state)
+bool Block::isFullCube(IBlockState* state)
 {
 	return true;
 }
 
-bool Block::hasCustomBreakingProgress(IBlockState state)
+bool Block::hasCustomBreakingProgress(IBlockState* state)
 {
 	return false;
 }
 
-bool Block::isPassable(IBlockAccess worldIn, BlockPos pos)
+bool Block::isPassable(IBlockAccess* worldIn, const BlockPos& pos)
 {
 	return !material.blocksMovement();
 }
 
-EnumBlockRenderType Block::getRenderType(IBlockState state)
+EnumBlockRenderType Block::getRenderType(IBlockState* state)
 {
-	return EnumBlockRenderType.MODEL;
+	return EnumBlockRenderType::MODEL;
 }
 
-bool Block::isReplaceable(IBlockAccess worldIn, BlockPos pos)
+bool Block::isReplaceable(IBlockAccess* worldIn, const BlockPos& pos)
 {
 	return false;
 }
 
-float Block::getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
+float Block::getBlockHardness(IBlockState* blockState, World* worldIn, const BlockPos& pos)
 {
 	return blockHardness;
 }
@@ -593,99 +596,99 @@ void Block::addCollisionBoxToList(BlockPos pos, AxisAlignedBB entityBox, std::ve
 	if (blockBox) {
 		auto axisalignedbb = blockBox.value().offset(pos);
 		if (entityBox.intersects(axisalignedbb)) {
-			collidingBoxes.add(axisalignedbb);
+			collidingBoxes.emplace_back(axisalignedbb);
 		}
 	}
 }
 
-AxisAlignedBB& Block::getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+AxisAlignedBB& Block::getBoundingBox(IBlockState* state, IBlockAccess* source, const BlockPos& pos)
 {
 	return FULL_BLOCK_AABB;
 }
 
-int32_t Block::getPackedLightmapCoords(IBlockState state, IBlockAccess source, BlockPos pos)
+int32_t Block::getPackedLightmapCoords(IBlockState* state, IBlockAccess* source, const BlockPos& pos)
 {
-	auto i = source.getCombinedLight(pos, state.getLightValue());
-	if (i == 0 &&  instanceof<BlockSlab>(state.getBlock())) {
+	auto i = source->getCombinedLight(pos, state->getLightValue());
+	if (i == 0 &&  Util::instanceof<BlockSlab>(state->getBlock())) {
 		pos = pos.down();
-		state = source.getBlockState(pos);
-		return source.getCombinedLight(pos, state.getLightValue());
+		state = source->getBlockState(pos);
+		return source->getCombinedLight(pos, state->getLightValue());
 	}
 	else {
 		return i;
 	}
 }
 
-bool Block::shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+bool Block::shouldSideBeRendered(IBlockState* blockState, IBlockAccess* blockAccess, const BlockPos& pos, EnumFacing side)
 {
-	auto axisalignedbb = blockState.getBoundingBox(blockAccess, pos);
+	auto axisalignedbb = blockState->getBoundingBox(blockAccess, pos);
 
 	if (side == EnumFacing::DOWN)
 	{
-		if (axisalignedbb.minY > 0.0) {
+		if (axisalignedbb.getminY() > 0.0) {
 			return true;
 		}
 	}
 
 	if (side == EnumFacing::UP)
 	{
-		if (axisalignedbb.maxY < 1.0) {
+		if (axisalignedbb.getmaxY() < 1.0) {
 			return true;
 		}
 	}
 	if (side == EnumFacing::NORTH)
 	{
-		if (axisalignedbb.minZ > 0.0) {
+		if (axisalignedbb.getminZ() > 0.0) {
 			return true;
 		}
 	}
 	if (side == EnumFacing::SOUTH)
 	{
-		if (axisalignedbb.maxZ < 1.0) {
+		if (axisalignedbb.getmaxZ() < 1.0) {
 			return true;
 		}
 	}
 	if (side == EnumFacing::WEST)
 	{
-		if (axisalignedbb.minX > 0.0) {
+		if (axisalignedbb.getminX() > 0.0) {
 			return true;
 		}
 	}
 	if (side == EnumFacing::EAST)
 	{
-		if (axisalignedbb.maxX < 1.0) {
+		if (axisalignedbb.getmaxX() < 1.0) {
 			return true;
 		}
 	}
-	return !blockAccess.getBlockState(pos.offset(side)).isOpaqueCube();
+	return !blockAccess->getBlockState(pos.offset(side))->isOpaqueCube();
 }
 
-BlockFaceShape& Block::getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
+BlockFaceShape Block::getBlockFaceShape(IBlockAccess* worldIn, IBlockState* state, const BlockPos& pos, EnumFacing face)
 {
-	return BlockFaceShape.SOLID;
+	return BlockFaceShape::SOLID;
 }
 
-AxisAlignedBB& Block::getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
+AxisAlignedBB& Block::getSelectedBoundingBox(IBlockState* state, World* worldIn, const BlockPos& pos)
 {
-	return state.getBoundingBox(worldIn, pos).offset(pos);
+	return state->getBoundingBox(worldIn, pos).offset(pos);
 }
 
-void Block::addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, std::vector<AxisAlignedBB>& collidingBoxes, std::optional<Entity> entityIn, bool isActualState)
+void Block::addCollisionBoxToList(IBlockState* state, World* worldIn, const BlockPos& pos, const AxisAlignedBB& entityBox, const std::vector<AxisAlignedBB>& collidingBoxes, Entity* entityIn, bool isActualState)
 {
-	addCollisionBoxToList(pos, entityBox, collidingBoxes, state.getCollisionBoundingBox(worldIn, pos));
+	addCollisionBoxToList(pos, entityBox, collidingBoxes, state->getCollisionBoundingBox(worldIn, pos));
 }
 
-std::optional<AxisAlignedBB> Block::getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
+std::optional<AxisAlignedBB> Block::getCollisionBoundingBox(IBlockState* blockState, IBlockAccess* worldIn, const BlockPos& pos)
 {
-	return blockState.getBoundingBox(worldIn, pos);
+	return blockState->getBoundingBox(worldIn, pos);
 }
 
-bool Block::isOpaqueCube(IBlockState state)
+bool Block::isOpaqueCube(IBlockState* state)
 {
 	return true;
 }
 
-bool Block::canCollideCheck(IBlockState state, bool hitIfLiquid)
+bool Block::canCollideCheck(IBlockState* state, bool hitIfLiquid)
 {
 	return isCollidable();
 }
@@ -695,27 +698,27 @@ bool Block::isCollidable() const
 	return true;
 }
 
-void Block::randomTick(World worldIn, BlockPos pos, IBlockState state, pcg32& random)
+void Block::randomTick(World* worldIn, const BlockPos& pos, IBlockState* state, pcg32& random)
 {
 	updateTick(worldIn, pos, state, random);
 }
 
-void Block::updateTick(World worldIn, BlockPos pos, IBlockState state, pcg32& rand)
+void Block::updateTick(World* worldIn, const BlockPos& pos, IBlockState* state, pcg32& rand)
 {
 	
 }
 
-void Block::randomDisplayTick(IBlockState* stateIn, World* worldIn, BlockPos pos, pcg32& rand)
+void Block::randomDisplayTick(IBlockState* stateIn, World* worldIn, const BlockPos& pos, pcg32& rand)
 {
 	
 }
 
-void Block::onPlayerDestroy(World* worldIn, BlockPos pos, IBlockState* state)
+void Block::onPlayerDestroy(World* worldIn, const BlockPos& pos, IBlockState* state)
 {
 	
 }
 
-void Block::neighborChanged(IBlockState* state, World* worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
+void Block::neighborChanged(IBlockState* state, World* worldIn, const BlockPos& pos, Block* blockIn, const BlockPos& fromPos)
 {
 	
 }
@@ -725,12 +728,12 @@ int32_t Block::tickRate(World* worldIn)
 	return 10;
 }
 
-void Block::onBlockAdded(World* worldIn, BlockPos pos, IBlockState* state)
+void Block::onBlockAdded(World* worldIn, const BlockPos& pos, IBlockState* state)
 {
 	
 }
 
-void Block::breakBlock(World worldIn, BlockPos pos, IBlockState state)
+void Block::breakBlock(World* worldIn, const BlockPos& pos, IBlockState* state)
 {
 	
 }
@@ -740,36 +743,36 @@ int32_t Block::quantityDropped(pcg32& random) const
 	return 1;
 }
 
-Item Block::getItemDropped(IBlockState state, pcg32& rand, int32_t fortune)
+Item* Block::getItemDropped(IBlockState* state, pcg32& rand, int32_t fortune)
 {
 	return Item.getItemFromBlock(this);
 }
 
-float Block::getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
+float Block::getPlayerRelativeBlockHardness(IBlockState* state, EntityPlayer* player, World* worldIn, const BlockPos& pos)
 {
-	float f = state.getBlockHardness(worldIn, pos);
+	float f = state->getBlockHardness(worldIn, pos);
 	if (f < 0.0F) {
 		return 0.0F;
 	}
 	else {
-		return !player.canHarvestBlock(state) ? player.getDigSpeed(state) / f / 100.0F : player.getDigSpeed(state) / f / 30.0F;
+		return !player->canHarvestBlock(state) ? player->getDigSpeed(state) / f / 100.0F : player.getDigSpeed(state) / f / 30.0F;
 	}
 }
 
-void Block::dropBlockAsItem(World worldIn, BlockPos pos, IBlockState state, int32_t fortune)
+void Block::dropBlockAsItem(World* worldIn, const BlockPos& pos, IBlockState* state, int32_t fortune)
 {
 	dropBlockAsItemWithChance(worldIn, pos, state, 1.0F, fortune);
 }
 
-void Block::dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int32_t fortune)
+void Block::dropBlockAsItemWithChance(World* worldIn, const BlockPos& pos, IBlockState* state, float chance, int32_t fortune)
 {
-	if (!worldIn.isRemote) {
-		auto i = quantityDroppedWithBonus(fortune, worldIn.rand);
+	if (!worldIn->isRemote) {
+		auto i = quantityDroppedWithBonus(fortune, worldIn->rand);
 
 		for (auto j = 0; j < i; ++j) {
-			if (worldIn.rand.nextFloat() <= chance) {
-				auto item = getItemDropped(state, worldIn.rand, fortune);
-				if (item != Items.AIR) {
+			if (MathHelper::nextFloat(worldIn->rand) <= chance) {
+				auto *item = getItemDropped(state, worldIn->rand, fortune);
+				if (item != Items::AIR) {
 					spawnAsEntity(worldIn, pos, ItemStack(item, 1, damageDropped(state)));
 				}
 			}
@@ -777,26 +780,26 @@ void Block::dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState s
 	}
 }
 
-void Block::spawnAsEntity(World worldIn, BlockPos pos, ItemStack stack)
+void Block::spawnAsEntity(World* worldIn, const BlockPos& pos, ItemStack stack)
 {
-	if (!worldIn.isRemote && !stack.isEmpty() && worldIn.getGameRules().getBoolean("doTileDrops")) {
+	if (!worldIn->isRemote && !stack.isEmpty() && worldIn->getGameRules().getBoolean("doTileDrops")) {
 		float f = 0.5F;
-		double d0 = (double)(worldIn.rand.nextFloat() * 0.5F) + 0.25;
-		double d1 = (double)(worldIn.rand.nextFloat() * 0.5F) + 0.25;
-		double d2 = (double)(worldIn.rand.nextFloat() * 0.5F) + 0.25;
-		EntityItem entityitem(worldIn, (double)pos.getx() + d0, (double)pos.gety() + d1, (double)pos.getz() + d2, stack);
-		entityitem.setDefaultPickupDelay();
-		worldIn.spawnEntity(entityitem);
+		double d0 = (double)(MathHelper::nextFloat(worldIn->rand) * 0.5F) + 0.25;
+		double d1 = (double)(MathHelper::nextFloat(worldIn->rand) * 0.5F) + 0.25;
+		double d2 = (double)(MathHelper::nextFloat(worldIn->rand) * 0.5F) + 0.25;
+		EntityItem* entityitem = new EntityItem(worldIn, (double)pos.getx() + d0, (double)pos.gety() + d1, (double)pos.getz() + d2, stack);
+		entityitem->setDefaultPickupDelay();
+		worldIn->spawnEntity(entityitem);
 	}
 }
 
-void Block::dropXpOnBlockBreak(World worldIn, BlockPos pos, int32_t amount)
+void Block::dropXpOnBlockBreak(World* worldIn, const BlockPos& pos, int32_t amount)
 {
-	if (!worldIn.isRemote && worldIn.getGameRules().getBoolean("doTileDrops")) {
+	if (!worldIn->isRemote && worldIn->getGameRules().getBoolean("doTileDrops")) {
 		while (amount > 0) {
-			auto i = EntityXPOrb.getXPSplit(amount);
+			auto i = EntityXPOrb::getXPSplit(amount);
 			amount -= i;
-			worldIn.spawnEntity(EntityXPOrb(worldIn, (double)pos.getx() + 0.5, (double)pos.gety() + 0.5, (double)pos.getz() + 0.5, i));
+			worldIn->spawnEntity(EntityXPOrb(worldIn, (double)pos.getx() + 0.5, (double)pos.gety() + 0.5, (double)pos.getz() + 0.5, i));
 		}
 	}
 }
@@ -806,30 +809,30 @@ std::optional<RayTraceResult> Block::rayTrace(BlockPos pos, Vec3d start, Vec3d e
 	Vec3d vec3d = start.subtract((double)pos.getx(), (double)pos.gety(), (double)pos.getz());
 	Vec3d vec3d1 = end.subtract((double)pos.getx(), (double)pos.gety(), (double)pos.getz());
 	auto raytraceresult = boundingBox.calculateIntercept(vec3d, vec3d1);
-	return !raytraceresult ? std::nullopt : RayTraceResult(raytraceresult.value().hitVec.add((double)pos.getx(), (double)pos.gety(), (double)pos.getz()), raytraceresult.value().sideHit, pos);
+	return (!raytraceresult) ? std::nullopt : RayTraceResult(raytraceresult.value().hitVec.add((double)pos.getx(), (double)pos.gety(), (double)pos.getz()), raytraceresult.value().sideHit, pos);
 }
 
 bool Block::canSilkHarvest()
 {
-	return getDefaultState().isFullCube() && !bTileEntity;
+	return getDefaultState()->isFullCube() && !bTileEntity;
 }
 
-int32_t Block::damageDropped(IBlockState state)
+int32_t Block::damageDropped(IBlockState* state)
 {
 	return 0;
 }
 
-float Block::getExplosionResistance(Entity exploder)
+float Block::getExplosionResistance(Entity* exploder)
 {
 	return blockResistance / 5.0F;
 }
 
-std::optional<RayTraceResult> Block::collisionRayTrace(IBlockState blockState, World worldIn, BlockPos pos, Vec3d start, Vec3d end)
+std::optional<RayTraceResult> Block::collisionRayTrace(IBlockState* blockState, World* worldIn, const BlockPos& pos, const Vec3d& start, const Vec3d& end)
 {
-	return rayTrace(pos, start, end, blockState.getBoundingBox(worldIn, pos));
+	return rayTrace(pos, start, end, blockState->getBoundingBox(worldIn, pos));
 }
 
-void Block::onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn)
+void Block::onExplosionDestroy(World* worldIn, const BlockPos& pos, Explosion explosionIn)
 {
 	
 }
@@ -839,78 +842,78 @@ BlockRenderLayer Block::getRenderLayer() const
 	return BlockRenderLayer::Solid;
 }
 
-bool Block::canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)
+bool Block::canPlaceBlockOnSide(World* worldIn, const BlockPos& pos, EnumFacing side)
 {
 	return canPlaceBlockAt(worldIn, pos);
 }
 
-bool Block::canPlaceBlockAt(World worldIn, BlockPos pos)
+bool Block::canPlaceBlockAt(World* worldIn, const BlockPos& pos)
 {
-	return worldIn.getBlockState(pos).getBlock().material.isReplaceable();
+	return worldIn->getBlockState(pos).getBlock().material.isReplaceable();
 }
 
-bool Block::onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+bool Block::onBlockActivated(World* worldIn, const BlockPos& pos, IBlockState* state, EntityPlayer* playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 {
 	return false;
 }
 
-void Block::onEntityWalk(World worldIn, BlockPos pos, Entity entityIn)
+void Block::onEntityWalk(World* worldIn, const BlockPos& pos, Entity* entityIn)
 {
 	
 }
 
-IBlockState Block::getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+IBlockState Block::getStateForPlacement(World* worldIn, const BlockPos& pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase* placer)
 {
 	return getStateFromMeta(meta);
 }
 
-void Block::onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
+void Block::onBlockClicked(World* worldIn, const BlockPos& pos, EntityPlayer* playerIn)
 {
 	
 }
 
-Vec3d Block::modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3d motion)
+Vec3d Block::modifyAcceleration(World* worldIn, const BlockPos& pos, Entity* entityIn, Vec3d motion)
 {
 	return motion;
 }
 
-int32_t Block::getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+int32_t Block::getWeakPower(IBlockState* blockState, IBlockAccess* blockAccess, const BlockPos& pos, EnumFacing side)
 {
 	return 0;
 }
 
-bool Block::canProvidePower(IBlockState state)
+bool Block::canProvidePower(IBlockState* state)
 {
 	return false;
 }
 
-void Block::onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
+void Block::onEntityCollision(World* worldIn, const BlockPos& pos, IBlockState* state, Entity* entityIn)
 {}
 
-int32_t Block::getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+int32_t Block::getStrongPower(IBlockState* blockState, IBlockAccess* blockAccess, const BlockPos& pos, EnumFacing side)
 {
 	return 0;
 }
 
-void Block::harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, std::optional<TileEntity> te, ItemStack stack)
+void Block::harvestBlock(World* worldIn, EntityPlayer* player, const BlockPos& pos, IBlockState* state, TileEntity* te, ItemStack stack)
 {
-	player.addStat(StatList.getBlockStats(this));
-	player.addExhaustion(0.005F);
-	if (canSilkHarvest() && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
+	player->addStat(StatList.getBlockStats(this));
+	player->addExhaustion(0.005F);
+	if (canSilkHarvest() && EnchantmentHelper::getEnchantmentLevel(Enchantments::SILK_TOUCH, stack) > 0) {
 		ItemStack itemstack = getSilkTouchDrop(state);
 		spawnAsEntity(worldIn, pos, itemstack);
 	}
 	else {
-		auto i = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
+		auto i = EnchantmentHelper::getEnchantmentLevel(Enchantments::FORTUNE, stack);
 		dropBlockAsItem(worldIn, pos, state, i);
 	}
 }
 
-ItemStack Block::getSilkTouchDrop(IBlockState state)
+ItemStack Block::getSilkTouchDrop(IBlockState* state)
 {
-	auto item = Item.getItemFromBlock(this);
+	auto item = Item::getItemFromBlock(this);
 	auto i = 0;
-	if (item.getHasSubtypes()) {
+	if (item->getHasSubtypes()) {
 		i = getMetaFromState(state);
 	}
 
@@ -928,7 +931,7 @@ bool operator==(const Block& lhs, const Block& rhs)
 	return true;
 }
 
-void Block::onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+void Block::onBlockPlacedBy(World* worldIn, const BlockPos& pos, IBlockState* state, EntityLivingBase* placer, ItemStack stack)
 {
 	
 }
@@ -938,10 +941,10 @@ bool Block::canSpawnInBlock()
 	return !material.isSolid() && !material.isLiquid();
 }
 
-Block& Block::setTranslationKey(std::string key)
+Block* Block::setTranslationKey(std::string_view key)
 {
 	translationKey = key;
-	return *this;
+	return this;
 }
 
 std::string Block::getLocalizedName() const
@@ -954,7 +957,7 @@ std::string Block::getTranslationKey() const
 	return "tile." + translationKey;
 }
 
-bool Block::eventReceived(IBlockState state, World worldIn, BlockPos pos, int32_t id, int32_t param)
+bool Block::eventReceived(IBlockState* state, World* worldIn, const BlockPos& pos, int32_t id, int32_t param)
 {
 	return false;
 }
@@ -964,27 +967,27 @@ bool Block::getEnableStats() const
 	return enableStats;
 }
 
-EnumPushReaction Block::getPushReaction(IBlockState state)
+EnumPushReaction Block::getPushReaction(IBlockState* state)
 {
 	return material.getPushReaction();
 }
 
-float Block::getAmbientOcclusionLightValue(IBlockState state)
+float Block::getAmbientOcclusionLightValue(IBlockState* state)
 {
-	return state.isBlockNormalCube() ? 0.2F : 1.0F;
+	return state->isBlockNormalCube() ? 0.2F : 1.0F;
 }
 
-void Block::onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
+void Block::onFallenUpon(World* worldIn, const BlockPos& pos, Entity* entityIn, float fallDistance)
 {
-	entityIn.fall(fallDistance, 1.0F);
+	entityIn->fall(fallDistance, 1.0F);
 }
 
-void Block::onLanded(World worldIn, Entity entityIn)
+void Block::onLanded(World* worldIn, Entity* entityIn)
 {
-	entityIn.motionY = 0.0;
+	entityIn->motionY = 0.0;
 }
 
-ItemStack Block::getItem(World worldIn, BlockPos pos, IBlockState state)
+ItemStack Block::getItem(World* worldIn, const BlockPos& pos, IBlockState* state)
 {
 	return ItemStack(Item.getItemFromBlock(this), 1, damageDropped(state));
 }
@@ -999,18 +1002,18 @@ CreativeTabs Block::getCreativeTab()
 	return displayOnCreativeTab;
 }
 
-Block& Block::setCreativeTab(CreativeTabs tab)
+Block* Block::setCreativeTab(CreativeTabs tab)
 {
 	displayOnCreativeTab = tab;
-	return *this;
+	return this;
 }
 
-void Block::onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
+void Block::onBlockHarvested(World* worldIn, const BlockPos& pos, IBlockState* state, EntityPlayer* player)
 {
 	
 }
 
-void Block::fillWithRain(World worldIn, BlockPos pos)
+void Block::fillWithRain(World* worldIn, const BlockPos& pos)
 {
 	
 }
@@ -1025,17 +1028,17 @@ bool Block::canDropFromExplosion(Explosion explosionIn)
 	return true;
 }
 
-bool Block::isAssociatedBlock(const Block& other) const
+bool Block::isAssociatedBlock(const Block* other) const
 {
-	return *this == other;
+	return this == other;
 }
 
-bool Block::hasComparatorInputOverride(IBlockState state)
+bool Block::hasComparatorInputOverride(IBlockState* state)
 {
 	return false;
 }
 
-int32_t Block::getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
+int32_t Block::getComparatorInputOverride(IBlockState* blockState, World* worldIn, const BlockPos& pos)
 {
 	return 0;
 }
@@ -1050,22 +1053,22 @@ BlockStateContainer& Block::getBlockState()
 	return blockState;
 }
 
-void Block::setDefaultState(IBlockState state)
+void Block::setDefaultState(IBlockState* state)
 {
 	defaultBlockState = state;
 }
 
-void Block::registerBlock(int32_t id, ResourceLocation textualID, Block block_)
+void Block::registerBlock(int32_t id, ResourceLocation textualID, Block* block_)
 {
 	REGISTRY.registe(id, textualID, block_);
 }
 
-void Block::registerBlock(int32_t id, std::string textualID, Block block_)
+void Block::registerBlock(int32_t id, std::string_view textualID, Block* block_)
 {
 	registerBlock(id,ResourceLocation(textualID), block_);
 }
 
-IBlockState Block::getDefaultState()
+IBlockState* Block::getDefaultState()
 {
 	return defaultBlockState;
 }
@@ -1075,7 +1078,7 @@ EnumOffsetType Block::getOffsetType() const
 	return EnumOffsetType::NONE;
 }
 
-Vec3d Block::getOffset(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+Vec3d Block::getOffset(IBlockState* state, IBlockAccess* worldIn, const BlockPos& pos)
 {
 	EnumOffsetType block$enumoffsettype = getOffsetType();
 	if (block$enumoffsettype == EnumOffsetType::NONE) {
@@ -1097,6 +1100,6 @@ std::string Block::toString() const
 	return "Block{" + REGISTRY.getNameForObject(*this).value().to_string() + "}";
 }
 
-void addInformation(ItemStack stack, std::optional<World> worldIn, std::vector<> tooltip, ITooltipFlag flagIn)
+void addInformation(ItemStack stack, World* worldIn, std::vector<std::string> tooltip, ITooltipFlag* flagIn)
 {
 }

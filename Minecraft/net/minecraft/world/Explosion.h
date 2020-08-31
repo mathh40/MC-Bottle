@@ -11,7 +11,7 @@ public:
 
 	void doExplosionA();
 	void doExplosionB(bool spawnParticles);
-	Map getPlayerKnockbackMap();
+    std::unordered_map<EntityPlayer*,Vec3d>& getPlayerKnockbackMap();
 	EntityLivingBase* getExplosivePlacedBy();
 	void clearAffectedBlockPositions();
 	std::vector<BlockPos> getAffectedBlockPositions();
@@ -25,5 +25,5 @@ private:
 	Entity* exploder;
 	float size;
 	std::vector<BlockPos> affectedBlockPositions;
-	Map playerKnockbackMap;
+    std::unordered_map<EntityPlayer*,Vec3d> playerKnockbackMap;
 };

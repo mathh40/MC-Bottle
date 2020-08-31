@@ -196,7 +196,7 @@ void Item::onPlayerStoppedUsing(ItemStack stack, World *worldIn, EntityLivingBas
 
 }
 
-void Item::addInformation(ItemStack stack, World* worldIn, std::vector<std::string>& tooltip, ITooltipFlag flagIn)
+void Item::addInformation(ItemStack stack, World* worldIn, std::vector<std::string>& tooltip, ITooltipFlag* flagIn)
 {
     
 }
@@ -211,7 +211,7 @@ bool Item::hasEffect(ItemStack stack)
     return stack.isItemEnchanted();
 }
 
-EnumRarity Item::getRarity(ItemStack stack)
+EnumRarity Item::getRarity(ItemStack stack) const
 {
     return stack.isItemEnchanted() ? EnumRarity::RARE : EnumRarity::COMMON;
 }
@@ -860,3 +860,4 @@ RayTraceResult Item::rayTrace(World* worldIn, EntityPlayer* playerIn, bool useLi
     Vec3d vec3d1 = vec3d.add((double)f6 * 5.0, (double)f5 * 5.0, (double)f7 * 5.0);
     return worldIn->rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
 }
+Item::~Item() {}

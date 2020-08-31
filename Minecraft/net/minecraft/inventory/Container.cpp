@@ -3,11 +3,9 @@
 #include "IContainerListener.h"
 #include "IInventory.h"
 #include "Util.h"
-#include "World.h"
 #include "../../../../nlohmann_json/include/nlohmann/detail/value_t.hpp"
 #include "../item/crafting/CraftingManager.h"
 #include "../item/crafting/IRecipe.h"
-#include "biome/Biome.h"
 
 constexpr int32_t UNENDLICH = -999;
 
@@ -126,7 +124,7 @@ ItemStack Container::slotClick(int32_t slotId, int32_t dragType, ClickType click
             auto itemstack = inventoryplayer->getItemStack();
             if (slot7.has_value() && canAddItemToSlot(slot7, itemstack, true) && slot7.isItemValid(itemstack) && (dragMode == 2 || itemstack.getCount() > dragSlots.size()) && canDragIntoSlot(slot7)) 
             {
-                dragSlots.add(slot7);
+                dragSlots.emplace(slot7);
             }
         }
         else if (dragEvent == 2) 

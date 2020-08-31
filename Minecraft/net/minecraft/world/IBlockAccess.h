@@ -5,6 +5,7 @@
 #include "WorldType.h"
 class BlockPos;
 class EnumFacing;
+class TileEntity;
 
 class IBlockAccess
 {

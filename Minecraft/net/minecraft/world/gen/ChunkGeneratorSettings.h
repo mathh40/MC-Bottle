@@ -1,8 +1,9 @@
 #pragma once
-#include <cstdint>
-#include <nlohmann/json.hpp>
+#include "../../../../../nlohmann_json/single_include/nlohmann/json.hpp"
+#include "../biome/Biome.h"
 #include "Util.h"
 #include "biome/Biome.h"
+#include <cstdint>
 
 class ChunkGeneratorSettings
 {

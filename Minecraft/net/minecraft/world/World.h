@@ -22,6 +22,7 @@
 #include "storage/WorldSavedData.h"
 #include "storage/MapStorage.h"
 #include "../village/VillageCollection.h"
+#include "gen/ChunkGeneratorEnd.h"
 
 
 class Profiler;

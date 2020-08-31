@@ -45,7 +45,7 @@ int64_t Util::currentTimeMillis()
 	return getcurrent_time();
 }
 
-std::string_view Util::toLowerCase(std::string_view str, std::locale& loc)
+std::string_view Util::toLowerCase(std::string_view str, const std::locale& loc)
 {
 	std::transform(str.begin(), str.end(), str.begin(), [&](const char c) 
 	{

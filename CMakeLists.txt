@@ -134,6 +134,8 @@ add_subdirectory(Minecraft/net/minecraft/item)
 add_subdirectory(Minecraft/net/minecraft/inventory)
 add_subdirectory(Minecraft/net/minecraft/init)
 add_subdirectory(Minecraft/net/minecraft/entity)
+add_subdirectory(Minecraft/net/minecraft/creativetab)
+
 
 add_executable(Minecraft Minecraft/main.cpp)
 target_link_libraries(Minecraft PRIVATE project_options project_warnings args nlohmann_json::nlohmann_json util block world)

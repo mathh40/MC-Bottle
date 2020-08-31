@@ -1,6 +1,5 @@
 #pragma once
 #include "BlockPos.h"
-#include "enum.h"
 #include "Vec3d.h"
 #include "EnumFacing.h"
 

@@ -2,6 +2,11 @@
 #include <string>
 #include <optional>
 #include "ITextComponent.h"
+#include "TextFormatting.h"
+#include "event/ClickEvent.h"
+#include "event/HoverEvent.h"
+
+
 #include <nlohmann/json.hpp>
 
 class Style
@@ -137,7 +142,7 @@ namespace ns {
 				if (jsonobject.find("clickEvent") != jsonobject.end()) {
 					auto jsonobject2 = jsonobject.at("clickEvent");
 						auto jsonprimitive2 = jsonobject2.at("action");
-						ClickEvent.Action clickevent$action = jsonprimitive2 == nullptr ? nullptr : ClickEvent.Action.getValueByCanonicalName(jsonprimitive2.getAsString());
+						Action clickevent$action = jsonprimitive2 == nullptr ? nullptr : Action.getValueByCanonicalName(jsonprimitive2.getAsString());
 						auto jsonprimitive1 = jsonobject2.at("value");
 						auto s = jsonprimitive1.get<std::string>();
 						if (clickevent$action != nullptr && s != nullptr && clickevent$action.shouldAllowInChat()) {
@@ -148,7 +153,7 @@ namespace ns {
 				if (jsonobject.find("hoverEvent") != jsonobject.end()) {
 					auto jsonobject2 = jsonobject.at("hoverEvent");
 					auto jsonprimitive2 = jsonobject2.at("action");
-						HoverEvent.Action hoverevent$action = jsonprimitive2 == nullptr ? nullptr : HoverEvent.Action.getValueByCanonicalName(jsonprimitive2.getAsString());
+						HoverEvent::Action hoverevent$action = jsonprimitive2 == nullptr ? nullptr : HoverEvent::Action::getValueByCanonicalName(jsonprimitive2.getAsString());
 						auto itextcomponent = jsonobject2.at("value").get<ITextComponent>();
 						if (hoverevent$action != nullptr && itextcomponent != nullptr && hoverevent$action.shouldAllowInChat()) {
 							style.setHoverEvent(HoverEvent(hoverevent$action, itextcomponent));
@@ -167,7 +172,7 @@ namespace std {
 	{
 		size_t operator()(const Style & x) const noexcept
 		{
-			int i = std::hash<TextFormatting>{}(x.getColor().value());
+			size_t i = std::hash<TextFormatting>{}(x.getColor().value());
 			i = 31 * i + std::hash<bool>{}(x.getBold().value());
 			i = 31 * i + std::hash<bool>{}(x.getItalic().value());
 			i = 31 * i + std::hash<bool>{}(x.getUnderlined().value());

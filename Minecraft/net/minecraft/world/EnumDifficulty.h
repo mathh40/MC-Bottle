@@ -13,7 +13,7 @@ public:
 
 	uint16_t getId() const;
 	static EnumDifficulty& byId(uint16_t id);
-	std::string getTranslationKey();
+	std::string getTranslationKey() const;
 private:
 	EnumDifficulty(uint16_t difficultyIdIn, std::string difficultyResourceKeyIn);
 

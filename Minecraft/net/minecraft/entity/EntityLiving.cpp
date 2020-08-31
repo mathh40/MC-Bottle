@@ -1,15 +1,14 @@
 #include "EntityLiving.h"
-
-
 #include "NBTTagFloat.h"
 #include "../inventory/EntityEquipmentSlot.h"
+#include "../item/ItemArmor.h"
 #include "../pathfinding/PathNavigateGround.h"
 #include "../world/WorldServer.h"
 #include "ai/attributes/AbstractAttributeMap.h"
 #include "datafix/DataFixer.h"
-
-
 #include <typeindex>
+
+AI_FLAGS = EntityDataManager.createKey(EntityLiving.class, DataSerializers.BYTE);
 
 EntityLiving::EntityLiving(World *worldIn):
     EntityLivingBase(worldIn),
@@ -382,6 +381,305 @@ std::vector<ItemStack> & EntityLiving::getArmorInventoryList() {
     return inventoryArmor;
 }
 
+ItemStack EntityLiving::getItemStackFromSlot(EntityEquipmentSlot slotIn) {
+    switch(slotIn.getSlotType()) {
+      case EquipmentType::HAND:
+         return inventoryHands[slotIn.getIndex()];
+      case EquipmentType::ARMOR:
+         return inventoryArmor[slotIn.getIndex()];
+      default:
+         return ItemStack::EMPTY;
+      }
+}
+
+void EntityLiving::setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) {
+    switch(slotIn.getSlotType()) {
+      case EquipmentType::HAND:
+         inventoryHands[slotIn.getIndex()] = stack;
+         break;
+      case EquipmentType::ARMOR:
+         inventoryArmor[slotIn.getIndex()] = stack;
+      }
+}
+
+EntityEquipmentSlot EntityLiving::getSlotForItemStack(ItemStack stack) {
+    if (stack.getItem() != Item::getItemFromBlock(Blocks::PUMPKIN) && stack.getItem() != Items::SKULL) {
+         if (Util::instanceof<ItemArmor>(stack.getItem())) 
+         {
+            return ((ItemArmor*)stack.getItem())->armorType;
+         }
+        else if (stack.getItem() == Items::ELYTRA) 
+         {
+            return EntityEquipmentSlot::CHEST;
+         }
+        else 
+         {
+            return stack.getItem() == Items::SHIELD ? EntityEquipmentSlot::OFFHAND : EntityEquipmentSlot::MAINHAND;
+         }
+      } else {
+         return EntityEquipmentSlot::HEAD;
+      }
+}
+
+Item * EntityLiving::getArmorByChance(EntityEquipmentSlot slotIn, int32_t chance) {
+    switch(slotIn) {
+      case EntityEquipmentSlot::HEAD:
+         if (chance == 0) {
+            return Items::LEATHER_HELMET;
+         } else if (chance == 1) {
+            return Items::GOLDEN_HELMET;
+         } else if (chance == 2) {
+            return Items::CHAINMAIL_HELMET;
+         } else if (chance == 3) {
+            return Items::IRON_HELMET;
+         } else if (chance == 4) {
+            return Items::DIAMOND_HELMET;
+         }
+      case EntityEquipmentSlot::CHEST:
+         if (chance == 0) {
+            return Items::LEATHER_CHESTPLATE;
+         } else if (chance == 1) {
+            return Items::GOLDEN_CHESTPLATE;
+         } else if (chance == 2) {
+            return Items::CHAINMAIL_CHESTPLATE;
+         } else if (chance == 3) {
+            return Items::IRON_CHESTPLATE;
+         } else if (chance == 4) {
+            return Items::DIAMOND_CHESTPLATE;
+         }
+      case EntityEquipmentSlot::LEGS:
+         if (chance == 0) {
+            return Items::LEATHER_LEGGINGS;
+         } else if (chance == 1) {
+            return Items::GOLDEN_LEGGINGS;
+         } else if (chance == 2) {
+            return Items::CHAINMAIL_LEGGINGS;
+         } else if (chance == 3) {
+            return Items::IRON_LEGGINGS;
+         } else if (chance == 4) {
+            return Items::DIAMOND_LEGGINGS;
+         }
+      case EntityEquipmentSlot::FEET:
+         if (chance == 0) {
+            return Items::LEATHER_BOOTS;
+         } else if (chance == 1) {
+            return Items::GOLDEN_BOOTS;
+         } else if (chance == 2) {
+            return Items::CHAINMAIL_BOOTS;
+         } else if (chance == 3) {
+            return Items::IRON_BOOTS;
+         } else if (chance == 4) {
+            return Items::DIAMOND_BOOTS;
+         }
+      default:
+         return nullptr;
+      }
+}
+
+IEntityLivingData * EntityLiving::onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData *livingdata) {
+    getEntityAttribute(SharedMonsterAttributes::FOLLOW_RANGE).applyModifier(AttributeModifier("Random spawn bonus", MathHelper::nextGaussian<double>(rand) * 0.05, 1));
+      if (MathHelper::nextFloat(rand) < 0.05F) {
+         setLeftHanded(true);
+      } else {
+         setLeftHanded(false);
+      }
+
+      return livingdata;
+}
+
+bool EntityLiving::canBeSteered() {
+    return false;
+}
+
+void EntityLiving::enablePersistence() {
+    persistenceRequired = true;
+}
+
+void EntityLiving::setDropChance(EntityEquipmentSlot slotIn, float chance) {
+    switch(slotIn.getSlotType()) {
+      case EquipmentType::HAND:
+         inventoryHandsDropChances[slotIn.getIndex()] = chance;
+         break;
+      case EquipmentType::ARMOR:
+         inventoryArmorDropChances[slotIn.getIndex()] = chance;
+      }
+}
+
+bool EntityLiving::canPickUpLoot() const{
+    return canPickUpLoot;
+}
+
+void EntityLiving::setCanPickUpLoot(bool canPickup) {
+    canPickUpLoot = canPickup;
+}
+
+bool EntityLiving::isNoDespawnRequired() const {
+    return persistenceRequired;
+}
+
+bool EntityLiving::processInitialInteract(EntityPlayer *player, EnumHand hand) {
+    if (getLeashed() && getLeashHolder() == player) {
+         clearLeashed(true, !player->capabilities.isCreativeMode);
+         return true;
+      } else {
+         ItemStack itemstack = player->getHeldItem(hand);
+         if (itemstack.getItem() == Items::LEAD && canBeLeashedTo(player)) {
+            setLeashHolder(player, true);
+            itemstack.shrink(1);
+            return true;
+         } else {
+            return processInteract(player, hand) ? true : EntityLivingBase::processInitialInteract(player, hand);
+         }
+      }
+}
+
+void EntityLiving::clearLeashed(bool sendPacket, bool dropLead) {
+    if (isLeashed) {
+         isLeashed = false;
+         leashHolder = nullptr;
+         if (!world->isRemote && dropLead) {
+            dropItem(Items::LEAD, 1);
+         }
+
+         if (!world->isRemote && sendPacket && Util::instanceof<WorldServer>(world)) {
+            ((WorldServer*)world)->getEntityTracker()->sendToTracking(this, new SPacketEntityAttach(this, nullptr));
+         }
+      }
+}
+
+bool EntityLiving::canBeLeashedTo(EntityPlayer *player) {
+    return !getLeashed() && !Util::instanceof<IMob>(this);
+}
+
+bool EntityLiving::getLeashed() const {
+    return isLeashed;
+}
+
+Entity * EntityLiving::getLeashHolder() const {
+    return leashHolder;
+}
+
+void EntityLiving::setLeashHolder(Entity *entityIn, bool sendAttachNotification) {
+    isLeashed = true;
+      leashHolder = entityIn;
+      if (!world->isRemote && sendAttachNotification && Util::instanceof<WorldServer>(world)) {
+         ((WorldServer*)world)->getEntityTracker().sendToTracking(this, new SPacketEntityAttach(this, leashHolder));
+      }
+
+      if (isRiding()) {
+         dismountRidingEntity();
+      }
+}
+
+bool EntityLiving::startRiding(Entity *entityIn, bool force) {
+    bool flag = EntityLivingBase::startRiding(entityIn, force);
+      if (flag && getLeashed()) {
+         clearLeashed(true, true);
+      }
+
+      return flag;
+}
+
+bool EntityLiving::replaceItemInInventory(int32_t inventorySlot, ItemStack itemStackIn) {
+    EntityEquipmentSlot entityequipmentslot = EntityEquipmentSlot::FEET;
+      if (inventorySlot == 98) {
+         entityequipmentslot = EntityEquipmentSlot::MAINHAND;
+      } else if (inventorySlot == 99) {
+         entityequipmentslot = EntityEquipmentSlot::OFFHAND;
+      } else if (inventorySlot == 100 + EntityEquipmentSlot::HEAD.getIndex()) {
+         entityequipmentslot = EntityEquipmentSlot::HEAD;
+      } else if (inventorySlot == 100 + EntityEquipmentSlot::CHEST.getIndex()) {
+         entityequipmentslot = EntityEquipmentSlot::CHEST;
+      } else if (inventorySlot == 100 + EntityEquipmentSlot::LEGS.getIndex()) {
+         entityequipmentslot = EntityEquipmentSlot::LEGS;
+      } else {
+         if (inventorySlot != 100 + EntityEquipmentSlot::FEET.getIndex()) {
+            return false;
+         }
+
+         entityequipmentslot = EntityEquipmentSlot::FEET;
+      }
+
+      if (!itemStackIn.isEmpty() && !isItemStackInSlot(entityequipmentslot, itemStackIn) && entityequipmentslot != EntityEquipmentSlot::HEAD) {
+         return false;
+      } else {
+         setItemStackToSlot(entityequipmentslot, itemStackIn);
+         return true;
+      }
+}
+
+bool EntityLiving::canPassengerSteer() {
+    return canBeSteered() && EntityLivingBase::canPassengerSteer();
+}
+
+bool EntityLiving::isItemStackInSlot(EntityEquipmentSlot slotIn, ItemStack stack) {
+    EntityEquipmentSlot entityequipmentslot = getSlotForItemStack(stack);
+      return entityequipmentslot == slotIn || entityequipmentslot == EntityEquipmentSlot::MAINHAND && slotIn == EntityEquipmentSlot::OFFHAND || entityequipmentslot == EntityEquipmentSlot::OFFHAND && slotIn == EntityEquipmentSlot::MAINHAND;
+}
+
+bool EntityLiving::isServerWorld() {
+    return EntityLivingBase::isServerWorld() && !isAIDisabled();
+}
+
+void EntityLiving::setNoAI(bool disable) {
+    std::byte b0 = dataManager.get(AI_FLAGS);
+      dataManager.set(AI_FLAGS, disable ? (byte)(b0 |  std::byte{1}) : (byte)(b0 &  std::byte{-2}));
+}
+
+void EntityLiving::setLeftHanded(bool leftHanded) {
+    std::byte b0 = dataManager.get(AI_FLAGS);
+      dataManager.set(AI_FLAGS, leftHanded ? b0 | std::byte{2} : (b0 & std::byte{-3}));
+}
+
+bool EntityLiving::isAIDisabled() {
+    return (dataManager.get(AI_FLAGS) & 1) != 0;
+}
+
+bool EntityLiving::isLeftHanded() {
+    return (dataManager.get(AI_FLAGS) & 2) != 0;
+}
+
+EnumHandSide EntityLiving::getPrimaryHand() {
+    return isLeftHanded() ? EnumHandSide::LEFT : EnumHandSide::RIGHT;
+}
+
+void EntityLiving::setEnchantmentBasedOnDifficulty(DifficultyInstance difficulty) {
+    float f = difficulty.getClampedAdditionalDifficulty();
+      if (!getHeldItemMainhand().isEmpty() && MathHelper::nextFloat(rand) < 0.25F * f) {
+         setItemStackToSlot(EntityEquipmentSlot::MAINHAND, EnchantmentHelper::addRandomEnchantment(rand, getHeldItemMainhand(), (int)(5.0F + f * (float)rand(18)), false));
+      }
+
+    for(auto entityequipmentslot : EntityEquipmentSlot::values())
+    {
+         if (entityequipmentslot->getSlotType() == EntityEquipmentSlot::Type::ARMOR) {
+            ItemStack itemstack = getItemStackFromSlot(entityequipmentslot);
+            if (!itemstack.isEmpty() && MathHelper::nextFloat(rand) < 0.5F * f) {
+               setItemStackToSlot(entityequipmentslot, EnchantmentHelper::addRandomEnchantment(rand, itemstack, (int)(5.0F + f * (float)rand(18)), false));
+            }
+         }
+      }
+}
+
+bool EntityLiving::processInteract(EntityPlayer *player, EnumHand hand) {
+    return false;
+}
+
+void EntityLiving::updateLeashedState() {
+    if (leashNBTTag != nullptr) {
+         recreateLeash();
+      }
+
+      if (isLeashed) {
+         if (!isEntityAlive()) {
+            clearLeashed(true, true);
+         }
+
+         if (leashHolder == nullptr || leashHolder->isDead) {
+            clearLeashed(true, true);
+         }
+      }
+}
+
 void EntityLiving::initEntityAI() {
 }
 
@@ -631,6 +929,72 @@ void EntityLiving::updateAITasks() {
 
 }
 
+void EntityLiving::dropEquipment(bool wasRecentlyHit, int32_t lootingModifier) {
+    auto var3 = EntityEquipmentSlot::values();
+
+      for(auto entityequipmentslot : var3) {
+         ItemStack itemstack = getItemStackFromSlot(entityequipmentslot);
+         double d0;
+         switch(entityequipmentslot->getSlotType()) {
+         case EquipmentType::HAND:
+            d0 = inventoryHandsDropChances[entityequipmentslot->getIndex()];
+            break;
+         case EquipmentType::ARMOR:
+            d0 = inventoryArmorDropChances[entityequipmentslot->getIndex()];
+            break;
+         default:
+            d0 = 0.0;
+         }
+
+         bool flag = d0 > 1.0;
+         if (!itemstack.isEmpty() && !EnchantmentHelper::hasVanishingCurse(itemstack) && (wasRecentlyHit || flag) && (double)(MathHelper::nextFloat(rand) - (float)lootingModifier * 0.01F) < d0) {
+            if (!flag && itemstack.isItemStackDamageable()) {
+               itemstack.setItemDamage(itemstack.getMaxDamage() - rand(1 + rand(MathHelper::max(itemstack.getMaxDamage() - 3, 1))));
+            }
+
+            entityDropItem(itemstack, 0.0F);
+         }
+      }
+}
+
+void EntityLiving::setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
+    if (MathHelper::nextFloat(rand) < 0.15F * difficulty.getClampedAdditionalDifficulty()) {
+         auto i = rand(2);
+         float f = world->getDifficulty() == EnumDifficulty::HARD ? 0.1F : 0.25F;
+         if (MathHelper::nextFloat(rand) < 0.095F) {
+            ++i;
+         }
+
+         if (MathHelper::nextFloat(rand) < 0.095F) {
+            ++i;
+         }
+
+         if (MathHelper::nextFloat(rand) < 0.095F) {
+            ++i;
+         }
+
+         bool flag = true;
+
+        for (auto entityequipmentslot : EntityEquipmentSlot::values())
+        {
+            if (entityequipmentslot->getSlotType() == EntityEquipmentSlot::Type::ARMOR) {
+               ItemStack itemstack = getItemStackFromSlot(entityequipmentslot);
+               if (!flag && MathHelper::nextFloat(rand) < f) {
+                  break;
+               }
+
+               flag = false;
+               if (itemstack.isEmpty()) {
+                  Item* item = getArmorByChance(entityequipmentslot, i);
+                  if (item != nullptr) {
+                     setItemStackToSlot(entityequipmentslot, ItemStack(item));
+                  }
+               }
+            }
+         }
+      }
+}
+
 void EntityLiving::applyEntityAI() {
     livingSoundTime = -getTalkInterval();
 }
@@ -646,4 +1010,33 @@ float EntityLiving::updateRotation(float angle, float targetAngle, float maxIncr
     }
 
     return angle + f;
+}
+
+void EntityLiving::recreateLeash() {
+    if (isLeashed && leashNBTTag != nullptr) {
+         if (leashNBTTag->hasUniqueId("UUID")) {
+            auto uuid = leashNBTTag->getUniqueId("UUID");
+            auto var2 = world->getEntitiesWithinAABB<EntityLivingBase>(getEntityBoundingBox().grow(10.0));
+
+            for (auto entitylivingbase : var2)
+            {
+               if (entitylivingbase->getUniqueID() == uuid) {
+                  setLeashHolder(entitylivingbase, true);
+                  break;
+               }
+            }
+         } else if (leashNBTTag->hasKey("X", 99) && leashNBTTag->hasKey("Y", 99) && leashNBTTag->hasKey("Z", 99)) {
+            BlockPos blockpos = BlockPos(leashNBTTag->getInteger("X"), leashNBTTag->getInteger("Y"), leashNBTTag->getInteger("Z"));
+            auto entityleashknot = EntityLeashKnot::getKnotForPosition(world, blockpos);
+            if (entityleashknot == nullptr) {
+               entityleashknot = EntityLeashKnot::createKnot(world, blockpos);
+            }
+
+            setLeashHolder(entityleashknot, true);
+         } else {
+            clearLeashed(false, true);
+         }
+      }
+
+      leashNBTTag = nullptr;
 }

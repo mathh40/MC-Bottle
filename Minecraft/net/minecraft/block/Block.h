@@ -1,39 +1,23 @@
 #pragma once
+
+#include "../creativetab/CreativeTabs.h"
+#include "../item/ItemStack.h"
 #include "../util/registry/RegistryNamespacedDefaultedByKey.h"
-#include "../util/ResourceLocation.h"
-#include "../util/math/AxisAlignedBB.h"
-#include "../util/EnumBlockRenderType.h"
-#include "../../../../pcg-cpp/pcg_random.hpp"
-#include "../util/BlockRenderLayer.h"
-#include "material/EnumPushReaction.h"
-#include "SoundType.h"
+#include "../world/Explosion.h"
+#include "../world/IBlockAccess.h"
 #include "../world/chunk/BlockStateContainer.h"
-#include "state/BlockFaceShape.h"
-
-enum class EnumHand;
-class EnumFacing;
-class Mirror;
-class IBlockState;
-class Item;
-class Entity;
-class Material;
-class MapColor;
-class IBlockAccess;
-class World;
-class EntityPlayer;
-class ItemStack;
-class Explosion;
-class TileEntity;
-class EntityLivingBase;
-
+#include "SoundType.h"
+#include <BlockRenderLayer.h>
+#include <math/AxisAlignedBB.h>
 enum class EnumOffsetType {
 	NONE,
 	XZ,
 	XYZ
 };
-
-class CreativeTabs;
+class IBlockAccess;
 class ITooltipFlag;
+class Mirror;
+class TileEntity;
 class Block
 {
 public:
@@ -44,24 +28,24 @@ public:
 	float blockParticleGravity;
 	float slipperiness;
 
-	static int32_t getIdFromBlock(Block blockIn);
+	static int32_t getIdFromBlock(Block* blockIn);
 	static int32_t getStateId(IBlockState* state);
-	static Block& getBlockById(int32_t id);
+	static Block* getBlockById(int32_t id);
 	static IBlockState* getStateById(int32_t id);
-	static Block& getBlockFromItem(std::optional<Item> itemIn);
-	static std::optional<Block> getBlockFromName(std::string_view name);
+	static Block* getBlockFromItem(Item* itemIn);
+	static Block* getBlockFromName(std::string_view name);
 	bool isTopSolid(IBlockState* state);
-	bool isFullBlock(IBlockState* state);
-	bool canEntitySpawn(IBlockState* state, Entity& entityIn);
-	uint16_t getLightOpacity(IBlockState* state);
-	bool isTranslucent(IBlockState* state);
-	uint16_t getLightValue(IBlockState* state);
-	bool getUseNeighborBrightness(IBlockState* state);
+	bool isFullBlock(IBlockState* state) const;
+	static bool canEntitySpawn(IBlockState* state, Entity* entityIn);
+	uint16_t getLightOpacity(IBlockState* state) const;
+	bool isTranslucent(IBlockState* state) const;
+	uint16_t getLightValue(IBlockState* state) const;
+	bool getUseNeighborBrightness(IBlockState* state) const;
 	Material& getMaterial(IBlockState* state);
-	MapColor& getMapColor(IBlockState* state, IBlockAccess& worldIn, BlockPos& pos);
+	MapColor& getMapColor(IBlockState* state, IBlockAccess* worldIn, const BlockPos& pos);
 	virtual IBlockState* getStateFromMeta(uint16_t meta);
 	virtual uint16_t getMetaFromState(IBlockState* state);
-	IBlockState* getActualState(IBlockState* state, IBlockAccess& worldIn, BlockPos& pos);
+	IBlockState* getActualState(IBlockState* state, IBlockAccess* worldIn, const BlockPos& pos);
 	virtual IBlockState* withRotation(IBlockState* state, Rotation& rot);
 	virtual IBlockState* withMirror(IBlockState* state, Mirror& mirrorIn);
 	bool isBlockNormalCube(IBlockState* state);
@@ -69,82 +53,82 @@ public:
 	bool causesSuffocation(IBlockState* state);
 	virtual bool isFullCube(IBlockState* state);
 	bool hasCustomBreakingProgress(IBlockState* state);
-	virtual bool isPassable(IBlockAccess& worldIn, BlockPos& pos);
+	virtual bool isPassable(IBlockAccess* worldIn, const BlockPos& pos);
 	virtual EnumBlockRenderType getRenderType(IBlockState* state);
-	virtual bool isReplaceable(IBlockAccess& worldIn, BlockPos& pos);
-	float getBlockHardness(IBlockState* blockState, World& worldIn, BlockPos& pos);
+	virtual bool isReplaceable(IBlockAccess* worldIn, const BlockPos& pos);
+	float getBlockHardness(IBlockState* blockState, World* worldIn, const BlockPos& pos);
 	bool getTickRandomly() const;
 	bool hasTileEntity() const;
-	virtual AxisAlignedBB& getBoundingBox(IBlockState* state, IBlockAccess& source, BlockPos& pos);
-	int32_t getPackedLightmapCoords(IBlockState* state, IBlockAccess& source, BlockPos& pos);
-	virtual bool shouldSideBeRendered(IBlockState* blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side);
-	virtual BlockFaceShape& getBlockFaceShape(IBlockAccess worldIn, IBlockState* state, BlockPos pos, EnumFacing face);
-	AxisAlignedBB& getSelectedBoundingBox(IBlockState* state, World worldIn, BlockPos pos);
-	void addCollisionBoxToList(IBlockState* state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, std::vector<AxisAlignedBB>& collidingBoxes, std::optional<Entity> entityIn, bool isActualState);
-	virtual std::optional<AxisAlignedBB> getCollisionBoundingBox(IBlockState* blockState, IBlockAccess worldIn, BlockPos pos);
+	virtual AxisAlignedBB& getBoundingBox(IBlockState* state, IBlockAccess* source, const BlockPos& pos);
+	int32_t getPackedLightmapCoords(IBlockState* state, IBlockAccess* source, const BlockPos& pos);
+	virtual bool shouldSideBeRendered(IBlockState* blockState, IBlockAccess* blockAccess, const BlockPos& pos, EnumFacing side);
+	virtual BlockFaceShape getBlockFaceShape(IBlockAccess* worldIn, IBlockState* state, const BlockPos& pos, EnumFacing face);
+	AxisAlignedBB& getSelectedBoundingBox(IBlockState* state, World* worldIn, const BlockPos& pos);
+	void addCollisionBoxToList(IBlockState* state, World* worldIn, const BlockPos& pos, const AxisAlignedBB& entityBox, const std::vector<AxisAlignedBB>& collidingBoxes, Entity* entityIn, bool isActualState);
+	virtual std::optional<AxisAlignedBB> getCollisionBoundingBox(IBlockState* blockState, IBlockAccess* worldIn, const BlockPos& pos);
 	virtual bool isOpaqueCube(IBlockState* state);
 	virtual bool canCollideCheck(IBlockState* state, bool hitIfLiquid);
 	bool isCollidable() const;
-	void randomTick(World worldIn, BlockPos pos, IBlockState* state, pcg32& random);
-	virtual void randomDisplayTick(IBlockState* stateIn, World worldIn, BlockPos pos, pcg32& rand);
-	void onPlayerDestroy(World worldIn, BlockPos pos, IBlockState* state);
-	virtual void neighborChanged(IBlockState* state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos);
+	void randomTick(World* worldIn, const BlockPos& pos, IBlockState* state, pcg32& random);
+	virtual void randomDisplayTick(IBlockState* stateIn, World* worldIn, const BlockPos& pos, pcg32& rand);
+	void onPlayerDestroy(World* worldIn, const BlockPos& pos, IBlockState* state);
+	virtual void neighborChanged(IBlockState* state, World* worldIn, const BlockPos& pos, Block* blockIn, const BlockPos& fromPos);
 	virtual int32_t tickRate(World* worldIn);
-	virtual void onBlockAdded(World worldIn, BlockPos pos, IBlockState* state);
-	virtual void breakBlock(World worldIn, BlockPos pos, IBlockState* state);
+	virtual void onBlockAdded(World* worldIn, const BlockPos& pos, IBlockState* state);
+	virtual void breakBlock(World* worldIn, const BlockPos& pos, IBlockState* state);
 	int32_t quantityDropped(pcg32& random) const;
-	virtual Item getItemDropped(IBlockState* state, pcg32& rand, int32_t fortune);
-	float getPlayerRelativeBlockHardness(IBlockState* state, EntityPlayer player, World worldIn, BlockPos pos);
-	void dropBlockAsItem(World worldIn, BlockPos pos, IBlockState* state, int32_t fortune);
-	virtual void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState* state, float chance, int32_t fortune);
-	static void spawnAsEntity(World worldIn, BlockPos pos, ItemStack stack);
+	virtual Item* getItemDropped(IBlockState* state, pcg32& rand, int32_t fortune);
+	float getPlayerRelativeBlockHardness(IBlockState* state, EntityPlayer* player, World* worldIn, const BlockPos& pos);
+	void dropBlockAsItem(World* worldIn, const BlockPos& pos, IBlockState* state, int32_t fortune);
+	virtual void dropBlockAsItemWithChance(World* worldIn, const BlockPos& pos, IBlockState* state, float chance, int32_t fortune);
+	static void spawnAsEntity(World* worldIn, const BlockPos& pos, ItemStack stack);
 	virtual int32_t damageDropped(IBlockState* state);
-	float getExplosionResistance(Entity exploder);
-	std::optional<RayTraceResult> collisionRayTrace(IBlockState* blockState, World worldIn, BlockPos pos, Vec3d start, Vec3d end);
-	void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn);
+	float getExplosionResistance(Entity* exploder);
+	std::optional<RayTraceResult> collisionRayTrace(IBlockState* blockState, World* worldIn, const BlockPos& pos, const Vec3d& start, const Vec3d& end);
+	void onExplosionDestroy(World* worldIn, const BlockPos& pos, Explosion explosionIn);
 	BlockRenderLayer getRenderLayer() const;
-	bool canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side);
-	virtual bool canPlaceBlockAt(World worldIn, BlockPos pos);
-	virtual bool onBlockActivated(World worldIn, BlockPos pos, IBlockState* state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ);
-	void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn);
-	virtual IBlockState* getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer);
-	void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn);
-	Vec3d modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3d motion);
-	int32_t getWeakPower(IBlockState* blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side);
+	bool canPlaceBlockOnSide(World* worldIn, const BlockPos& pos, EnumFacing side);
+	virtual bool canPlaceBlockAt(World* worldIn, const BlockPos& pos);
+	virtual bool onBlockActivated(World* worldIn, const BlockPos& pos, IBlockState* state, EntityPlayer* playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ);
+	void onEntityWalk(World* worldIn, const BlockPos& pos, Entity* entityIn);
+	virtual IBlockState* getStateForPlacement(World* worldIn, const BlockPos& pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase* placer);
+	void onBlockClicked(World* worldIn, const BlockPos& pos, EntityPlayer* playerIn);
+	Vec3d modifyAcceleration(World* worldIn, const BlockPos& pos, Entity* entityIn, Vec3d motion);
+	int32_t getWeakPower(IBlockState* blockState, IBlockAccess* blockAccess, const BlockPos& pos, EnumFacing side);
 	bool canProvidePower(IBlockState* state);
-	void onEntityCollision(World worldIn, BlockPos pos, IBlockState* state, Entity entityIn);
-	int32_t getStrongPower(IBlockState* blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side);
-	virtual void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState* state, std::optional<TileEntity> te, ItemStack stack);
+	void onEntityCollision(World* worldIn, const BlockPos& pos, IBlockState* state, Entity* entityIn);
+	int32_t getStrongPower(IBlockState* blockState, IBlockAccess* blockAccess, const BlockPos& pos, EnumFacing side);
+	virtual void harvestBlock(World* worldIn, EntityPlayer* player, const BlockPos& pos, IBlockState* state, TileEntity* te, ItemStack stack);
 	int32_t quantityDroppedWithBonus(int fortune, pcg32& random);
-	void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState* state, EntityLivingBase placer, ItemStack stack);
+	void onBlockPlacedBy(World* worldIn, const BlockPos& pos, IBlockState* state, EntityLivingBase* placer, ItemStack stack);
 	virtual bool canSpawnInBlock();
-	Block& setTranslationKey(std::string key);
+	Block* setTranslationKey(std::string_view key);
 	virtual std::string getLocalizedName() const;
 	std::string getTranslationKey() const;
-	virtual bool eventReceived(IBlockState* state, World worldIn, BlockPos pos, int32_t id, int32_t param);
+	virtual bool eventReceived(IBlockState* state, World* worldIn, const BlockPos& pos, int32_t id, int32_t param);
 	bool getEnableStats() const;
 	EnumPushReaction getPushReaction(IBlockState* state);
 	virtual float getAmbientOcclusionLightValue(IBlockState* state);
-	void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance);
-	void onLanded(World worldIn, Entity entityIn);
-	virtual ItemStack getItem(World worldIn, BlockPos pos, IBlockState* state);
+	void onFallenUpon(World* worldIn, const BlockPos& pos, Entity* entityIn, float fallDistance);
+	void onLanded(World* worldIn, Entity* entityIn);
+	virtual ItemStack getItem(World* worldIn, const BlockPos& pos, IBlockState* state);
 	virtual void getSubBlocks(CreativeTabs itemIn, std::vector<ItemStack>& items);
 	CreativeTabs getCreativeTab();
-	Block& setCreativeTab(CreativeTabs tab);
-	void onBlockHarvested(World worldIn, BlockPos pos, IBlockState* state, EntityPlayer player);
-	void fillWithRain(World worldIn, BlockPos pos);
+	Block* setCreativeTab(CreativeTabs tab);
+	void onBlockHarvested(World* worldIn, const BlockPos& pos, IBlockState* state, EntityPlayer* player);
+	void fillWithRain(World* worldIn, const BlockPos& pos);
 	bool requiresUpdates() const;
 	bool canDropFromExplosion(Explosion explosionIn);
-	bool isAssociatedBlock(const Block& other) const;
+	bool isAssociatedBlock(const Block* other) const;
 	bool hasComparatorInputOverride(IBlockState* state);
-	int32_t getComparatorInputOverride(IBlockState* blockState, World worldIn, BlockPos pos);
+	int32_t getComparatorInputOverride(IBlockState* blockState, World* worldIn, const BlockPos& pos);
 	BlockStateContainer& getBlockState();
 	IBlockState* getDefaultState();
 	EnumOffsetType getOffsetType() const;
-	Vec3d getOffset(IBlockState* state, IBlockAccess worldIn, BlockPos pos);
+	Vec3d getOffset(IBlockState* state, IBlockAccess* worldIn, const BlockPos& pos);
 	SoundType getSoundType();
 	std::string toString() const;
-	void addInformation(ItemStack stack, std::optional<World> worldIn, std::vector<std::string> tooltip, ITooltipFlag* flagIn);
+	void addInformation(ItemStack stack, World* worldIn, std::vector<std::string> tooltip, ITooltipFlag* flagIn);
 	static void registerBlocks();
 
 	Block(Material blockMaterialIn, MapColor blockMapColorIn);
@@ -178,8 +162,8 @@ protected:
 	Block& setBlockUnbreakable();
 	Block& setTickRandomly(bool shouldTick);
 	static void addCollisionBoxToList(BlockPos pos, AxisAlignedBB entityBox, std::vector<AxisAlignedBB>& collidingBoxes, std::optional< AxisAlignedBB> blockBox);
-	virtual void updateTick(World worldIn, BlockPos pos, IBlockState* state, pcg32& rand);
-	void dropXpOnBlockBreak(World worldIn, BlockPos pos, int32_t amount);
+	virtual void updateTick(World* worldIn, const BlockPos& pos, IBlockState* state, pcg32& rand);
+	void dropXpOnBlockBreak(World* worldIn, const BlockPos& pos, int32_t amount);
 	std::optional<RayTraceResult> rayTrace(BlockPos pos, Vec3d start, Vec3d end, AxisAlignedBB boundingBox);
 	bool canSilkHarvest();
 	ItemStack getSilkTouchDrop(IBlockState* state); 
@@ -193,8 +177,8 @@ private:
 	IBlockState* defaultBlockState;
 	std::string translationKey;
 
-	static void registerBlock(int32_t id, ResourceLocation textualID, Block block_);
-	static void registerBlock(int32_t id, std::string textualID, Block block_);
+	static void registerBlock(int32_t id, ResourceLocation textualID, Block* block_);
+	static void registerBlock(int32_t id, std::string_view textualID, Block* block_);
 };
 
 

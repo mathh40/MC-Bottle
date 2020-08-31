@@ -1,12 +1,11 @@
 #pragma once
-#include "BlockFalling.h"
-#include "../util/text/ITextComponent.h"
+
 #include "../world/IInteractionObject.h"
+#include "BlockFalling.h"
 #include "properties/PropertyDirection.h"
 #include "properties/PropertyInteger.h"
-#include "state/BlockStateContainer.h"
-#include "../../../../spdlog/include/spdlog/logger.h"
-
+#include <Container.h>
+class BlockStateContainer;
 class BlockAnvil :public BlockFalling
 {
 public:
@@ -14,14 +13,14 @@ public:
 	static PropertyInteger DAMAGE;
 
 	bool isFullCube(IBlockState* state)override;
-	BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)override;
+	BlockFaceShape getBlockFaceShape(IBlockAccess* worldIn, IBlockState* state, BlockPos pos, EnumFacing face)override;
 	bool isOpaqueCube(IBlockState* state)override;
 	IBlockState* getStateForPlacement(World* worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int32_t meta, EntityLivingBase placer)override;
 	bool onBlockActivated(World* worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)override;
 	int32_t damageDropped(IBlockState* state)override;
 	AxisAlignedBB getBoundingBox(IBlockState* state, IBlockAccess source, BlockPos pos)override;
 	void getSubBlocks(CreativeTabs itemIn, std::vector<ItemStack>& items)override;
-	void onEndFalling(World* worldIn, BlockPos pos, IBlockState* fallingState, * hitState)override;
+	void onEndFalling(World* worldIn, BlockPos pos, IBlockState* fallingState, IBlockState* hitState)override;
 	void onBroken(World* worldIn, BlockPos pos)override;
 	bool shouldSideBeRendered(IBlockState* blockState, IBlockAccess* blockAccess, BlockPos pos, EnumFacing side)override;
 	IBlockState* getStateFromMeta(uint16_t meta)override;
@@ -51,7 +50,7 @@ protected:
 
 	BlockAnvil();
 
-	void onStartFalling(EntityFallingBlock fallingEntity)override;
-	BlockStateContainer createBlockState()override;
+	void onStartFalling(EntityFallingBlock* fallingEntity)override;
+    BlockStateContainer* createBlockState()override;
 private:
 };

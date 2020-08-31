@@ -1,6 +1,7 @@
 #include "Vec3d.h"
 #include "Vec2f.h"
 #include "MathHelper.h"
+#include "Vec3i.h"
 
 Vec3d Vec3d::ZERO = Vec3d(0.0, 0.0, 0.0);
 
@@ -29,7 +30,7 @@ Vec3d::Vec3d(double xIn, double yIn, double zIn)
 }
 
 Vec3d::Vec3d(const Vec3i &vector)
-	:Vec3d(vector.getX(), vector.getY(), vector.getZ())
+	:Vec3d(vector.getx(), vector.gety(), vector.getz())
 {
 	
 }
@@ -39,8 +40,7 @@ Vec3d Vec3d::subtractReverse(Vec3d vec) const
 	return Vec3d(vec.x - x, vec.y - y, vec.z - z);
 }
 
-Vec3d Vec3d::normalize()
-{
+Vec3d Vec3d::normalize() const {
 	double d0 = MathHelper::sqrt(x * x + y * y + z * z);
 	return d0 < 1.0E-4 ? ZERO : Vec3d(x / d0, y / d0, z / d0);
 }
@@ -70,8 +70,7 @@ Vec3d Vec3d::add(Vec3d vec) const
 	return add(vec.x, vec.y, vec.z);
 }
 
-Vec3d Vec3d::add(double x, double y, double z) const
-{
+Vec3d Vec3d::add(double x, double y, double z) {
 	return Vec3d(x + x, y + y, z + z);
 }
 
@@ -96,8 +95,7 @@ double Vec3d::squareDistanceTo(double xIn, double yIn, double zIn)const
 	return d0 * d0 + d1 * d1 + d2 * d2;
 }
 
-Vec3d Vec3d::scale(double factor)
-{
+Vec3d Vec3d::scale(double factor) const {
 	return Vec3d(x * factor, y * factor, z * factor);
 }
 
@@ -153,8 +151,7 @@ std::optional<Vec3d> Vec3d::getIntermediateWithZValue(Vec3d vec, double z) const
 	}
 }
 
-Vec3d Vec3d::rotatePitch(float pitch)
-{
+Vec3d Vec3d::rotatePitch(float pitch) const {
 	float f = MathHelper::cos(pitch);
 	float f1 = MathHelper::sin(pitch);
 	double d0 = x;
@@ -163,8 +160,7 @@ Vec3d Vec3d::rotatePitch(float pitch)
 	return Vec3d(d0, d1, d2);
 }
 
-Vec3d Vec3d::rotateYaw(float yaw)
-{
+Vec3d Vec3d::rotateYaw(float yaw) const {
 	float f = MathHelper::cos(yaw);
 	float f1 = MathHelper::sin(yaw);
 	double d0 = x * (double)f + z * (double)f1;

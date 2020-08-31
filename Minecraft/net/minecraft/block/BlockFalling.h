@@ -1,8 +1,7 @@
 #pragma once
-#include "Block.h"
 
 class EntityFallingBlock;
-class BlockFalling :public Block
+class BlockFalling : public Block
 {
 public:
 	static bool fallInstantly;

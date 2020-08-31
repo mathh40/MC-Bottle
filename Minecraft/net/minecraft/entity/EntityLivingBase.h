@@ -16,7 +16,7 @@ public:
     void onKillCommand() override;
     bool canBreatheUnderwater();
     void onEntityUpdate() override;
-    bool isChild();
+    virtual bool isChild();
     pcg32& getRNG();
     EntityLivingBase* getRevengeTarget() const;
     void setRevengeTarget(EntityLivingBase* livingBase);
@@ -45,7 +45,7 @@ public:
     void renderBrokenItemStack(const ItemStack& stack);
     void onDeath(DamageSource::DamageSource cause);
     void knockBack(Entity* entityIn, float strength, double xRatio, double zRatio);
-    bool isOnLadder();
+    virtual bool isOnLadder();
     bool isEntityAlive();
     void fall(float distance, float damageMultiplier) override;
     void performHurtAnimation() override;
@@ -71,7 +71,7 @@ public:
     void setSprinting(bool sprinting) override;
     void dismountEntity(Entity* entityIn);
     bool getAlwaysRenderNameTagForRender() override;
-    void travel(float strafe, float vertical, float forward);
+    virtual void travel(float strafe, float vertical, float forward);
     float getAIMoveSpeed() const;
     virtual void setAIMoveSpeed(float speedIn);
     bool attackEntityAsMob(Entity* entityIn);
@@ -161,7 +161,7 @@ protected:
     void blockUsingShield(EntityLivingBase* p_190629_1_);
     virtual void playHurtSound(DamageSource::DamageSource source);
     virtual void dropLoot(bool wasRecentlyHit, int32_t lootingModifier, DamageSource::DamageSource source);
-    void dropEquipment(bool wasRecentlyHit, int32_t lootingModifier);
+    virtual void dropEquipment(bool wasRecentlyHit, int32_t lootingModifier);
     SoundEvent getHurtSound(DamageSource::DamageSource damageSourceIn);
     SoundEvent getDeathSound();
     SoundEvent getFallSound(int32_t heightIn);

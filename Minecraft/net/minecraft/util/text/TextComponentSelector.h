@@ -1,5 +1,5 @@
 #pragma once
-#include "ITextComponent.h"
+#include "TextComponentBase.h"
 
 
 class TextComponentSelector :public  TextComponentBase

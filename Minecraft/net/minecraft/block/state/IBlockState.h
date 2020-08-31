@@ -7,7 +7,7 @@
 class IProperty;
 class Block;
 
-class IBlockState :public IBlockBehaviors, IBlockProperties
+class IBlockState :public IBlockBehaviors, public IBlockProperties
 {
 protected:
 	~IBlockState() = default;

@@ -7,70 +7,70 @@
 
 std::shared_ptr<spdlog::logger> BlockAnvil::LOGGER = spdlog::get("Minecraft")->clone("Registry");
 PropertyDirection BlockAnvil::FACING = BlockHorizontal::FACING;
-PropertyInteger BlockAnvil::DAMAGE = PropertyInteger.create("damage", 0, 2);
+PropertyInteger BlockAnvil::DAMAGE = PropertyInteger::create("damage", 0, 2);
 AxisAlignedBB BlockAnvil::X_AXIS_AABB(0.0, 0.0, 0.125, 1.0, 1.0, 0.875);
 AxisAlignedBB BlockAnvil::Z_AXIS_AABB(0.125, 0.0, 0.0, 0.875, 1.0, 1.0);
 
 
-BlockAnvil::BlockAnvil() : BlockFalling(Material.ANVIL)
+BlockAnvil::BlockAnvil() : BlockFalling(Material::ANVIL)
 {
     setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing::NORTH).withProperty(DAMAGE, 0));
     setLightOpacity(0);
-    setCreativeTab(CreativeTabs.DECORATIONS);
+    setCreativeTab(CreativeTabs::DECORATIONS);
 }
 
-bool BlockAnvil::isFullCube(IBlockState state) { return false; }
+bool BlockAnvil::isFullCube(IBlockState* state) { return false; }
 
-BlockFaceShape BlockAnvil::getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
+BlockFaceShape BlockAnvil::getBlockFaceShape(IBlockAccess* worldIn, IBlockState* state, BlockPos pos, EnumFacing face)
 {
     return BlockFaceShape::UNDEFINED;
 }
 
-bool BlockAnvil::isOpaqueCube(IBlockState state) { return false; }
+bool BlockAnvil::isOpaqueCube(IBlockState* state) { return false; }
 
-IBlockState BlockAnvil::getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-                                             float hitZ, int32_t meta, EntityLivingBase placer)
+IBlockState BlockAnvil::getStateForPlacement(World* worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
+                                             float hitZ, int32_t meta, EntityLivingBase* placer)
 {
-    EnumFacing enumfacing = placer.getHorizontalFacing().rotateY();
+    EnumFacing enumfacing = placer->getHorizontalFacing().rotateY();
 
     try
     {
         return BlockFalling::getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer)
-            .withProperty(FACING, enumfacing)
-            .withProperty(DAMAGE, meta >> 2);
+            ->withProperty(FACING, enumfacing)
+            ->withProperty(DAMAGE, meta >> 2);
     }
     catch (IllegalArgumentException var11)
     {
-        if (!worldIn.isRemote)
+        if (!worldIn->isRemote)
         {
             LOGGER->warn("Invalid damage property for anvil at %s. Found %d, must be in [0, 1, 2]", pos, meta >> 2);
             if (Util:: instanceof <EntityPlayer>(placer))
             {
-                placer.sendMessage(
+                placer->sendMessage(
                     TextComponentTranslation("Invalid damage property. Please pick in [0, 1, 2]", new Object[0]));
             }
         }
 
         return BlockFalling::getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, 0, placer)
-            .withProperty(FACING, enumfacing)
-            .withProperty(DAMAGE, 0);
+            ->withProperty(FACING, enumfacing)
+            ->withProperty(DAMAGE, 0);
     }
 }
 
-bool BlockAnvil::onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand,
+bool BlockAnvil::onBlockActivated(World* worldIn, BlockPos pos, IBlockState* state, EntityPlayer* playerIn, EnumHand hand,
                                   EnumFacing facing, float hitX, float hitY, float hitZ)
 {
-    if (!worldIn.isRemote)
+    if (!worldIn->isRemote)
     {
-        playerIn.displayGui(BlockAnvil.Anvil(worldIn, pos));
+        playerIn->displayGui(BlockAnvil.Anvil(worldIn, pos));
     }
 
     return true;
 }
 
-int32_t BlockAnvil::damageDropped(IBlockState state) { return state.getValue(DAMAGE); }
+int32_t BlockAnvil::damageDropped(IBlockState* state) { return state->getValue(DAMAGE); }
 
-AxisAlignedBB BlockAnvil::getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+AxisAlignedBB BlockAnvil::getBoundingBox(IBlockState* state, IBlockAccess* source, BlockPos pos)
 {
     EnumFacing enumfacing = (EnumFacing)state.getValue(BlockAnvil::FACING);
     return enumfacing.getAxis() == Axis::X ? X_AXIS_AABB : Z_AXIS_AABB;
@@ -85,7 +85,7 @@ void BlockAnvil::getSubBlocks(CreativeTabs itemIn, std::vector<ItemStack> &items
 
 void BlockAnvil::onStartFalling(EntityFallingBlock fallingEntity) { fallingEntity.setHurtEntities(true); }
 
-void BlockAnvil::onEndFalling(World worldIn, BlockPos pos, IBlockState fallingState, IBlockState hitState)
+void BlockAnvil::onEndFalling(World* worldIn, BlockPos pos, IBlockState* fallingState, IBlockState* hitState)
 {
     worldIn.playEvent(1031, pos, 0);
 }

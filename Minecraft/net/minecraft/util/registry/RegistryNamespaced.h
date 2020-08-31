@@ -26,11 +26,11 @@ template <typename KEY, typename VALUE>
 std::optional<KEY> RegistryNamespaced<KEY, VALUE>::getNameForObject(VALUE value)
 {
 	auto result = std::find_if(
-        registryObjects.begin(),
-        registryObjects.end(),
+        this->registryObjects.begin(),
+        this->registryObjects.end(),
 		[value](const auto & mo) {return mo.second == value; });
 
-	if (result != registryObjects.end())
+	if (result != this->registryObjects.end())
 		return result->first;
 	else
 		return std::nullopt;

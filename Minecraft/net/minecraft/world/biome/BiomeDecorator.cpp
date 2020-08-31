@@ -1,14 +1,23 @@
 #include "BiomeDecorator.h"
-#include <random>
 #include "../../block/material/Material.h"
+#include <gen/feature/WorldGenBigMushroom.h>
+#include <gen/feature/WorldGenBush.h>
+#include <gen/feature/WorldGenCactus.h>
+#include <gen/feature/WorldGenClay.h>
+#include <gen/feature/WorldGenMinable.h>
+#include <gen/feature/WorldGenReed.h>
+#include <gen/feature/WorldGenSand.h>
+#include <gen/feature/WorldGenWaterlily.h>
+#include <random>
 
 BiomeDecorator::BiomeDecorator()
 {
-	sandGen = new WorldGenSand(Blocks.SAND, 7);
-	gravelGen = new WorldGenSand(Blocks.GRAVEL, 6);
-	flowerGen = new WorldGenFlowers(Blocks.YELLOW_FLOWER, BlockFlower.EnumFlowerType.DANDELION);
-	mushroomBrownGen = new WorldGenBush(Blocks.BROWN_MUSHROOM);
-	mushroomRedGen = new WorldGenBush(Blocks.RED_MUSHROOM);
+    clayGen = new WorldGenClay(4);
+	sandGen = new WorldGenSand(Blocks::SAND, 7);
+	gravelGen = new WorldGenSand(Blocks::GRAVEL, 6);
+	flowerGen = new WorldGenFlowers(Blocks::YELLOW_FLOWER, BlockFlower::EnumFlowerType::DANDELION);
+	mushroomBrownGen = new WorldGenBush(Blocks::BROWN_MUSHROOM);
+	mushroomRedGen = new WorldGenBush(Blocks::RED_MUSHROOM);
 	bigMushroomGen = new WorldGenBigMushroom();
 	reedGen = new WorldGenReed();
 	cactusGen = new WorldGenCactus();
@@ -30,19 +39,19 @@ void BiomeDecorator::decorate(World* worldIn, pcg32& random, Biome* biome, Block
 	}
 	else 
 	{
-		chunkProviderSettings = ChunkGeneratorSettings.Factory.jsonToFactory(worldIn->getWorldInfo().getGeneratorOptions()).build();
+		chunkProviderSettings = ChunkGeneratorSettings::Factory::jsonToFactory(worldIn->getWorldInfo().getGeneratorOptions()).build();
 		chunkPos = pos;
-		dirtGen = new WorldGenMinable(Blocks.DIRT.getDefaultState(), chunkProviderSettings.dirtSize);
-		gravelOreGen = new WorldGenMinable(Blocks.GRAVEL.getDefaultState(), chunkProviderSettings.gravelSize);
-		graniteGen = new WorldGenMinable(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.GRANITE), chunkProviderSettings.graniteSize);
-		dioriteGen = new WorldGenMinable(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.DIORITE), chunkProviderSettings.dioriteSize);
-		andesiteGen = new WorldGenMinable(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.ANDESITE), chunkProviderSettings.andesiteSize);
-		coalGen = new WorldGenMinable(Blocks.COAL_ORE.getDefaultState(), chunkProviderSettings.coalSize);
-		ironGen = new WorldGenMinable(Blocks.IRON_ORE.getDefaultState(), chunkProviderSettings.ironSize);
-		goldGen = new WorldGenMinable(Blocks.GOLD_ORE.getDefaultState(), chunkProviderSettings.goldSize);
-		redstoneGen = new WorldGenMinable(Blocks.REDSTONE_ORE.getDefaultState(), chunkProviderSettings.redstoneSize);
-		diamondGen = new WorldGenMinable(Blocks.DIAMOND_ORE.getDefaultState(), chunkProviderSettings.diamondSize);
-		lapisGen = new WorldGenMinable(Blocks.LAPIS_ORE.getDefaultState(), chunkProviderSettings.lapisSize);
+		dirtGen = new WorldGenMinable(Blocks::DIRT.getDefaultState(), chunkProviderSettings.dirtSize);
+		gravelOreGen = new WorldGenMinable(Blocks::GRAVEL.getDefaultState(), chunkProviderSettings.gravelSize);
+		graniteGen = new WorldGenMinable(Blocks::STONE.getDefaultState().withProperty(BlockStone::VARIANT, BlockStone::EnumType::GRANITE), chunkProviderSettings.graniteSize);
+		dioriteGen = new WorldGenMinable(Blocks::STONE.getDefaultState().withProperty(BlockStone::VARIANT, BlockStone::EnumType::DIORITE), chunkProviderSettings.dioriteSize);
+		andesiteGen = new WorldGenMinable(Blocks::STONE.getDefaultState().withProperty(BlockStone::VARIANT, BlockStone::EnumType::ANDESITE), chunkProviderSettings.andesiteSize);
+		coalGen = new WorldGenMinable(Blocks::COAL_ORE.getDefaultState(), chunkProviderSettings.coalSize);
+		ironGen = new WorldGenMinable(Blocks::IRON_ORE.getDefaultState(), chunkProviderSettings.ironSize);
+		goldGen = new WorldGenMinable(Blocks::GOLD_ORE.getDefaultState(), chunkProviderSettings.goldSize);
+		redstoneGen = new WorldGenMinable(Blocks::REDSTONE_ORE.getDefaultState(), chunkProviderSettings.redstoneSize);
+		diamondGen = new WorldGenMinable(Blocks::DIAMOND_ORE.getDefaultState(), chunkProviderSettings.diamondSize);
+		lapisGen = new WorldGenMinable(Blocks::LAPIS_ORE.getDefaultState(), chunkProviderSettings.lapisSize);
 		genDecorations(biome, worldIn, random);
 		decorating = false;
 	}
@@ -84,10 +93,10 @@ void BiomeDecorator::genDecorations(Biome* biomeIn, World* worldIn, pcg32& rando
 	{
 		auto j10 = random(16) + 8;
 		auto i14 = random(16) + 8;
-		WorldGenAbstractTree worldgenabstracttree = biomeIn->getRandomTreeFeature(random);
-		worldgenabstracttree.setDecorationDefaults();
+		auto worldgenabstracttree = biomeIn->getRandomTreeFeature(random);
+		worldgenabstracttree->setDecorationDefaults();
 		auto blockpos3 = worldIn->getHeight(chunkPos.add(j10, 0, i14));
-		if (worldgenabstracttree.generate(worldIn, random, blockpos3)) 
+		if (worldgenabstracttree->generate(worldIn, random, blockpos3))
 		{
 			worldgenabstracttree.generateSaplings(worldIn, random, blockpos3);
 		}
@@ -97,7 +106,7 @@ void BiomeDecorator::genDecorations(Biome* biomeIn, World* worldIn, pcg32& rando
 	{
 		auto j10 = random(16) + 8;
 		auto i14 = random(16) + 8;
-		bigMushroomGen.generate(worldIn, random, worldIn->getHeight(chunkPos.add(j10, 0, i14)));
+		bigMushroomGen->generate(worldIn, random, worldIn->getHeight(chunkPos.add(j10, 0, i14)));
 	}
 
 	for (auto l5 = 0; l5 < flowersPerChunk; ++l5)
@@ -107,14 +116,14 @@ void BiomeDecorator::genDecorations(Biome* biomeIn, World* worldIn, pcg32& rando
 		auto j17 = worldIn->getHeight(chunkPos.add(j10, 0, i14)).getY() + 32;
 		if (j17 > 0) 
 		{
-			auto k19 = random.nextInt(j17);
+			auto k19 = random(j17);
 			auto blockpos6 = chunkPos.add(j10, k19, i14);
 			auto blockflower$enumflowertype = biomeIn->pickRandomFlower(random, blockpos6);
 			auto blockflower = blockflower$enumflowertype.getBlockType().getBlock();
 			if (blockflower.getDefaultState().getMaterial() != Material::AIR) 
 			{
-				flowerGen.setGeneratedBlock(blockflower, blockflower$enumflowertype);
-				flowerGen.generate(worldIn, random, blockpos6);
+				flowerGen->setGeneratedBlock(blockflower, blockflower$enumflowertype);
+				flowerGen->generate(worldIn, random, blockpos6);
 			}
 		}
 	}
@@ -305,7 +314,7 @@ void BiomeDecorator::generateOres(World* worldIn, pcg32& random)
 	genStandardOre2(worldIn, random, chunkProviderSettings.lapisCount, lapisGen, chunkProviderSettings.lapisCenterHeight, chunkProviderSettings.lapisSpread);
 }
 
-void BiomeDecorator::genStandardOre1(World* worldIn, pcg32& random, int32_t blockCount, WorldGenerator generator, int32_t minHeight, int32_t maxHeight)
+void BiomeDecorator::genStandardOre1(World* worldIn, pcg32& random, int32_t blockCount, WorldGenerator* generator, int32_t minHeight, int32_t maxHeight)
 {
 	if (maxHeight < minHeight) 
 	{
@@ -328,15 +337,15 @@ void BiomeDecorator::genStandardOre1(World* worldIn, pcg32& random, int32_t bloc
 	for (auto j = 0; j < blockCount; ++j)
 	{
 		BlockPos blockpos = chunkPos.add((int32_t)random(16), random(maxHeight - minHeight) + minHeight, random(16));
-		generator.generate(worldIn, random, blockpos);
+		generator->generate(worldIn, random, blockpos);
 	}
 }
 
-void BiomeDecorator::genStandardOre2(World* worldIn, pcg32& random, int32_t blockCount, WorldGenerator generator, int32_t centerHeight, int32_t spread)
+void BiomeDecorator::genStandardOre2(World* worldIn, pcg32& random, int32_t blockCount, WorldGenerator* generator, int32_t centerHeight, int32_t spread)
 {
 	for (auto i = 0; i < blockCount; ++i) 
 	{
 		auto blockpos = chunkPos.add((int32_t)random(16), random(spread) + random(spread) + centerHeight - spread, random(16));
-		generator.generate(worldIn, random, blockpos);
+		generator->generate(worldIn, random, blockpos);
 	}
 }

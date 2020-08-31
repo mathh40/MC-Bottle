@@ -19,6 +19,7 @@ class ItemCompass :public Item
 {
 public:
     ItemCompass();
+    virtual ~ItemCompass() = default;
 private:
     CompassProperty property;
 };

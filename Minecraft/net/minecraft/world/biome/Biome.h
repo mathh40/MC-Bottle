@@ -1,15 +1,17 @@
 #pragma once
-#include "../../block/state/IBlockState.h"
-#include "../../util/registry/RegistryNamespaced.h"
 #include "../../../../../pcg-cpp/pcg_random.hpp"
+#include "../../block/state/IBlockState.h"
 #include "../../util/ResourceLocation.h"
 #include "../../util/WeightedRandom.h"
+#include "../../util/registry/RegistryNamespaced.h"
+#include "../chunk/ChunkPrimer.h"
+#include "../gen/feature/WorldGenSwamp.h"
+#include "../gen/feature/WorldGenTrees.h"
 #include "BiomeDecorator.h"
-#include "gen/feature/WorldGenAbstractTree.h"
 #include "gen/NoiseGeneratorPerlin.h"
-#include "gen/feature/WorldGenDoublePlant.h"
+#include "gen/feature/WorldGenAbstractTree.h"
 #include "gen/feature/WorldGenBigTree.h"
-#include "spdlog/logger.h"
+#include "gen/feature/WorldGenDoublePlant.h"
 
 enum class TempCategory
 {

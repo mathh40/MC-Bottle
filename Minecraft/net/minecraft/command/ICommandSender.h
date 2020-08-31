@@ -9,7 +9,8 @@ class CommandResultStatsType;
 class ICommandSender 
 {
 public:
-   virtual std::string getName() = 0;
+    virtual ~ICommandSender() = default;
+    virtual std::string getName() = 0;
 
    virtual ITextComponent* getDisplayName();
 

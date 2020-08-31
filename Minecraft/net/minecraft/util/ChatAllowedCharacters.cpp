@@ -1,7 +1,6 @@
 #include "ChatAllowedCharacters.h"
-#include <algorithm>
 
-bool ChatAllowedCharacters::isAllowedCharacter(char character)
+constexpr bool ChatAllowedCharacters::isAllowedCharacter(char character)
 {
 	return character != '§' && character >= ' ' && character != 127;
 }

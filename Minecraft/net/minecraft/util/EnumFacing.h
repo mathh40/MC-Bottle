@@ -17,7 +17,7 @@ public:
 	static AxisDirection POSITIVE;
 	static AxisDirection NEGATIVE;
 	AxisDirection(int offset, std::string description);
-	int getOffset();
+	int getOffset() const;
 private:
 	int offset;;
 	std::string description;
@@ -29,10 +29,10 @@ public:
 	static Plane HORIZONTAL;
 	static Plane VERTICAL;
 
-	std::vector<EnumFacing> facings();
+	std::vector<EnumFacing> facings() const;
 	explicit Plane(const std::string &name);
 
-	EnumFacing random(pcg32 &rand);
+	EnumFacing random(pcg32 &rand) const;
 	friend bool operator==(const Plane& lhs, const Plane& rhs);
 private:
 	std::string name;
@@ -46,6 +46,14 @@ public:
 	static Axis Z;
 
 	Axis(std::string name, Plane plane);
+	static std::optional<Axis> byName(std::string_view name);
+	std::string getName2();
+	bool isVertical();
+	bool isHorizontal();
+	std::string toString();
+	Plane getPlane();
+	std::string getName();
+
 	friend auto operator==(const Axis& lhs, const Axis& rhs) -> bool;
 	friend auto operator!=(const Axis& lhs, const Axis& rhs) -> bool;
 private:
@@ -65,29 +73,29 @@ public:
 	static EnumFacing WEST;
 	static EnumFacing EAST;
 
-	int getIndex();
-	int getHorizontalIndex();
-	AxisDirection getAxisDirection();
+	int32_t getIndex() const;
+	int32_t getHorizontalIndex() const;
+	AxisDirection getAxisDirection() const;
 	EnumFacing getOpposite() const;
 	EnumFacing rotateAround(Axis axis);
 	EnumFacing rotateY() const;
 	EnumFacing rotateYCCW() const;
-	int getXOffset();
-	int getYOffset();
-	int getZOffset();
+	int32_t getXOffset() const;
+	int32_t getYOffset() const;
+	int32_t getZOffset() const;
 	std::string getName2() const;
 	Axis getAxis() const;
 	static std::optional<EnumFacing> byName(std::string &name);
-	static EnumFacing byIndex(int index);
-	static EnumFacing byHorizontalIndex(int horizontalIndexIn);
+	static EnumFacing byIndex(int32_t index);
+	static EnumFacing byHorizontalIndex(int32_t horizontalIndexIn);
 	static EnumFacing fromAngle(double angle);
-	float getHorizontalAngle();
+	float getHorizontalAngle() const;
 	static EnumFacing random(pcg32 &rand);
 	static EnumFacing getFacingFromVector(float x, float y, float z);
-	std::string toString();
-	std::string getName();
+	std::string toString() const;
+	std::string getName() const;
 	static EnumFacing getFacingFromAxis(AxisDirection axisDirectionIn, Axis axisIn);
-	static EnumFacing getDirectionFromEntityLiving(BlockPos pos, EntityLivingBase placer);
+	static EnumFacing getDirectionFromEntityLiving(BlockPos pos, EntityLivingBase* placer);
 	Vec3i getDirectionVec() const;
 	friend void initEnumFacing();
 	friend auto operator==(const EnumFacing& lhs, const EnumFacing& rhs) -> bool;
@@ -96,13 +104,12 @@ public:
 
 	friend auto operator!=(const EnumFacing& lhs, const EnumFacing& rhs) -> bool;
 
-	EnumFacing(int indexIn, int oppositeIn, int horizontalIndexIn, std::string nameIn, AxisDirection axisDirectionIn, Axis axisIn, Vec3i directionVecIn);
+	EnumFacing(int32_t indexIn, int32_t oppositeIn, int32_t horizontalIndexIn, std::string_view nameIn, AxisDirection axisDirectionIn, Axis axisIn, Vec3i directionVecIn);
 	EnumFacing& operator=(const EnumFacing& other);
-	EnumFacing(const EnumFacing& other);
 private:
-	int index;
-	int opposite;
-	int horizontalIndex;
+	int32_t index;
+	int32_t opposite;
+	int32_t horizontalIndex;
 	std::string name;
 	Axis axis;
 	AxisDirection axisDirection;
@@ -111,8 +118,8 @@ private:
 	static std::array<EnumFacing, 4> HORIZONTALS;
 	static std::unordered_map<std::string,EnumFacing> NAME_LOOKUP;
 
-	EnumFacing rotateX();
-	EnumFacing rotateZ();
+	EnumFacing rotateX() const;
+	EnumFacing rotateZ() const;
 };
 
 

@@ -7,5 +7,5 @@ struct MouseHelper
 
 	void grabMouseCursor();
 	void ungrabMouseCursor();
-	void mouseXYChan<ge();
+	void mouseXYChange();
 };

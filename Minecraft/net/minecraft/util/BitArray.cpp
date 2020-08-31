@@ -1,23 +1,19 @@
 #include "BitArray.h"
-#include <stdexcept>
 #include "../world/World.h"
 
 BitArray::BitArray(uint32_t bitsPerEntryIn, size_t arraySizeIn)
 {
-	if (bitsPerEntryIn >= 1 && bitsPerEntryIn <= 32)
-	{
-		arraySize = arraySizeIn;
-		bitsPerEntry = bitsPerEntryIn;
-		maxEntryValue = (1L << bitsPerEntryIn) - 1L;
-		longArray.resize(MathHelper::roundUp(arraySizeIn * bitsPerEntryIn, 64) / 64);
-	}
-	else
-		throw std::logic_error("bitsPerEntryIn muss zwischen 1 und 32 bit liegen");
-
+    assert(bitsPerEntryIn >= 1 && bitsPerEntryIn <= 32);
+	arraySize = arraySizeIn;
+	bitsPerEntry = bitsPerEntryIn;
+	maxEntryValue = (1L << bitsPerEntryIn) - 1L;
+	longArray.resize(MathHelper::roundUp(arraySizeIn * bitsPerEntryIn, 64) / 64);
 }
 
 void BitArray::setAt(size_t index, uint64_t value)
 {
+    assert((arraySize - 1) >= 0  && (arraySize - 1) <= index);
+    assert((maxEntryValue >= 0) && maxEntryValue <= value);
 	const auto i = index * bitsPerEntry;
 	const auto j = i / 64;
 	const auto k = ((index + 1) * bitsPerEntry - 1) / 64;
@@ -32,6 +28,7 @@ void BitArray::setAt(size_t index, uint64_t value)
 
 uint32_t BitArray::getAt(size_t index)
 {
+    assert((arraySize - 1) >= 0  && (arraySize - 1) <= index);
 	const auto i = index * bitsPerEntry;
 	const auto j = i / 64;
 	const auto k = ((index + 1) * bitsPerEntry - 1) / 64;

@@ -13,7 +13,7 @@ public:
 
 	static PropertyEnum<T> create(const std::string& name)
 	{
-		return create(name, Predicates.alwaysTrue());
+		return create(name, [](){return true;});
 	}
 
 	static PropertyEnum<T> create(const std::string& name, std::set<T>& values);

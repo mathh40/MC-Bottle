@@ -40,7 +40,7 @@ void RegistryNamespacedDefaultedByKey<KEY, VALUE>::validateKey()
 {
 	if(!defaultValue.has_value())
 	{
-		LOGGER->debug("Missing default of DefaultedMappedRegistry: " + defaultValueKey);
+		this->LOGGER->debug("Missing default of DefaultedMappedRegistry: " + defaultValueKey);
 	}
 }
 

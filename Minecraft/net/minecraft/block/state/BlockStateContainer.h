@@ -30,7 +30,7 @@ namespace state {
       private:
         Block *block;
         std::unordered_map<std::string, IProperty *> properties;
-        ImmutableTable propertyValueTable;
+        std::unordered_map<> propertyValueTable;
 
         StateImplementation(Block *blockIn, std::unordered_map<std::string, IProperty *> propertiesIn);
     };

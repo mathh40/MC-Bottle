@@ -32,7 +32,7 @@ public:
     int16_t getNextTransactionID(InventoryPlayer* invPlayer);
     bool getCanCraft(EntityPlayer* player);
     void setCanCraft(EntityPlayer* player, bool canCraft);
-    virtual bool canInteractWith(EntityPlayer* var1);
+    virtual bool canInteractWith(EntityPlayer* var1) = 0;
     int32_t extractDragMode(int32_t eventButton);
     int32_t getDragEvent(int32_t clickedButton);
     int32_t getQuickcraftMask(int32_t p_94534_0_, int32_t p_94534_1_);

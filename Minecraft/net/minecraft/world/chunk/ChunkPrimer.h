@@ -1,6 +1,6 @@
 #pragma once
-#include "state/IBlockState.h"
 
+class IBlockState;
 class ChunkPrimer
 {
 public:

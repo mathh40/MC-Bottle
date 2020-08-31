@@ -1,27 +1,27 @@
 #include "WeightedRandom.h"
+#include <pcg_random.hpp>
 #include <random>
 
 namespace WeightedRandom
 {
-	int getTotalWeight(List collection)
+    int32_t getTotalWeight(std::span<WeightedItem> collection)
 	{
-		int i = 0;
-		int j = 0;
+		auto i = 0;
+        auto j = 0;
 
-		for (int k = collection.size(); j < k; ++j) {
-			WeightedItem weightedrandomitem = collection.get(j);
+		for (auto& weightedrandomitem : collection) {
 			i += weightedrandomitem.itemWeight;
 		}
 
 		return i;
 	}
 
-	WeightedItem::WeightedItem(int itemWeightIn)
+	WeightedItem::WeightedItem(int32_t itemWeightIn)
 	{
 		itemWeight = itemWeightIn;
 	}
 
-	WeightedItem getRandomItem(pcg32_unique random, List collection, int totalWeight)
+	WeightedItem getRandomItem(pcg32& random, std::span<WeightedItem> collection, int32_t totalWeight)
 	{
 		if (totalWeight <= 0) {
 			throw std::runtime_error("Total Weight muss higher than zero.");
@@ -33,12 +33,11 @@ namespace WeightedRandom
 		}
 	}
 
-	WeightedItem getRandomItem(List collection, int weight)
+	WeightedItem getRandomItem(std::span<WeightedItem> collection, int32_t weight)
 	{
 		int i = 0;
 
-		for (int j = collection.size(); i < j; ++i) {
-			WeightedItem t = collection.get(i);
+		for (auto& t : collection) {
 			weight -= t.itemWeight;
 			if (weight < 0) {
 				return t;
@@ -48,7 +47,7 @@ namespace WeightedRandom
 		return WeightedItem(0);
 	}
 
-	WeightedItem getRandomItem(pcg32_unique random, List collection)
+	WeightedItem getRandomItem(pcg32_unique random, std::span<WeightedItem> collection)
 	{
 		return getRandomItem(random, collection, getTotalWeight(collection));
 	}

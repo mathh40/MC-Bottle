@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../../../spdlog/include/spdlog/logger.h"
+#include "../../../../../spdlog/include/spdlog/spdlog.h"
 #include <optional>
 #include <set>
 #include <unordered_map>

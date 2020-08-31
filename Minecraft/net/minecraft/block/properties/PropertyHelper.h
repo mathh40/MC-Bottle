@@ -38,7 +38,7 @@ std::any PropertyHelper<T>::getValueClass()
 template <typename T>
 std::string PropertyHelper<T>::toString()
 {
-	return MoreObjects.toStringHelper(this).add("name", name).add("clazz", valueClass).add("values", getAllowedValues()).toString();
+	return fmt::to_string(this).add("name", name).add("clazz", valueClass).add("values", getAllowedValues()).toString();
 }
 
 template<typename T>

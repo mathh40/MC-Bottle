@@ -13,25 +13,25 @@ public:
 	Vec3d(double xIn, double yIn, double zIn);
 	explicit Vec3d(const Vec3i &vector);
 	Vec3d subtractReverse(Vec3d vec) const;
-	Vec3d normalize();
+	Vec3d normalize() const;
 	double dotProduct(Vec3d vec) const;
 	Vec3d crossProduct(Vec3d vec) const;
 	Vec3d subtract(Vec3d vec) const;
 	Vec3d subtract(double x, double y, double z) const;
 	Vec3d add(Vec3d vec) const;
-	Vec3d add(double x, double y, double z) const;
+    static Vec3d add(double x, double y, double z);
 	double distanceTo(Vec3d vec)const;
 	double squareDistanceTo(Vec3d vec)const;
 	double squareDistanceTo(double xIn, double yIn, double zIn)const;
-	Vec3d scale(double factor);
+	Vec3d scale(double factor) const;
 	double length()const;
 	double lengthSquared()const;
 	std::optional<Vec3d> getIntermediateWithXValue(Vec3d vec, double x) const;
 	std::optional<Vec3d> getIntermediateWithYValue(Vec3d vec, double y) const;
 	std::optional<Vec3d> getIntermediateWithZValue(Vec3d vec, double z) const;
 
-	Vec3d rotatePitch(float pitch);
-	Vec3d rotateYaw(float yaw);
+	Vec3d rotatePitch(float pitch) const;
+	Vec3d rotateYaw(float yaw) const;
 	
 
 	double getx()const;

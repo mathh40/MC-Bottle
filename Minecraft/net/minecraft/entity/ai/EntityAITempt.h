@@ -1,5 +1,4 @@
 #pragma once
-#include <rpcndr.h>
 #include <unordered_set>
 
 #include "EntityAIBase.h"

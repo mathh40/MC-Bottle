@@ -15,8 +15,7 @@ EnumDifficulty& EnumDifficulty::byId(uint16_t id)
 	return *ID_MAPPING[id % ID_MAPPING.size()];
 }
 
-std::string EnumDifficulty::getTranslationKey()
-{
+std::string EnumDifficulty::getTranslationKey() const {
 	return translationKey;
 }
 
