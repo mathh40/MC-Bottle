@@ -9,11 +9,11 @@ class ChunkPos
 {
 public:
 	ChunkPos(int32_t x, int32_t z);
-	explicit ChunkPos(BlockPos& pos);
+	explicit ChunkPos(const BlockPos& pos);
 
 	static int64_t asLong(int x, int z);
 
-	double getDistanceSq(Entity entityIn);
+	double getDistanceSq(Entity* entityIn);
 	int32_t getx() const;
 	int32_t getz() const;
 

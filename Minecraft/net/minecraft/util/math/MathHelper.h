@@ -9,7 +9,7 @@ class Vec3i;
 
 namespace MathHelper
 {
-	constexpr  float SQRT_2 = 1.414213f;
+	constexpr float SQRT_2 = 1.414213f;
 	constexpr int32_t MULTIPLY_DE_BRUIJN_BIT_POSITION[] = { 0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9 };
 
     double longBitsToDouble(const int64_t bits)
@@ -25,6 +25,14 @@ namespace MathHelper
 		memcpy(&result, &bits, sizeof(bits));
 		return result;
 	}
+
+	template<typename T>
+	T DifferenceOfProducts(T a, T b, T c, T d) {
+		T cd = c * d;
+		T err = std::fma(-c, d, cd);
+		T dop = std::fma(a, b, -cd);
+		return dop + err;
+}
 
 	float sin(float value);
 	float cos(float value);

@@ -3,6 +3,7 @@
 #include "../potion/PotionEffect.h"
 #include "../util/CombatTracker.h"
 #include "Entity.h"
+#include "EnumCreatureAttribute.h"
 #include "EnumHandSide.h"
 #include "ai/attributes/AttributeModifier.h"
 #include <DamageSource.h>
@@ -110,8 +111,8 @@ public:
     bool isElytraFlying();
     int32_t getTicksElytraFlying() const;
     bool attemptTeleport(double x, double y, double z);
-    bool canBeHitWithPotion();
-    bool attackable();
+    virtual bool canBeHitWithPotion();
+    virtual bool attackable();
     void setPartying(BlockPos pos, bool isPartying);
 
     bool isSwingInProgress;
@@ -153,7 +154,7 @@ protected:
     bool isPlayer();
     void playEquipSound(ItemStack stack);
     void updatePotionEffects();
-    void updatePotionMetadata();
+    virtual void updatePotionMetadata();
     void resetPotionEffectMetadata();
     void onNewPotionEffect(PotionEffect id);
     void onChangedPotionEffect(PotionEffect id, bool p_70695_2_);
@@ -162,9 +163,9 @@ protected:
     virtual void playHurtSound(DamageSource::DamageSource source);
     virtual void dropLoot(bool wasRecentlyHit, int32_t lootingModifier, DamageSource::DamageSource source);
     virtual void dropEquipment(bool wasRecentlyHit, int32_t lootingModifier);
-    SoundEvent getHurtSound(DamageSource::DamageSource damageSourceIn);
-    SoundEvent getDeathSound();
-    SoundEvent getFallSound(int32_t heightIn);
+    virtual SoundEvent getHurtSound(DamageSource::DamageSource damageSourceIn);
+    virtual SoundEvent getDeathSound();
+    virtual SoundEvent getFallSound(int32_t heightIn);
     virtual void dropFewItems(bool wasRecentlyHit, int32_t lootingModifier);
     void damageArmor(float damage);
     void damageShield(float damage);
@@ -183,8 +184,8 @@ protected:
     float getWaterSlowDown();
     virtual float updateDistance(float p_110146_1_, float p_110146_2_);
     virtual void updateEntityActionState();
-    void collideWithNearbyEntities();
-    void collideWithEntity(Entity* entityIn);
+    virtual void collideWithNearbyEntities();
+    virtual void collideWithEntity(Entity* entityIn);
     void markVelocityChanged() override;
     void markPotionsDirty();
     void updateActiveHand();

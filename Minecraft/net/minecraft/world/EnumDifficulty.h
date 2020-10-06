@@ -14,6 +14,8 @@ public:
 	uint16_t getId() const;
 	static EnumDifficulty& byId(uint16_t id);
 	std::string getTranslationKey() const;
+
+	friend bool operator==(const EnumDifficulty &lhs,const EnumDifficulty &rhs);
 private:
 	EnumDifficulty(uint16_t difficultyIdIn, std::string difficultyResourceKeyIn);
 

@@ -1,5 +1,6 @@
 #include "WorldProviderEnd.h"
 #include "WorldEntitySpawner.h"
+#include "biome/BiomeProviderSingle.h"
 
 void WorldProviderEnd::init()
 {
@@ -8,7 +9,7 @@ void WorldProviderEnd::init()
 	dragonFightManager = Util::instanceof<WorldServer>(world) ? std::make_unique<DragonFightManager>((WorldServer)world, nbttagcompound.getCompoundTag("DragonFight")) : nullptr;
 }
 
-IChunkGenerator WorldProviderEnd::createChunkGenerator()
+IChunkGenerator* WorldProviderEnd::createChunkGenerator()
 {
 	return new ChunkGeneratorEnd(world, world->getWorldInfo().isMapFeaturesEnabled(), world->getSeed(), getSpawnCoordinate());
 }
@@ -87,7 +88,7 @@ void WorldProviderEnd::onWorldSave()
 	auto nbttagcompound = std::make_unique<NBTTagCompound>();
 	if (dragonFightManager != nullptr) 
 	{
-		nbttagcompound->setTag("DragonFight", dragonFightManager.getCompound());
+		nbttagcompound->setTag("DragonFight", dragonFightManager->getCompound());
 	}
 
 	world->getWorldInfo().setDimensionData(DimensionType::THE_END, nbttagcompound);

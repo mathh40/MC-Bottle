@@ -4,7 +4,6 @@
 #include "BlockFalling.h"
 #include "properties/PropertyDirection.h"
 #include "properties/PropertyInteger.h"
-#include <Container.h>
 class BlockStateContainer;
 class BlockAnvil :public BlockFalling
 {
@@ -16,9 +15,9 @@ public:
 	BlockFaceShape getBlockFaceShape(IBlockAccess* worldIn, IBlockState* state, BlockPos pos, EnumFacing face)override;
 	bool isOpaqueCube(IBlockState* state)override;
 	IBlockState* getStateForPlacement(World* worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int32_t meta, EntityLivingBase placer)override;
-	bool onBlockActivated(World* worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)override;
+	bool onBlockActivated(World* worldIn, BlockPos pos, IBlockState* state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)override;
 	int32_t damageDropped(IBlockState* state)override;
-	AxisAlignedBB getBoundingBox(IBlockState* state, IBlockAccess source, BlockPos pos)override;
+	AxisAlignedBB getBoundingBox(IBlockState* state, IBlockAccess* source, BlockPos pos)override;
 	void getSubBlocks(CreativeTabs itemIn, std::vector<ItemStack>& items)override;
 	void onEndFalling(World* worldIn, BlockPos pos, IBlockState* fallingState, IBlockState* hitState)override;
 	void onBroken(World* worldIn, BlockPos pos)override;

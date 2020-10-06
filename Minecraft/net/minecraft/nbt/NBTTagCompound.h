@@ -33,8 +33,8 @@ public:
     void setShort(std::string key, int16_t value);
     void setInteger(std::string key, int32_t value);
     void setLong(std::string key, int64_t value);
-    void setUniqueId(std::string key, xg::Guid &value);
-    xg::Guid getUniqueId(std::string key);
+    void setUniqueId(std::string key, const xg::Guid &value);
+    xg::Guid getUniqueId(std::string key) const;
     bool hasUniqueId(std::string key) const;
     void setFloat(std::string key, float value);
     void setDouble(std::string key, double value);

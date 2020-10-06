@@ -6,7 +6,7 @@ class WorldProviderEnd :public WorldProvider
 {
 public:
 	void init() override;
-	IChunkGenerator createChunkGenerator() override;
+	IChunkGenerator* createChunkGenerator() override;
 	float calculateCelestialAngle(int64_t worldTime, float partialTicks) const override;
 	std::optional<std::array<float, 4>> calcSunriseSunsetColors(float celestialAngle, float partialTicks) override;
 	Vec3d getFogColor(float p_76562_1_, float p_76562_2_) const override;

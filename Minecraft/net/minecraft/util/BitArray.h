@@ -12,7 +12,7 @@ public:
 	size_t size() const;
 private:
 	std::vector<uint64_t> longArray;
-	uint32_t bitsPerEntry = 0;
-	uint64_t maxEntryValue = 0;
-	size_t  arraySize = 0;
+	const uint32_t bitsPerEntry;
+	const uint64_t maxEntryValue;
+	const size_t  arraySize;
 };

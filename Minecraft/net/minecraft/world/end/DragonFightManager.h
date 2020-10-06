@@ -3,6 +3,8 @@
 #include "WorldServer.h"
 #include "BossInfoServer.h"
 
+class EntityEnderCrystal;
+class EntityDragon;
 class DragonSpawnManager;
 
 namespace DamageSource {
@@ -44,7 +46,7 @@ private:
 	List crystals;
 
 	bool hasDragonBeenKilled();
-	BlockPattern.PatternHelper findExitPortal();
+	BlockPattern::PatternHelper findExitPortal();
 	void loadChunks() const;
 	void updatePlayers();
 	void findAliveCrystals();

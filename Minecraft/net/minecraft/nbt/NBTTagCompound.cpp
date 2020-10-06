@@ -133,7 +133,7 @@ void NBTTagCompound::setLong(std::string key, int64_t value)
     tagMap.emplace(key, std::make_shared<NBTTagLong>(value));
 }
 
-void NBTTagCompound::setUniqueId(std::string key, xg::Guid &value)
+void NBTTagCompound::setUniqueId(std::string key, const xg::Guid &value)
 {
     auto bytes = value.bytes();
     const char most[] = {bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]};
@@ -142,8 +142,7 @@ void NBTTagCompound::setUniqueId(std::string key, xg::Guid &value)
     setLong(key + "Least", reinterpret_cast<int64_t>(&least));
 }
 
-xg::Guid NBTTagCompound::getUniqueId(std::string key)
-{
+xg::Guid NBTTagCompound::getUniqueId(std::string key) const {
     auto m = getLong(key + "Most");
     auto l = getLong(key + "Least");
     const auto most = reinterpret_cast<char *>(m);

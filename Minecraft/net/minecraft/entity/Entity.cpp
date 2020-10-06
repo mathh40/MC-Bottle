@@ -5,15 +5,11 @@
 
 
 #include "DamageSource.h"
+#include "EntityList.h"
 #include "EntityLivingBase.h"
-#include "Explosion.h"
 #include "Mirror.h"
 #include "ReportedException.h"
 #include "Rotation.h"
-#include "SoundCategory.h"
-#include "World.h"
-#include "WorldProvider.h"
-#include "WorldServer.h"
 #include "../../../../spdlog/include/spdlog/spdlog-inl.h"
 #include "../../../../spdlog/include/spdlog/fmt/bundled/format.h"
 #include "../item/ItemStack.h"
@@ -21,15 +17,19 @@
 #include "../nbt/NBTTagFloat.h"
 #include "../nbt/NBTTagString.h"
 #include "../potion/PotionUtils.h"
+#include "../profiler/Profiler.h"
 #include "../scoreboard/ScorePlayerTeam.h"
 #include "../scoreboard/Team.h"
 #include "../util/text/TextComponentString.h"
+#include "../world/WorldProvider.h"
+#include "../world/WorldServer.h"
 #include "datafix/DataFixer.h"
 #include "datafix/FixTypes.h"
 #include "datafix/IDataWalker.h"
+#include "item/EntityBoat.h"
+#include "item/EntityItem.h"
 #include "math/MathHelper.h"
 #include "math/Vec2f.h"
-#include "text/TextComponentString.h"
 #include "text/translation/I18n.h"
 
 std::shared_ptr<spdlog::logger> Entity::LOGGER = spdlog::get("Minecraft")->clone("EntityAIFindEntityNearestPlayer");
@@ -52,7 +52,7 @@ public:
 
             for(int32_t i = 0; i < nbttaglist->tagCount(); ++i) 
             {
-                nbttaglist->set(i, fixer.process(FixTypes::ENTITY, nbttaglist->getCompoundTagAt(i), versionIn));
+                nbttaglist->set(i, fixer->process(FixTypes::ENTITY, nbttaglist->getCompoundTagAt(i), versionIn));
             }
         }
 
@@ -469,7 +469,7 @@ void Entity::getRecursivePassengersByType(std::type_index entityClass, std::unor
 void Entity::onEntityUpdate()
 {
     world->profiler.startSection("entityBaseTick");
-    if (isRiding() && getRidingEntity().isDead) 
+    if (isRiding() && getRidingEntity()->isDead) 
     {
         dismountRidingEntity();
     }
@@ -526,7 +526,7 @@ void Entity::onEntityUpdate()
 
             if (portalCounter < 0) 
             {
-                ortalCounter = 0;
+                portalCounter = 0;
             }
         }
 
@@ -633,7 +633,7 @@ void Entity::move(const MoverType &type, double x, double y, double z)
             double d13 = 0.0;
             if (x != 0.0) 
             {
-                i5 = Axis::X.ordinal();
+                i5 = Axis::X::ordinal();
                 d13 = MathHelper::clamp(x + pistonDeltas[i5], -0.51, 0.51);
                 x = d13 - pistonDeltas[i5];
                 pistonDeltas[i5] = d13;
@@ -644,7 +644,7 @@ void Entity::move(const MoverType &type, double x, double y, double z)
             }
             else if (y != 0.0) 
             {
-                i5 = Axis::Y.ordinal();
+                i5 = Axis::Y::ordinal();
                 d13 = MathHelper::clamp(y + pistonDeltas[i5], -0.51, 0.51);
                 y = d13 - pistonDeltas[i5];
                 pistonDeltas[i5] = d13;
@@ -905,7 +905,7 @@ void Entity::move(const MoverType &type, double x, double y, double z)
         {
             BlockPos blockpos1 = blockpos.down();
             IBlockState* iblockstate1 = world->getBlockState(blockpos1);
-            Block* block1 = iblockstate1.getBlock();
+            Block* block1 = iblockstate1->getBlock();
             if (Util::instanceof<BlockFence>(block1) || Util::instanceof<BlockWall>(block1) || Util::instanceof<BlockFenceGate>(block1)) 
             {
                 iblockstate = iblockstate1;
@@ -1079,15 +1079,13 @@ bool Entity::isWet()
     }
     else 
     {
-        PooledMutableBlockPos blockpos$pooledmutableblockpos = PooledMutableBlockPos::retain(posX, posY, posZ);
+        BlockPos blockpos$pooledmutableblockpos(posX, posY, posZ);
         if (!world->isRainingAt(blockpos$pooledmutableblockpos) && !world->isRainingAt(blockpos$pooledmutableblockpos.setPos(posX, posY + height, posZ))) 
         {
-            blockpos$pooledmutableblockpos.release();
             return false;
         }
         else 
         {
-            blockpos$pooledmutableblockpos.release();
             return true;
         }
     }
@@ -1454,7 +1452,7 @@ bool Entity::isInRangeToRenderDist(double distance)
 bool Entity::writeToNBTAtomically(NBTTagCompound *compound)
 {
     auto s = getEntityString();
-    if (!isDead && s != nullptr) 
+    if (!isDead && !s.empty()) 
     {
         compound->setString("id", s);
         writeToNBT(compound);
@@ -1469,7 +1467,7 @@ bool Entity::writeToNBTAtomically(NBTTagCompound *compound)
 bool Entity::writeToNBTOptional(NBTTagCompound *compound)
 {
     auto s = getEntityString();
-    if (!isDead && s != nullptr && !isRiding()) 
+    if (!isDead && !s.empty() && !isRiding()) 
     {
         compound->setString("id", s);
         writeToNBT(compound);
@@ -1706,7 +1704,7 @@ bool Entity::isEntityInsideOpaqueBlock()
     }
     else 
     {
-        PooledMutableBlockPos blockpos$pooledmutableblockpos = PooledMutableBlockPos::retain();
+        BlockPos blockpos$pooledmutableblockpos;
 
         for(auto i = 0; i < 8; ++i) 
         {
@@ -1718,13 +1716,10 @@ bool Entity::isEntityInsideOpaqueBlock()
                 blockpos$pooledmutableblockpos.setPos(k, j, l);
                 if (world->getBlockState(blockpos$pooledmutableblockpos)->causesSuffocation()) 
                 {
-                    blockpos$pooledmutableblockpos.release();
                     return true;
                 }
             }
         }
-
-        blockpos$pooledmutableblockpos.release();
         return false;
     }
 }
@@ -2250,7 +2245,7 @@ std::string Entity::getName()
     }
     else 
     {
-        std::string s = EntityList.getEntityString(this);
+        std::string s = EntityList::getEntityString(this);
         if (s.empty()) 
         {
             s = "generic";
@@ -2508,8 +2503,8 @@ void Entity::setRenderDistanceWeight(double renderDistWeight)
 ITextComponent * Entity::getDisplayName()
 {
     TextComponentString* textcomponentstring = new TextComponentString(ScorePlayerTeam::formatPlayerName(getTeam(), getName()));
-    textcomponentstring.getStyle().setHoverEvent(getHoverEvent());
-    textcomponentstring.getStyle().setInsertion(getCachedUniqueIdString());
+    textcomponentstring->getStyle().setHoverEvent(getHoverEvent());
+    textcomponentstring->getStyle().setInsertion(getCachedUniqueIdString());
     return textcomponentstring;
 }
 
@@ -2523,7 +2518,7 @@ std::string Entity::getCustomNameTag()
     return dataManager.get(CUSTOM_NAME);
 }
 
-bool Entity::hasCustomName()
+bool Entity::hasCustomName() const
 {
     return !(dataManager.get(CUSTOM_NAME)).isEmpty();
 }
@@ -2639,9 +2634,9 @@ SoundEvent Entity::getSplashSound()
 void Entity::doBlockCollisions()
 {
     AxisAlignedBB axisalignedbb = getEntityBoundingBox();
-    PooledMutableBlockPos blockpos$pooledmutableblockpos = PooledMutableBlockPos::retain(axisalignedbb.getminX() + 0.001, axisalignedbb.getminY() + 0.001, axisalignedbb.getminZ() + 0.001);
-    PooledMutableBlockPos blockpos$pooledmutableblockpos1 = PooledMutableBlockPos::retain(axisalignedbb.getmaxX() - 0.001, axisalignedbb.getmaxY() - 0.001, axisalignedbb.getmaxZ() - 0.001);
-    PooledMutableBlockPos blockpos$pooledmutableblockpos2 = PooledMutableBlockPos::retain();
+    BlockPos blockpos$pooledmutableblockpos(axisalignedbb.getminX() + 0.001, axisalignedbb.getminY() + 0.001, axisalignedbb.getminZ() + 0.001);
+    BlockPos blockpos$pooledmutableblockpos1(axisalignedbb.getmaxX() - 0.001, axisalignedbb.getmaxY() - 0.001, axisalignedbb.getmaxZ() - 0.001);
+    BlockPos blockpos$pooledmutableblockpos2;
     if (world->isAreaLoaded(blockpos$pooledmutableblockpos, blockpos$pooledmutableblockpos1)) 
     {
         for(int32_t i = blockpos$pooledmutableblockpos.getx(); i <= blockpos$pooledmutableblockpos1.getx(); ++i) 
@@ -2669,10 +2664,6 @@ void Entity::doBlockCollisions()
             }
         }
     }
-
-    blockpos$pooledmutableblockpos.release();
-    blockpos$pooledmutableblockpos1.release();
-    blockpos$pooledmutableblockpos2.release();
 }
 
 void Entity::onInsideBlock(IBlockState *p_191955_1_)

@@ -50,6 +50,8 @@ namespace DamageSource
 		DamageSource setMagicDamage();
 		bool isCreativePlayer();
         std::optional<Vec3d> getDamageLocation();
+
+		friend bool operator==(const DamageSource & lhs,const DamageSource & rhs);
 	private:
 		bool Unblockable = false;
 		bool DamageAllowedInCreativeMode = false;

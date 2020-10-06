@@ -52,7 +52,9 @@ double Vec3d::dotProduct(Vec3d vec) const
 
 Vec3d Vec3d::crossProduct(Vec3d vec) const
 {
-	return Vec3d(y * vec.z - z * vec.y, z * vec.x - x * vec.z, x * vec.y - y * vec.x);
+	return Vec3d(MathHelper::DifferenceOfProducts(y, vec.z, z, vec.y),
+                MathHelper::DifferenceOfProducts(z, vec.x, x, vec.z),
+                MathHelper::DifferenceOfProducts(x, vec.y, y, vec.x));
 }
 
 Vec3d Vec3d::subtract(Vec3d vec) const
@@ -156,7 +158,7 @@ Vec3d Vec3d::rotatePitch(float pitch) const {
 	float f1 = MathHelper::sin(pitch);
 	double d0 = x;
 	double d1 = y * (double)f + z * (double)f1;
-	double d2 = z * (double)f - y * (double)f1;
+	double d2 = MathHelper::DifferenceOfProducts(z,(double)f,y,(double)f1);
 	return Vec3d(d0, d1, d2);
 }
 
@@ -165,7 +167,7 @@ Vec3d Vec3d::rotateYaw(float yaw) const {
 	float f1 = MathHelper::sin(yaw);
 	double d0 = x * (double)f + z * (double)f1;
 	double d1 = y;
-	double d2 = z * (double)f - x * (double)f1;
+	double d2 = MathHelper::DifferenceOfProducts(z,(double)f,y,(double)f1);
 	return Vec3d(d0, d1, d2);
 }
 

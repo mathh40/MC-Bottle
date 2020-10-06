@@ -159,4 +159,8 @@ namespace DamageSource
 	{
 		return {};
 	}
+
+    bool operator==(const DamageSource &lhs, const DamageSource &rhs) {
+		return lhs.damageType == rhs.damageType;
+    }
 }

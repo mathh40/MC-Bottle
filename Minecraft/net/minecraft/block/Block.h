@@ -7,8 +7,8 @@
 #include "../world/IBlockAccess.h"
 #include "../world/chunk/BlockStateContainer.h"
 #include "SoundType.h"
-#include <BlockRenderLayer.h>
-#include <math/AxisAlignedBB.h>
+#include "../util/BlockRenderLayer.h"
+
 enum class EnumOffsetType {
 	NONE,
 	XZ,

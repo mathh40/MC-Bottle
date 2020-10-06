@@ -42,7 +42,7 @@ public:
 	BlockPos offset(EnumFacing facing) const;
 	BlockPos offset(EnumFacing facing, int n) const;
 
-	BlockPos rotate(Rotation rotationIn);
+	BlockPos rotate(Rotation rotationIn) const;
 	BlockPos crossProduct(Vec3i vec) const;
 	int64_t toLong() const;
 	static BlockPos fromLong(long serialized);
@@ -62,21 +62,3 @@ using MutableBlockPos = BlockPos;
 
 std::vector<MutableBlockPos> getAllInBoxMutable(int32_t x1, int32_t y1, int32_t z1, int32_t x2, int32_t y2, int32_t z2);
 std::vector<MutableBlockPos> getAllInBoxMutable(const BlockPos& from, const BlockPos& to);
-
-class PooledMutableBlockPos : public BlockPos
-{
-public:
-	static PooledMutableBlockPos retain();
-	static PooledMutableBlockPos retain(double xIn, double yIn, double zIn);
-	static PooledMutableBlockPos retain(int32_t xIn, int32_t yIn, int32_t zIn);
-	static PooledMutableBlockPos retain(Vec3i& vec);
-
-	void release();
-private:
-	bool released{};
-	static std::vector<PooledMutableBlockPos> POOL;
-	std::mutex mux;
-
-	PooledMutableBlockPos(int32_t xIn, int32_t yIn, int32_t zIn);
-	PooledMutableBlockPos(const PooledMutableBlockPos& lhs);
-};

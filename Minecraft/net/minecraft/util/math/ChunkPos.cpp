@@ -63,11 +63,11 @@ std::string to_string(const ChunkPos& a)
 	return "[" + std::to_string(a.getx()) + ", " + std::to_string(a.getz()) + "]";
 }
 
-double ChunkPos::getDistanceSq(Entity entityIn)
+double ChunkPos::getDistanceSq(Entity* entityIn)
 {
 	double d0 = (double)(x * 16 + 8);
 	double d1 = (double)(z * 16 + 8);
-	double d2 = d0 - entityIn.posX;
-	double d3 = d1 - entityIn.posZ;
+	double d2 = d0 - entityIn->posX;
+	double d3 = d1 - entityIn->posZ;
 	return d2 * d2 + d3 * d3;
 }

@@ -24,3 +24,7 @@ EnumDifficulty::EnumDifficulty(uint16_t difficultyIdIn, std::string difficultyRe
 {
 	ID_MAPPING.emplace_back(*this);
 }
+
+bool operator==(const EnumDifficulty &lhs, const EnumDifficulty &rhs) {
+	return lhs.getId() == rhs.getId();
+}

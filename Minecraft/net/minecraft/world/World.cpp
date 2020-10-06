@@ -7,6 +7,7 @@
 #include "../../../../spdlog/spdlog/fmt/bundled/format.h"
 #include "../util/ITickable.h"
 #include "../util/EntitySelectors.h"
+#include "math/AxisAlignedBB.h"
 
 World& World::init()
 {
@@ -205,9 +206,8 @@ bool World::getCollisionBoxes(Entity* entityIn, AxisAlignedBB aabb, bool p_19150
 	bool flag = entityIn != nullptr && entityIn->isOutsideBorder();
 	bool flag1 = entityIn != nullptr && isInsideWorldBorder(entityIn);
 	auto iblockstate = Blocks::STONE.getDefaultState();
-	auto pooledmutableblockpos = PooledMutableBlockPos::retain();
+	BlockPos pooledmutableblockpos;
 
-	try {
 		for (int32_t k1 = i; k1 < j; ++k1) 
 		{
 			for (int32_t l1 = i1; l1 < j1; ++l1) 
@@ -257,11 +257,6 @@ bool World::getCollisionBoxes(Entity* entityIn, AxisAlignedBB aabb, bool p_19150
 				}
 			}
 		}
-	}
-	catch (std::exception& ex)
-	{
-		pooledmutableblockpos.release();
-	}
 
 	return !outList.value().empty();
 }
@@ -1708,7 +1703,7 @@ bool World::checkBlockCollision(AxisAlignedBB& bb)
 	auto i3 = MathHelper::ceil(bb.getmaxY());
 	auto j3 = MathHelper::floor(bb.getminZ());
 	auto k3 = MathHelper::ceil(bb.getmaxZ());
-	PooledMutableBlockPos pooledmutableblockpos = PooledMutableBlockPos::retain();
+	BlockPos pooledmutableblockpos;
 
 	for (auto l3 = j2; l3 < k2; ++l3) 
 	{
@@ -1719,14 +1714,11 @@ bool World::checkBlockCollision(AxisAlignedBB& bb)
 				auto iblockstate1 = getBlockState(pooledmutableblockpos.setPos(l3, i4, j4));
 				if (iblockstate1->getMaterial() != Material::AIR) 
 				{
-					pooledmutableblockpos.release();
 					return true;
 				}
 			}
 		}
 	}
-
-	pooledmutableblockpos.release();
 	return false;
 }
 
@@ -1738,7 +1730,7 @@ bool World::containsAnyLiquid(AxisAlignedBB& bb)
 	auto i3 = MathHelper::ceil(bb.getmaxY());
 	auto j3 = MathHelper::floor(bb.getminZ());
 	auto k3 = MathHelper::ceil(bb.getmaxZ());
-	PooledMutableBlockPos pooledmutableblockpos = PooledMutableBlockPos::retain();
+	BlockPos pooledmutableblockpos;
 
 	for (auto l3 = j2; l3 < k2; ++l3) 
 	{
@@ -1749,14 +1741,11 @@ bool World::containsAnyLiquid(AxisAlignedBB& bb)
 				auto iblockstate1 = getBlockState(pooledmutableblockpos.setPos(l3, i4, j4));
 				if (iblockstate1->getMaterial().isLiquid()) 
 				{
-					pooledmutableblockpos.release();
 					return true;
 				}
 			}
 		}
 	}
-
-	blockpos$pooledmutableblockpos.release();
 	return false;
 }
 
@@ -1770,14 +1759,13 @@ bool World::isFlammableWithin(AxisAlignedBB& bb)
 	auto k3 = MathHelper::ceil(bb.getmaxZ());
 	if (isAreaLoaded(j2, l2, j3, k2, i3, k3, true)) 
 	{
-		PooledMutableBlockPos pooledmutableblockpos = PooledMutableBlockPos::retain();
+		BlockPos pooledmutableblockpos;
 		auto l3 = j2;
 
 		while (true) 
 		{
 			if (l3 >= k2) 
 			{
-				pooledmutableblockpos.release();
 				break;
 			}
 
@@ -1788,7 +1776,6 @@ bool World::isFlammableWithin(AxisAlignedBB& bb)
 					auto block = getBlockState(pooledmutableblockpos.setPos(l3, i4, j4)).getBlock();
 					if (block == Blocks::FIRE || block == Blocks::FLOWING_LAVA || block == Blocks::LAVA) 
 					{
-						pooledmutableblockpos.release();
 						return true;
 					}
 				}
@@ -1817,7 +1804,7 @@ bool World::handleMaterialAcceleration(AxisAlignedBB& bb, Material& materialIn, 
 	{
 		bool flag = false;
 		Vec3d vec3d = Vec3d::ZERO;
-		PooledMutableBlockPos pooledmutableblockpos = PooledMutableBlockPos::retain();
+		BlockPos pooledmutableblockpos;
 
 		for (auto l3 = j2; l3 < k2; ++l3) 
 		{
@@ -1841,7 +1828,6 @@ bool World::handleMaterialAcceleration(AxisAlignedBB& bb, Material& materialIn, 
 			}
 		}
 
-		pooledmutableblockpos.release();
 		if (vec3d.length() > 0.0 && entityIn.isPushedByWater()) 
 		{
 			vec3d = vec3d.normalize();
@@ -1863,7 +1849,7 @@ bool World::isMaterialInBB(AxisAlignedBB& bb, Material& materialIn)
 	auto i3 = MathHelper::ceil(bb.getmaxY());
 	auto j3 = MathHelper::floor(bb.getminZ());
 	auto k3 = MathHelper::ceil(bb.getmaxZ());
-	PooledMutableBlockPos pooledmutableblockpos = PooledMutableBlockPos::retain();
+	BlockPos pooledmutableblockpos;
 
 	for (auto l3 = j2; l3 < k2; ++l3)
 	{
@@ -1873,14 +1859,12 @@ bool World::isMaterialInBB(AxisAlignedBB& bb, Material& materialIn)
 			{
 				if (getBlockState(pooledmutableblockpos.setPos(l3, i4, j4)).getMaterial() == materialIn) 
 				{
-					pooledmutableblockpos.release();
 					return true;
 				}
 			}
 		}
 	}
 
-	pooledmutableblockpos.release();
 	return false;
 }
 
@@ -2234,10 +2218,8 @@ int32_t World::getRawLight(BlockPos pos, EnumSkyBlock lightType)
 		}
 		else 
 		{
-			PooledMutableBlockPos pooledmutableblockpos = PooledMutableBlockPos::retain();
+			BlockPos pooledmutableblockpos;
 
-			try 
-			{
 				for (auto enumfacing : EnumFacing::values())
 				{
 					pooledmutableblockpos.setPos(pos).move(enumfacing);
@@ -2256,11 +2238,6 @@ int32_t World::getRawLight(BlockPos pos, EnumSkyBlock lightType)
 
 				auto var17 = j2;
 				return var17;
-			}
-			catch(std::exception& ex)
-			{
-				pooledmutableblockpos.release();
-			}
 		}
 	}
 }
@@ -2333,7 +2310,7 @@ bool World::checkLightFor(EnumSkyBlock lightType, BlockPos& pos)
 				} 
 				while (k5 + l5 + i6 >= 17);
 
-				PooledMutableBlockPos pooledmutableblockpos = PooledMutableBlockPos::retain();
+				BlockPos pooledmutableblockpos;
 
 				for(auto enumfacing : EnumFacing::values())
 				{
@@ -2349,7 +2326,6 @@ bool World::checkLightFor(EnumSkyBlock lightType, BlockPos& pos)
 					}
 				}
 
-				pooledmutableblockpos.release();
 			}
 		}
 
@@ -2425,7 +2401,7 @@ std::optional<> World::getPendingBlockUpdates(Chunk& chunkIn, bool remove)
 	return std::nullopt;
 }
 
-std::optional<> World::getEntitiesWithinAABBExcludingEntity(Entity* entityIn, AxisAlignedBB& bb)
+std::vector<Entity*> World::getEntitiesWithinAABBExcludingEntity(Entity* entityIn, AxisAlignedBB& bb)
 {
 	return getEntitiesInAABBexcluding(entityIn, bb, EntitySelectors::NOT_SPECTATING);
 }
@@ -2435,9 +2411,9 @@ std::optional<> World::getPendingBlockUpdates(StructureBoundingBox& structureBB,
 	return std::nullopt;
 }
 
-std::optional<> World::getEntitiesInAABBexcluding(Entity* entityIn, AxisAlignedBB& boundingBox, Predicate predicate)
+std::vector<Entity*> World::getEntitiesInAABBexcluding(Entity* entityIn, AxisAlignedBB& boundingBox, std::function<bool(Entity*)> predicate)
 {
-	List list = Lists.newArrayList();
+	std::vector<Entity*> list;
 	auto j2 = MathHelper::floor((boundingBox.getminX() - 2.0) / 16.0);
 	auto k2 = MathHelper::floor((boundingBox.getmaxX() + 2.0) / 16.0);
 	auto l2 = MathHelper::floor((boundingBox.getminZ() - 2.0) / 16.0);

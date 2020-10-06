@@ -13,6 +13,7 @@
 #include "WorldSettings.h"
 #include "../pathfinding/PathWorldListener.h"
 #include "../scoreboard/Scoreboard.h"
+#include "../scoreboard/ServerScoreboard.h"
 #include "../tileentity/TileEntity.h"
 #include "biome/Biome.h"
 #include "biome/BiomeProvider.h"
@@ -166,8 +167,8 @@ public:
 	virtual bool tickUpdates(bool runAllPending);
 	std::optional<> getPendingBlockUpdates(Chunk& chunkIn, bool remove);
 	std::optional<> getPendingBlockUpdates(StructureBoundingBox& structureBB, bool remove);
-	std::optional<> getEntitiesWithinAABBExcludingEntity(Entity* entityIn, AxisAlignedBB& bb);
-	std::optional<> getEntitiesInAABBexcluding(Entity* entityIn, AxisAlignedBB& boundingBox, Predicate predicate);
+	std::vector<Entity*> getEntitiesWithinAABBExcludingEntity(Entity* entityIn, AxisAlignedBB& bb);
+	std::vector<Entity*> getEntitiesInAABBexcluding(Entity* entityIn, AxisAlignedBB& boundingBox, std::function<bool(Entity*)> predicate);
 	template<class Class,typename Predicate>
 	std::vector<Entity*> getEntities(Predicate filter);
 	template<class Class, typename Predicate>

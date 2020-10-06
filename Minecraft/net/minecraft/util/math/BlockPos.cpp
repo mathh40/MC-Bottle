@@ -3,12 +3,18 @@
 #include "EnumFacing.h"
 #include "MathHelper.h"
 #include "Mirror.h"
+#include "../../entity/Entity.h"
+
 #include <spdlog/fmt/bundled/format.h>
 #include "../../world/gen/structure/ComponentScatteredFeaturePieces.h"
 
 BlockPos BlockPos::ORIGIN = BlockPos(0, 0, 0);
 
-constexpr auto NUM_X_BITS = 1 + MathHelper::log2(MathHelper::smallestEncompassingPowerOfTwo(30000000));
+constexpr int64_t ONE = 1;
+constexpr int64_t TWO = MathHelper::smallestEncompassingPowerOfTwo(30000000);
+constexpr int64_t THREA = MathHelper::log2(TWO);
+
+constexpr auto NUM_X_BITS = ONE + ;
 constexpr uint32_t NUM_Z_BITS = NUM_X_BITS;
 constexpr uint32_t NUM_Y_BITS = 64 - NUM_X_BITS - NUM_Z_BITS;
 constexpr uint32_t Y_SHIFT = 0 + NUM_Z_BITS;
@@ -144,8 +150,7 @@ BlockPos BlockPos::offset(EnumFacing facing, int n) const
 	return n == 0 ? *this : BlockPos(getx() + facing.getXOffset() * n, gety() + facing.getYOffset() * n, getz() + facing.getZOffset() * n);
 }
 
-BlockPos BlockPos::rotate(Rotation rotationIn)
-{
+BlockPos BlockPos::rotate(Rotation rotationIn) const {
 	switch (rotationIn) 
 	{
 	case Mirror::NONE:
@@ -261,58 +266,4 @@ std::vector<MutableBlockPos> getAllInBoxMutable(int32_t x1, int32_t y1, int32_t 
 std::vector<MutableBlockPos> getAllInBoxMutable(const BlockPos& from, const BlockPos& to)
 {
 	return getAllInBoxMutable(MathHelper::min(from.getx(), to.getx()), MathHelper::min(from.gety(), to.gety()), MathHelper::min(from.getz(), to.getz()), MathHelper::max(from.getx(), to.getx()), MathHelper::max(from.gety(), to.gety()), MathHelper::max(from.getz(), to.getz()));
-}
-
-PooledMutableBlockPos PooledMutableBlockPos::retain()
-{
-	return retain(0, 0, 0);
-}
-
-PooledMutableBlockPos PooledMutableBlockPos::retain(double xIn, double yIn, double zIn)
-{
-	return retain(MathHelper::floor(xIn), MathHelper::floor(yIn), MathHelper::floor(zIn));
-}
-
-PooledMutableBlockPos PooledMutableBlockPos::retain(int32_t xIn, int32_t yIn, int32_t zIn)
-{
-	{
-		std::lock_guard<std::mutex> lock(mux);
-		if (!POOL.empty()) 
-		{
-			auto pooledmutableblockpos = POOL.erase(POOL.end() - 1);
-			if (pooledmutableblockpos != POOL.end() && pooledmutableblockpos->released) 
-			{
-				pooledmutableblockpos->released = false;
-				pooledmutableblockpos->setPos(xIn, yIn, zIn);
-				return *pooledmutableblockpos;
-			}
-		}
-	}
-
-	return PooledMutableBlockPos(xIn, yIn, zIn);
-}
-
-PooledMutableBlockPos PooledMutableBlockPos::retain(Vec3i& vec)
-{
-	return retain(vec.getx(), vec.gety(), vec.getz());
-}
-
-void PooledMutableBlockPos::release()
-{
-	std::lock_guard<std::mutex> lock(mux);
-	if (POOL.size() < 100) 
-	{
-		POOL.emplace_back(*this);
-	}
-
-	released = true;
-}
-
-PooledMutableBlockPos::PooledMutableBlockPos(int32_t xIn, int32_t yIn, int32_t zIn)
-	:MutableBlockPos(xIn, yIn, zIn)
-{
-}
-
-PooledMutableBlockPos::PooledMutableBlockPos(const PooledMutableBlockPos& lhs)
-{
 }

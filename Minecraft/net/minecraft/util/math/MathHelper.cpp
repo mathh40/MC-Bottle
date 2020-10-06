@@ -1,4 +1,7 @@
 #include "MathHelper.h"
+
+#include "pcg_random.hpp"
+
 #include <array>
 #include <random>
 #include "Vec3i.h"

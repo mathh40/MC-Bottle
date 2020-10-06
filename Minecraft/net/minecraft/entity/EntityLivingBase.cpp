@@ -5,6 +5,7 @@
 #include "DamageSource.h"
 #include "EntityDamageSource.h"
 #include "EnumHandSide.h"
+#include "SharedMonsterAttributes.h"
 #include "../inventory/ContainerHorseInventory.h"
 #include "../inventory/EntityEquipmentSlot.h"
 #include "../item/ItemArmor.h"
@@ -977,7 +978,7 @@ void EntityLivingBase::updateEntityActionState() {
 }
 
 void EntityLivingBase::collideWithNearbyEntities() {
-    auto list = world->getEntitiesInAABBexcluding(this, getEntityBoundingBox(), EntitySelectors::getTeamCollisionPredicate(this));
+    auto list = world->getEntitiesInAABBexcluding(this, getEntityBoundingBox(), EntitySelectors::getTeamCollisonPredicate(this));
       if (!list.isEmpty()) {
          auto i = world->getGameRules().getInt("maxEntityCramming");
          if (i > 0 && list.size() > i - 1 && rand(4) == 0) {
@@ -1485,7 +1486,7 @@ void EntityLivingBase::travel(float strafe, float vertical, float forward) {
                }
             } else {
                float f6 = 0.91F;
-               PooledMutableBlockPos blockpos$pooledmutableblockpos = PooledMutableBlockPos::retain(posX, getEntityBoundingBox().getminY() - 1.0, posZ);
+               BlockPos blockpos$pooledmutableblockpos(posX, getEntityBoundingBox().getminY() - 1.0, posZ);
                if (onGround) {
                   f6 = world->getBlockState(blockpos$pooledmutableblockpos)->getBlock()->slipperiness * 0.91F;
                }
@@ -1541,7 +1542,6 @@ void EntityLivingBase::travel(float strafe, float vertical, float forward) {
                motionY *= 0.9800000190734863;
                motionX *= (double)f6;
                motionZ *= (double)f6;
-               blockpos$pooledmutableblockpos.release();
             }
          } else {
             d0 = posY;

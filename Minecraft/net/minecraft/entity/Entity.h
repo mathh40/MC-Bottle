@@ -12,6 +12,7 @@
 #include "../util/text/event/HoverEvent.h"
 #include "math/AxisAlignedBB.h"
 
+class DataParameter;
 enum class MoverType;
 
 namespace std {
@@ -35,7 +36,7 @@ class IBlockState;
 class CrashReportCategory;
 
 
-class Entity :public ICommandSender
+class Entity :public ICommandSender ,public IWorldNameable
 {
 public:
     bool preventEntitySpawning;
@@ -112,7 +113,7 @@ public:
     void setSilent(bool isSilent);
     bool hasNoGravity();
     void setNoGravity(bool noGravity);
-    std::optional<AxisAlignedBB> getCollisionBoundingBox();
+    virtual std::optional<AxisAlignedBB> getCollisionBoundingBox();
     bool isImmuneToFire() const;
     virtual void fall(float distance, float damageMultiplier);
     bool isWet();
@@ -123,8 +124,8 @@ public:
     bool isInsideOfMaterial(const Material& materialIn);
     bool isInLava();
     void moveRelative(float strafe, float up, float forward, float friction);
-    int32_t getBrightnessForRender();
-    float getBrightness();
+    virtual int32_t getBrightnessForRender();
+    virtual float getBrightness();
     void setWorld(World* worldIn);
     void setPositionAndRotation(double x, double y, double z, float yaw, float pitch);
     void moveToBlockPosAndAngles(BlockPos pos, float rotationYawIn, float rotationPitchIn);
@@ -136,7 +137,7 @@ public:
     double getDistance(double x, double y, double z) const;
     double getDistanceSq(Entity* entityIn) const;
     virtual void onCollideWithPlayer(EntityPlayer* entityIn);
-    void applyEntityCollision(Entity* entityIn);
+    virtual void applyEntityCollision(Entity* entityIn);
     virtual void addVelocity(double x, double y, double z);
     virtual bool attackEntityFrom(DamageSource::DamageSource source, float amount);
     virtual Vec3d getLook(float partialTicks);
@@ -145,7 +146,7 @@ public:
     virtual bool canBeCollidedWith();
     virtual bool canBePushed();
     void awardKillScore(Entity* p_191956_1_, int32_t p_191956_2_, DamageSource::DamageSource p_191956_3_);
-    bool isInRangeToRender3d(double x, double y, double z);
+    virtual bool isInRangeToRender3d(double x, double y, double z);
     virtual bool isInRangeToRenderDist(double distance);
     bool writeToNBTAtomically(NBTTagCompound* compound);
     virtual bool writeToNBTOptional(NBTTagCompound* compound);
@@ -158,24 +159,24 @@ public:
     bool isEntityAlive() const;
     bool isEntityInsideOpaqueBlock();
     virtual bool processInitialInteract(EntityPlayer* player, EnumHand hand);
-    std::optional<AxisAlignedBB> getCollisionBox(Entity* entityIn);
+    virtual std::optional<AxisAlignedBB> getCollisionBox(Entity* entityIn);
     virtual void updateRidden();
-    void updatePassenger(Entity* passenger);
+    virtual void updatePassenger(Entity* passenger);
     virtual void applyOrientationToEntity(Entity* entityToUpdate);
-    double getYOffset();
-    double getMountedYOffset() const;
+    virtual double getYOffset();
+    virtual double getMountedYOffset() const;
     bool startRiding(Entity* entityIn);
     virtual bool startRiding(Entity* entityIn, bool force);
     void removePassengers();
     virtual void dismountRidingEntity();
     virtual void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int32_t posRotationIncrements, bool teleport);
-    float getCollisionBorderSize();
+    virtual float getCollisionBorderSize();
     Vec3d getLookVec();
     Vec2f getPitchYaw() const;
     Vec3d getForward() const;
     void setPortal(const BlockPos& pos);
     int32_t getPortalCooldown();
-    void setVelocity(double x, double y, double z);
+    virtual void setVelocity(double x, double y, double z);
     virtual void handleStatusUpdate(std::byte id);
     virtual void performHurtAnimation();
     virtual std::vector<> getHeldEquipment();
@@ -196,7 +197,7 @@ public:
     Team* getTeam();
     bool isOnSameTeam(Entity* entityIn);
     bool isOnScoreboardTeam(Team* teamIn);
-    void setInvisible(bool invisible);
+    virtual void setInvisible(bool invisible);
     int32_t getAir();
     void setAir(int32_t air);
     virtual void onStruckByLightning(EntityLightningBolt* lightningBolt);
@@ -204,18 +205,18 @@ public:
     void setInWeb();
     std::string getName() override;
     std::vector<Entity*> getParts();
-    bool isEntityEqual(Entity* entityIn);
+    virtual bool isEntityEqual(Entity* entityIn);
     virtual float getRotationYawHead();
     virtual void setRotationYawHead(float rotation);
     virtual void setRenderYawOffset(float offset);
-    bool canBeAttackedWithItem();
+    virtual bool canBeAttackedWithItem();
     virtual bool hitByEntity(Entity* entityIn);
     std::string toString();
     bool isEntityInvulnerable(DamageSource::DamageSource source);
     bool getIsInvulnerable() const;
     void setEntityInvulnerable(bool isInvulnerable);
     void copyLocationAndAnglesFrom(Entity* entityIn);
-    Entity* changeDimension(int32_t dimensionIn);
+    virtual Entity* changeDimension(int32_t dimensionIn);
     bool isNonBoss();
     float getExplosionResistance(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn);
     bool canExplosionDestroyBlock(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn, float p_174816_5_);
@@ -224,7 +225,7 @@ public:
     EnumFacing getTeleportDirection() const;
     bool doesEntityNotTriggerPressurePlate();
     void addEntityCrashInfo(CrashReportCategory& category);
-    bool canRenderOnFire();
+    virtual bool canRenderOnFire();
     void setUniqueId(xg::Guid uniqueIdIn);
     xg::Guid getUniqueID() const;
     std::string_view getCachedUniqueIdString() const;
@@ -234,14 +235,14 @@ public:
     ITextComponent* getDisplayName() override;
     void setCustomNameTag(std::string name);
     std::string getCustomNameTag();
-    bool hasCustomName();
+    virtual bool hasCustomName() const;
     void setAlwaysRenderNameTag(bool alwaysRenderNameTag);
     bool getAlwaysRenderNameTag();
     void setPositionAndUpdate(double x, double y, double z);
     virtual bool getAlwaysRenderNameTagForRender();
     virtual void notifyDataManagerChange(DataParameter key);
     EnumFacing getHorizontalFacing() const;
-    EnumFacing getAdjustedHorizontalFacing() const;
+    virtual EnumFacing getAdjustedHorizontalFacing() const;
     bool isSpectatedByPlayer(EntityPlayerMP* player);
     AxisAlignedBB getEntityBoundingBox() const;
     AxisAlignedBB getRenderBoundingBox() const;
@@ -261,15 +262,15 @@ public:
     MinecraftServer* getServer() override;
     CommandResultStats getCommandStats() const;
     void setCommandStats(Entity* entityIn);
-    EnumActionResult applyPlayerInteraction(EntityPlayer* player, Vec3d vec, EnumHand hand);
-    bool isImmuneToExplosions();
+    virtual EnumActionResult applyPlayerInteraction(EntityPlayer* player, Vec3d vec, EnumHand hand);
+    virtual bool isImmuneToExplosions();
     void addTrackingPlayer(EntityPlayerMP* player);
     void removeTrackingPlayer(EntityPlayerMP* player);
     float getRotatedYaw(Rotation transformRotation) const;
     float getMirroredYaw(Mirror transformMirror) const;
-    bool ignoreItemEntityData();
+    virtual bool ignoreItemEntityData();
     bool setPositionNonDirty();
-    Entity* getControllingPassenger();
+    virtual Entity* getControllingPassenger();
     std::vector<Entity*> getPassengers() const;
     bool isPassenger(Entity* entityIn) const;
     std::unordered_set<Entity*> getRecursivePassengers() const;
@@ -280,7 +281,7 @@ public:
     virtual bool canPassengerSteer();
     Entity* getRidingEntity() const;
     virtual EnumPushReaction getPushReaction();
-    SoundCategory getSoundCategory();
+    virtual SoundCategory getSoundCategory();
 
 
 
@@ -299,9 +300,9 @@ protected:
     void playStepSound(BlockPos pos, Block* blockIn);
     float playFlySound(float p_191954_1_);
     bool makeFlySound();
-    bool canTriggerWalking();
+    virtual bool canTriggerWalking();
     virtual void updateFallState(double y, bool onGroundIn, IBlockState* state, const BlockPos& pos);
-    void dealFireDamage(int32_t amount);
+    virtual void dealFireDamage(int32_t amount);
     void doWaterSplashEffect();
     void createRunningParticles();
     virtual void markVelocityChanged();
@@ -315,7 +316,7 @@ protected:
     bool canBeRidden(Entity* entityIn);
     void addPassenger(Entity* passenger);
     void removePassenger(Entity* passenger);
-    bool canFitPassenger(Entity* passenger);
+    virtual bool canFitPassenger(Entity* passenger);
     bool getFlag(int32_t flag);
     void setFlag(int32_t flag, bool set);
     bool pushOutOfBlocks(double x, double y, double z);

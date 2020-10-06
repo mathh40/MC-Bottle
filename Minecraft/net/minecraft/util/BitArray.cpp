@@ -2,11 +2,9 @@
 #include "../world/World.h"
 
 BitArray::BitArray(uint32_t bitsPerEntryIn, size_t arraySizeIn)
+    :arraySize(arraySizeIn),bitsPerEntry(bitsPerEntryIn),maxEntryValue((1L << bitsPerEntryIn) - 1L)
 {
     assert(bitsPerEntryIn >= 1 && bitsPerEntryIn <= 32);
-	arraySize = arraySizeIn;
-	bitsPerEntry = bitsPerEntryIn;
-	maxEntryValue = (1L << bitsPerEntryIn) - 1L;
 	longArray.resize(MathHelper::roundUp(arraySizeIn * bitsPerEntryIn, 64) / 64);
 }
 

@@ -2,8 +2,9 @@
 #include "concurrentqueue.h"
 #include "math/ChunkPos.h"
 #include "../../../../../spdlog/include/spdlog/logger.h"
+#include "../../tileentity/TileEntity.h"
+#include "math/AxisAlignedBB.h"
 #include "state/IBlockState.h"
-#include "state/BlockPistonStructureHelper.h"
 
 class World;
 class ChunkPrimer;
@@ -115,7 +116,7 @@ private:
 	int32_t heightMapMinimum;
 	int64_t inhabitedTime;
 	int32_t queuedLightChecks;
-	moodycamel::ConcurrentQueue<BlockPos> tileEntityPosQueue;
+    moodycamel::ConcurrentQueue<BlockPos> tileEntityPosQueue;
 
 	ExtendedBlockStorage* getLastExtendedBlockStorage();
 	void propagateSkylightOcclusion(int32_t x, int32_t z);
@@ -137,8 +138,8 @@ void Chunk::getEntitiesWithinAABBForEntity(Entity* entityIn, AxisAlignedBB& aabb
 {
 	auto i = MathHelper::floor((aabb.getminY() - 2.0) / 16.0);
 	auto j = MathHelper::floor((aabb.getmaxY() + 2.0) / 16.0);
-	i = MathHelper::clamp(i, 0, this.entityLists.length - 1);
-	j = MathHelper::clamp(j, 0, this.entityLists.length - 1);
+	i = MathHelper::clamp(i, 0, entityLists.length - 1);
+	j = MathHelper::clamp(j, 0, entityLists.length - 1);
 
 label67:
 	for (auto k = i; k <= j; ++k) 
