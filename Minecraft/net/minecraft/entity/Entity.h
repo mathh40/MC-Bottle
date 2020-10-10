@@ -96,7 +96,7 @@ public:
     virtual void onKillCommand();
     EntityDataManager getDataManager();
     friend bool operator==(const Entity& lhs , const Entity& rhs);
-    void setDead();
+    virtual void setDead();
     virtual void setDropItemsWhenDead(bool dropWhenDead);
     virtual void setPosition(double x, double y, double z);
     void turn(float yaw, float pitch);
@@ -218,8 +218,8 @@ public:
     void copyLocationAndAnglesFrom(Entity* entityIn);
     virtual Entity* changeDimension(int32_t dimensionIn);
     bool isNonBoss();
-    float getExplosionResistance(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn);
-    bool canExplosionDestroyBlock(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn, float p_174816_5_);
+    virtual float getExplosionResistance(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn);
+    virtual bool canExplosionDestroyBlock(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn, float p_174816_5_);
     virtual int32_t getMaxFallHeight();
     Vec3d getLastPortalVec() const;
     EnumFacing getTeleportDirection() const;

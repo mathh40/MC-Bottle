@@ -1,6 +1,7 @@
 #include "MobSpawnerBaseLogic.h"
 #include "math/BlockPos.h"
 #include "EnumParticleTypes.h"
+#include "../entity/EntityLiving.h"
 #include "math/MathHelper.h"
 #include "../world/World.h"
 
@@ -21,13 +22,13 @@ void MobSpawnerBaseLogic::updateSpawner()
    else 
    {
       BlockPos blockpos = getSpawnerPosition();
-      if (getSpawnerWorld().isRemote)
+      if (getSpawnerWorld()->isRemote)
       {
-         double d3 = (double)((float)blockpos.getx() + getSpawnerWorld().rand.nextFloat());
-         double d4 = (double)((float)blockpos.gety() + getSpawnerWorld().rand.nextFloat());
-         double d5 = (double)((float)blockpos.getz() + getSpawnerWorld().rand.nextFloat());
-         getSpawnerWorld().spawnParticle(EnumParticleTypes::SMOKE_NORMAL, d3, d4, d5, 0.0, 0.0, 0.0);
-         getSpawnerWorld().spawnParticle(EnumParticleTypes::FLAME, d3, d4, d5, 0.0, 0.0, 0.0);
+         double d3 = (double)((float)blockpos.getx() + MathHelper::nextFloat(getSpawnerWorld()->rand));
+         double d4 = (double)((float)blockpos.gety() + MathHelper::nextFloat(getSpawnerWorld()->rand));
+         double d5 = (double)((float)blockpos.getz() + MathHelper::nextFloat(getSpawnerWorld()->rand));
+         getSpawnerWorld()->spawnParticle(EnumParticleTypes::SMOKE_NORMAL, d3, d4, d5, 0.0, 0.0, 0.0);
+         getSpawnerWorld()->spawnParticle(EnumParticleTypes::FLAME, d3, d4, d5, 0.0, 0.0, 0.0);
          if (spawnDelay > 0) 
          {
             --spawnDelay;
@@ -67,33 +68,33 @@ void MobSpawnerBaseLogic::updateSpawner()
             auto nbttaglist = nbttagcompound->getTagList("Pos", 6);
             auto world = getSpawnerWorld();
             int32_t j = nbttaglist->tagCount();
-            double d0 = j >= 1 ? nbttaglist->getDoubleAt(0) : (double)blockpos.getx() + (world.rand.nextDouble() - world.rand.nextDouble()) * (double)spawnRange + 0.5;
-            double d1 = j >= 2 ? nbttaglist->getDoubleAt(1) : (double)(blockpos.gety() + world.rand.nextInt(3) - 1);
-            double d2 = j >= 3 ? nbttaglist->getDoubleAt(2) : (double)blockpos.getz() + (world.rand.nextDouble() - world.rand.nextDouble()) * (double)spawnRange + 0.5;
-            auto entity = AnvilChunkLoader.readWorldEntityPos(nbttagcompound, world, d0, d1, d2, false);
+            double d0 = j >= 1 ? nbttaglist->getDoubleAt(0) : (double)blockpos.getx() + (MathHelper::nextDouble(world->rand) - MathHelper::nextDouble(world->rand)) * (double)spawnRange + 0.5;
+            double d1 = j >= 2 ? nbttaglist->getDoubleAt(1) : (double)(blockpos.gety() + world->rand(3) - 1);
+            double d2 = j >= 3 ? nbttaglist->getDoubleAt(2) : (double)blockpos.getz() + (MathHelper::nextDouble(world->rand) - MathHelper::nextDouble(world->rand)) * (double)spawnRange + 0.5;
+            auto entity = AnvilChunkLoader::readWorldEntityPos(nbttagcompound, world, d0, d1, d2, false);
             if (entity == nullptr) 
             {
                return;
             }
 
-            int k = world.getEntitiesWithinAABB(entity->getClass(),(AxisAlignedBB((double)blockpos.getx(), (double)blockpos.gety(), (double)blockpos.getz(), (double)(blockpos.getx() + 1), (double)(blockpos.gety() + 1), (double)(blockpos.getz() + 1))).grow((double)spawnRange)).size();
+            int k = world->getEntitiesWithinAABB(entity->getClass(),(AxisAlignedBB((double)blockpos.getx(), (double)blockpos.gety(), (double)blockpos.getz(), (double)(blockpos.getx() + 1), (double)(blockpos.gety() + 1), (double)(blockpos.getz() + 1))).grow((double)spawnRange)).size();
             if (k >= maxNearbyEntities) 
             {
                resetTimer();
                return;
             }
 
-            auto entityliving = Util::instanceof<EntityLiving>(entity) ? (EntityLiving)entity : nullptr;
-            entity->setLocationAndAngles(entity->posX, entity->posY, entity->posZ, world.rand.nextFloat() * 360.0F, 0.0F);
+            auto entityliving = Util::instanceof<EntityLiving>(entity) ? (EntityLiving*)entity : nullptr;
+            entity->setLocationAndAngles(entity->posX, entity->posY, entity->posZ, MathHelper::nextFloat(world->rand) * 360.0F, 0.0F);
             if (entityliving == nullptr || entityliving.getCanSpawnHere() && entityliving.isNotColliding()) 
             {
                if (spawnData.getNbt()->getSize() == 1 && spawnData.getNbt()->hasKey("id", 8) && Util::instanceof<EntityLiving>(entity)) 
                {
-                  ((EntityLiving)entity).onInitialSpawn(world.getDifficultyForLocation(BlockPos(entity)), nullptr);
+                  ((EntityLiving*)entity)->onInitialSpawn(world->getDifficultyForLocation(BlockPos(entity)), nullptr);
                }
 
-               AnvilChunkLoader.spawnEntity(entity, world);
-               world.playEvent(2004, blockpos, 0);
+               AnvilChunkLoader::spawnEntity(entity, world);
+               world->playEvent(2004, blockpos, 0);
                if (entityliving != nullptr) 
                {
                   entityliving.spawnExplosionParticle();
@@ -118,7 +119,7 @@ void MobSpawnerBaseLogic::readFromNBT(NBTTagCompound* nbt)
 
       for(auto i = 0; i < nbttaglist->tagCount(); ++i) 
       {
-         potentialSpawns.add(WeightedSpawnerEntity(nbttaglist->getCompoundTagAt(i)));
+         potentialSpawns.emplace_back(WeightedSpawnerEntity(nbttaglist->getCompoundTagAt(i)));
       }
    }
 
@@ -126,9 +127,9 @@ void MobSpawnerBaseLogic::readFromNBT(NBTTagCompound* nbt)
    {
       setNextSpawnData(WeightedSpawnerEntity(1, nbt->getCompoundTag("SpawnData")));
    }
-   else if (!potentialSpawns.isEmpty()) 
+   else if (!potentialSpawns.empty()) 
    {
-      setNextSpawnData((WeightedSpawnerEntity)WeightedRandom.getRandomItem(getSpawnerWorld().rand, potentialSpawns));
+      setNextSpawnData((WeightedSpawnerEntity)WeightedRandom::getRandomItem(getSpawnerWorld()->rand, potentialSpawns));
    }
 
    if (nbt->hasKey("MinSpawnDelay", 99)) 
@@ -173,7 +174,7 @@ NBTTagCompound* MobSpawnerBaseLogic::writeToNBT(NBTTagCompound* p_189530_1_)
       p_189530_1_->setShort("SpawnRange", (short)spawnRange);
       p_189530_1_->setTag("SpawnData", spawnData.getNbt().copy());
       NBTTagList* nbttaglist = new NBTTagList();
-      if (potentialSpawns.isEmpty()) 
+      if (potentialSpawns.empty()) 
       {
          nbttaglist->appendTag(spawnData.toCompoundTag());
       }
@@ -194,10 +195,10 @@ Entity* MobSpawnerBaseLogic::getCachedEntity()
 {
    if (cachedEntity == nullptr) 
    {
-      cachedEntity = AnvilChunkLoader.readWorldEntity(spawnData.getNbt(), getSpawnerWorld(), false);
-      if (spawnData.getNbt().getSize() == 1 && spawnData.getNbt().hasKey("id", 8) && cachedEntity instanceof EntityLiving) 
+      cachedEntity = AnvilChunkLoader::readWorldEntity(spawnData.getNbt(), getSpawnerWorld(), false);
+      if (spawnData.getNbt().getSize() == 1 && spawnData.getNbt().hasKey("id", 8) && Util::instanceof<EntityLiving>(cachedEntity)) 
       {
-         ((EntityLiving)cachedEntity).onInitialSpawn(getSpawnerWorld().getDifficultyForLocation(BlockPos(cachedEntity)), nullptr);
+         ((EntityLiving*)cachedEntity)->onInitialSpawn(getSpawnerWorld()->getDifficultyForLocation(BlockPos(cachedEntity)), nullptr);
       }
    }
 
@@ -206,7 +207,7 @@ Entity* MobSpawnerBaseLogic::getCachedEntity()
 
 bool MobSpawnerBaseLogic::setDelayToMin(int32_t delay)
 {
-   if (delay == 1 && getSpawnerWorld().isRemote) 
+   if (delay == 1 && getSpawnerWorld()->isRemote) 
    {
       spawnDelay = minSpawnDelay;
       return true;
@@ -241,7 +242,7 @@ std::optional<ResourceLocation> MobSpawnerBaseLogic::getEntityId()
 bool MobSpawnerBaseLogic::isActivated()
 {
 	BlockPos blockpos = getSpawnerPosition();
-	return getSpawnerWorld().isAnyPlayerWithinRangeAt((double)blockpos.getx() + 0.5, (double)blockpos.gety() + 0.5, (double)blockpos.getz() + 0.5, (double)activatingRangeFromPlayer);
+	return getSpawnerWorld()->isAnyPlayerWithinRangeAt((double)blockpos.getx() + 0.5, (double)blockpos.gety() + 0.5, (double)blockpos.getz() + 0.5, (double)activatingRangeFromPlayer);
 }
 
 void MobSpawnerBaseLogic::resetTimer()
@@ -253,13 +254,13 @@ void MobSpawnerBaseLogic::resetTimer()
    else 
    {
       int32_t i = maxSpawnDelay - minSpawnDelay;
-      spawnDelay = minSpawnDelay + getSpawnerWorld().rand.nextInt(i);
+      spawnDelay = minSpawnDelay + getSpawnerWorld()->rand(i);
    }
 
    if (!potentialSpawns.empty()) 
    {
-      setNextSpawnData((WeightedSpawnerEntity)WeightedRandom.getRandomItem(getSpawnerWorld().rand, potentialSpawns));
+      setNextSpawnData((WeightedSpawnerEntity)WeightedRandom::getRandomItem(getSpawnerWorld()->rand, potentialSpawns));
    }
 
-   broadcastEvent(1);
+   broadcastEvent(std::byte{1});
 }

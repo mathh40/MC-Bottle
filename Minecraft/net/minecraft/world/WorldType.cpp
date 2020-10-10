@@ -1,5 +1,6 @@
 #include "WorldType.h"
 #include <optional>
+#include <string>
 
 WorldType WorldType::DEFAULT = (WorldType(0, "default", 1)).setVersioned();
 WorldType WorldType::FLAT = WorldType(1, "flat");

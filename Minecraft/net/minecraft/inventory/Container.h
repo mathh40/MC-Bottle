@@ -41,7 +41,7 @@ public:
     void computeStackSize(std::unordered_set<Slot>& dragSlotsIn, int32_t dragModeIn, ItemStack stack, int32_t slotStackSize);
     bool canDragIntoSlot(Slot slotIn);
     int32_t calcRedstone(TileEntity* te) const;
-    int32_t calcRedstoneFromInventory(IInventory* inv) const;
+    static int32_t calcRedstoneFromInventory(IInventory* inv);
     virtual ~Container();
 
     std::vector<ItemStack> inventoryItemStacks;

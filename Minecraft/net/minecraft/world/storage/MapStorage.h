@@ -1,14 +1,13 @@
 #pragma once
 #include "ISaveHandler.h"
 #include "WorldSavedData.h"
-#include "CompressedStreamTools.h"
 #include <fstream>
 
 class MapStorage
 {
 public:
 	template <class T>
-	std::unique_ptr<WorldSavedData> getOrLoadData(std::string_view dataIdentifier);
+	std::unique_ptr<T> getOrLoadData(std::string_view dataIdentifier);
 	MapStorage(ISaveHandler* saveHandlerIn);
 	virtual void setData(std::string_view dataIdentifier, WorldSavedData* data);
 	virtual void saveAllData();
@@ -27,9 +26,9 @@ private:
 };
 
 template <class T>
-std::unique_ptr<WorldSavedData> MapStorage::getOrLoadData(std::string_view dataIdentifier)
+std::unique_ptr<T> MapStorage::getOrLoadData(std::string_view dataIdentifier)
 {
-	auto worldsaveddata = loadedDataMap[dataIdentifier];
+	T* worldsaveddata = loadedDataMap[dataIdentifier];
 	if (worldsaveddata != nullptr) 
 	{
 		return worldsaveddata;

@@ -2,9 +2,10 @@
 #include <regex>
 #include "../properties/IProperty.h"
 #include "BlockStateBase.h"
+
 namespace state {
     class BlockStateContainer {
-      public:
+    public:
         BlockStateContainer(Block *blockIn, std::initializer_list<IProperty *> listproperties);
         std::string validateProperty(Block *block, IProperty *property);
         std::vector<std::set<std::any>> getValidStates() const;
@@ -12,8 +13,8 @@ namespace state {
         Block *getBlock();
         std::vector<IProperty *> getProperties();
 
-      protected:
-      private:
+    protected:
+    private:
         static std::regex NAME_PATTERN;
         Block *block;
         std::unordered_map<std::string, IProperty *> properties{};
@@ -23,11 +24,11 @@ namespace state {
     };
 
     class StateImplementation : public BlockStateBase {
-      public:
+    public:
         std::vector<IProperty *> getPropertyKeys() override;
         std::function<bool()> getValue(IProperty *propertys) override;
 
-      private:
+    private:
         Block *block;
         std::unordered_map<std::string, IProperty *> properties;
         std::unordered_map<> propertyValueTable;

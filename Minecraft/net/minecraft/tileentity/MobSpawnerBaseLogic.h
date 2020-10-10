@@ -16,9 +16,9 @@ public:
 	double getMobRotation() const;
 	double getPrevMobRotation() const;
 	
-	virtual void broadcastEvent(int32_t var1) = 0;
-	virtual World* getSpawnerWorld() = 0;
-	virtual BlockPos getSpawnerPosition() = 0;
+	virtual void broadcastEvent(std::byte var1) = 0;
+	virtual World* getSpawnerWorld() const = 0;
+	virtual BlockPos getSpawnerPosition() const = 0;
 	
 private:
 	std::optional<ResourceLocation> getEntityId();

@@ -1,10 +1,10 @@
 #pragma once
 #include "IInteractionObject.h"
-#include "IInventory.h"
+#include "../inventory/IInventory.h"
 
 class LockCode;
 
-class ILockableContainer : public IInventory,IInteractionObject
+class ILockableContainer : public IInventory,public IInteractionObject
 {
 public:
 	virtual ~ILockableContainer() = default;

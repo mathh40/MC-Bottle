@@ -4,6 +4,7 @@
 #include "Teleporter.h"
 #include "WorldEntitySpawner.h"
 #include "NextTickListEntry.h"
+#include "../entity/EnumCreatureType.h"
 
 class IProgressUpdate;
 class EntityPlayerMP;
@@ -29,8 +30,8 @@ public:
 	void updateEntities() override;
 	void resetUpdateEntityTick();
 	bool tickUpdates(bool runAllPending) override;
-	List getPendingBlockUpdates(Chunk& chunkIn, bool remove);
-	List getPendingBlockUpdates(StructureBoundingBox& structureBB, bool remove);
+	std::optional<> getPendingBlockUpdates(Chunk& chunkIn, bool remove) override;
+	std::optional<> getPendingBlockUpdates(StructureBoundingBox& structureBB, bool remove) override;
 	void updateEntityWithOptionalForce(Entity* entityIn, bool forceUpdate) override;
 	bool isBlockModifiable(EntityPlayer* player, BlockPos& pos) override;
 	void initialize(WorldSettings& settings);
@@ -68,7 +69,7 @@ protected:
 	void tickPlayers() override;
 	IChunkProvider createChunkProvider() override;
 	void createBonusChest();
-	BlockPos getSpawnCoordinate();
+    std::optional<BlockPos> getSpawnCoordinate() const;
 	void saveAllChunks(bool all, IProgressUpdate* progressCallback);
 	void flushToDisk();
 	virtual void saveLevel();
@@ -91,7 +92,7 @@ private:
 	int32_t blockEventCacheIndex;
 	std::vector<NextTickListEntry> pendingTickListEntriesThisTick;
 
-	void resetRainAndThunder();
+	void resetRainAndThunder() const;
 	bool canSpawnNPCs();
 	bool canSpawnAnimals();
 	void setDebugWorldSettings();

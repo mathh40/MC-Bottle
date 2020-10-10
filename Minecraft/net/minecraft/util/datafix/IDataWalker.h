@@ -7,5 +7,5 @@ class IDataWalker
 {
 public:
 	virtual ~IDataWalker() = default;
-	virtual std::unique_ptr<NBTTagCompound> process(IDataFixer* type, std::unique_ptr < NBTTagCompound> compound, int32_t versionIn) = 0;
+	virtual NBTTagCompound* process(IDataFixer* type, NBTTagCompound* compound, int32_t versionIn) = 0;
 };

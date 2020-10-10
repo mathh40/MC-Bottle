@@ -61,7 +61,7 @@ public:
     IBlockState* getDisplayTile();
     virtual IBlockState* getDefaultDisplayTile();
     int32_t getDisplayTileOffset();
-    int32_t getDefaultDisplayTileOffset() const;
+    virtual int32_t getDefaultDisplayTileOffset() const;
     void setDisplayTile(IBlockState* displayTile);
     void setDisplayTileOffset(int32_t displayTileOffset);
     bool hasDisplayTile();
@@ -71,10 +71,10 @@ public:
 protected:
     bool canTriggerWalking() override;
     void entityInit() override;
-    double getMaximumSpeed() const;
+    virtual double getMaximumSpeed() const;
     void moveDerailedMinecart();
-    void moveAlongTrack(const BlockPos& pos, IBlockState* state);
-    void applyDrag();
+    virtual void moveAlongTrack(const BlockPos& pos, IBlockState* state);
+    virtual void applyDrag();
     void readEntityFromNBT(NBTTagCompound* compound) override;
     void writeEntityToNBT(NBTTagCompound* compound) override;
 

@@ -1,7 +1,15 @@
 #include "WorldServer.h"
 #include "NextTickListEntry.h"
 #include "../util/ReportedException.h"
-#include "GameType.h"
+#include "WorldProvider.h"
+#include "../entity/INpc.h"
+#include "../entity/ai/EntityAISkeletonRiders.h"
+#include "../entity/effect/EntityLightningBolt.h"
+#include "../scoreboard/ScoreboardSaveData.h"
+#include "gen/ChunkProviderServer.h"
+#include "gen/feature/WorldGeneratorBonusChest.h"
+#include "storage/WorldInfo.h"
+#include "storage/WorldSavedDataCallableSave.h"
 
 std::shared_ptr<spdlog::logger> WorldServer::LOGGER = spdlog::get("Minecraft")->clone("WorldServer");
 
@@ -9,7 +17,7 @@ WorldServer::WorldServer(MinecraftServer* server, ISaveHandler* saveHandlerIn, W
 	:World(saveHandlerIn, info, DimensionType::getById(dimensionId).createDimension(), profilerIn, false), server(server), entityTracker(this),
 	playerChunkMap(this), chunkProvider(createChunkProvider()), worldTeleporter(this)
 {
-	provider.setWorld(this);
+	provider->setWorld(this);
 	calculateInitialSkylight();
 	calculateInitialWeather();
 	getWorldBorder().setSize(server->getMaxWorldSize());
@@ -18,8 +26,8 @@ WorldServer::WorldServer(MinecraftServer* server, ISaveHandler* saveHandlerIn, W
 World* WorldServer::init()
 {
 	mapStorage = MapStorage(saveHandler);
-	std::string s = VillageCollection.fileNameForProvider(provider);
-	auto villagecollection = (VillageCollection)mapStorage.getOrLoadData(VillageCollection.class, s);
+	std::string s = VillageCollection::fileNameForProvider(provider);
+	auto villagecollection = mapStorage.getOrLoadData<VillageCollection>(s);
 	if (villagecollection == nullptr) 
 	{
 		villageCollection = VillageCollection(this);
@@ -27,19 +35,19 @@ World* WorldServer::init()
 	}
 	else 
 	{
-		villageCollection = villagecollection;
+		villageCollection = *villagecollection;
 		villageCollection.setWorldsForAll(this);
 	}
 
 	worldScoreboard = ServerScoreboard(server);
-	auto scoreboardsavedata = (ScoreboardSaveData)mapStorage.getOrLoadData(ScoreboardSaveData.class, "scoreboard");
+	auto scoreboardsavedata = mapStorage.getOrLoadData<ScoreboardSaveData>("scoreboard");
 	if (scoreboardsavedata == nullptr) 
 	{
 		scoreboardsavedata = ScoreboardSaveData();
 		mapStorage.setData("scoreboard", scoreboardsavedata);
 	}
 
-	scoreboardsavedata.setScoreboard(worldScoreboard);
+	scoreboardsavedata->setScoreboard(worldScoreboard);
 	((ServerScoreboard)worldScoreboard).addDirtyRunnable(WorldSavedDataCallableSave(scoreboardsavedata));
 	lootTable = LootTableManager(new File(new File(saveHandler.getWorldDirectory(), "data"), "loot_tables"));
 	advancementManager = AdvancementManager(new File(new File(saveHandler.getWorldDirectory(), "data"), "advancements"));
@@ -69,7 +77,7 @@ void WorldServer::tick()
 		getWorldInfo().setDifficulty(EnumDifficulty::HARD);
 	}
 
-	provider.getBiomeProvider().cleanupCache();
+	provider->getBiomeProvider().cleanupCache();
 	if (areAllPlayersAsleep()) {
 		if (getGameRules().getBoolean("doDaylightCycle")) 
 		{
@@ -81,13 +89,13 @@ void WorldServer::tick()
 	}
 
 	profiler.startSection("mobSpawner");
-	if (getGameRules().getBoolean("doMobSpawning") && worldInfo.getTerrainType() != WorldType.DEBUG_ALL_BLOCK_STATES) 
+	if (getGameRules().getBoolean("doMobSpawning") && worldInfo.getTerrainType() != WorldType::DEBUG_ALL_BLOCK_STATES) 
 	{
 		entitySpawner.findChunksForSpawning(this, spawnHostileMobs, spawnPeacefulMobs, worldInfo.getWorldTotalTime() % 400 == 0);
 	}
 
 	profiler.endStartSection("chunkSource");
-	chunkProvider.tick();
+	chunkProvider->tick();
 	auto j = calculateSkylightSubtracted(1.0F);
 	if (j != getSkylightSubtracted()) 
 	{
@@ -193,15 +201,15 @@ void WorldServer::scheduleUpdate(BlockPos& pos, Block* blockIn, int32_t delay)
 
 void WorldServer::updateBlockTick(BlockPos& pos, Block* blockIn, int32_t delay, int32_t priority)
 {
-	Material material = blockIn.getDefaultState().getMaterial();
+	Material material = blockIn->getDefaultState().getMaterial();
 	if (scheduledUpdatesAreImmediate && material != Material::AIR) 
 	{
-		if (blockIn.requiresUpdates()) {
+		if (blockIn->requiresUpdates()) {
 			if (isAreaLoaded(pos.add(-8, -8, -8), pos.add(8, 8, 8))) 
 			{
 				auto iblockstate = getBlockState(pos);
-				if (iblockstate.getMaterial() != Material.AIR && iblockstate.getBlock() == blockIn) {
-					iblockstate.getBlock().updateTick(this, pos, iblockstate, rand);
+				if (iblockstate->getMaterial() != Material::AIR && iblockstate->getBlock() == blockIn) {
+					iblockstate->getBlock()->updateTick(this, pos, iblockstate, rand);
 				}
 			}
 
@@ -231,7 +239,7 @@ void WorldServer::scheduleBlockUpdate(BlockPos& pos, Block* blockIn, int32_t del
 {
 	NextTickListEntry nextticklistentry(pos, blockIn);
 	nextticklistentry.setPriority(priority);
-	Material material = blockIn.getDefaultState().getMaterial();
+	Material material = blockIn->getDefaultState()->getMaterial();
 	if (material != Material::AIR) 
 	{
 		nextticklistentry.setScheduledTime(delay + worldInfo.getWorldTotalTime());
@@ -258,7 +266,7 @@ void WorldServer::updateEntities()
 		resetUpdateEntityTick();
 	}
 
-	provider.onWorldUpdateEntities();
+	provider->onWorldUpdateEntities();
 	World::updateEntities();
 }
 
@@ -269,7 +277,7 @@ void WorldServer::resetUpdateEntityTick()
 
 bool WorldServer::tickUpdates(bool runAllPending)
 {
-	if (worldInfo.getTerrainType() == WorldType.DEBUG_ALL_BLOCK_STATES) 
+	if (worldInfo.getTerrainType() == WorldType::DEBUG_ALL_BLOCK_STATES) 
 	{
 		return false;
 	}
@@ -307,15 +315,13 @@ bool WorldServer::tickUpdates(bool runAllPending)
 
 			for (auto nextticklistentry1 : pendingTickListEntriesThisTick)
 			{
-				nextticklistentry1 = (NextTickListEntry)iterator.next();
-				iterator.remove();
 				if (isAreaLoaded(nextticklistentry1.position.add(0, 0, 0), nextticklistentry1.position.add(0, 0, 0))) 
 				{
 					auto iblockstate = getBlockState(nextticklistentry1.position);
-					if (iblockstate.getMaterial() != Material::AIR && Block.isEqualTo(iblockstate.getBlock(), nextticklistentry1.getBlock())) {
+					if (iblockstate->getMaterial() != Material::AIR && Block.isEqualTo(iblockstate->getBlock(), nextticklistentry1.getBlock())) {
 						try 
 						{
-							iblockstate.getBlock().updateTick(this, nextticklistentry1.position, iblockstate, this.rand);
+							iblockstate->getBlock().updateTick(this, nextticklistentry1.position, iblockstate, this.rand);
 						}
 						catch (Throwable var10) 
 						{
@@ -331,6 +337,8 @@ bool WorldServer::tickUpdates(bool runAllPending)
 					scheduleUpdate(nextticklistentry1.position, nextticklistentry1.getBlock(), 0);
 				}
 			}
+			pendingTickListEntriesThisTick.clear();
+
 
 			profiler.endSection();
 			pendingTickListEntriesThisTick.clear();
@@ -350,7 +358,7 @@ void WorldServer::setInitialSpawnLocation()
 	auto j = worldInfo.getSpawnZ();
 	auto k = 0;
 
-	while (getGroundAboveSeaLevel(BlockPos(i, 0, j)).getMaterial() == Material.AIR) {
+	while (getGroundAboveSeaLevel(BlockPos(i, 0, j))->getMaterial() == Material::AIR) {
 		i += rand(8) - rand(8);
 		j += rand(8) - rand(8);
 		++k;
@@ -394,9 +402,9 @@ void WorldServer::playerCheckLight()
 	{
 		int i = rand(playerEntities.size());
 		auto entityplayer = playerEntities[i];
-		int j = MathHelper::floor(entityplayer.posX) + rand(11) - 5;
-		int k = MathHelper::floor(entityplayer.posY) + rand(11) - 5;
-		int l = MathHelper::floor(entityplayer.posZ) + rand(11) - 5;
+		int j = MathHelper::floor(entityplayer->posX) + rand(11) - 5;
+		int k = MathHelper::floor(entityplayer->posY) + rand(11) - 5;
+		int l = MathHelper::floor(entityplayer->posZ) + rand(11) - 5;
 		BlockPos pos(j, k, l);
 		checkLight(pos);
 	}
@@ -407,7 +415,7 @@ void WorldServer::playerCheckLight()
 void WorldServer::updateBlocks()
 {
 	playerCheckLight();
-	if (worldInfo.getTerrainType() == WorldType.DEBUG_ALL_BLOCK_STATES) 
+	if (worldInfo.getTerrainType() == WorldType::DEBUG_ALL_BLOCK_STATES) 
 	{
 		for (auto chunk : playerChunkMap)
 		{
@@ -592,8 +600,7 @@ void WorldServer::tickPlayers()
 	}
 }
 
-void WorldServer::resetRainAndThunder()
-{
+void WorldServer::resetRainAndThunder() const {
 	worldInfo.setRainTime(0);
 	worldInfo.setRaining(false);
 	worldInfo.setThunderTime(0);
@@ -625,7 +632,7 @@ void WorldServer::setDebugWorldSettings()
 	getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
 }
 
-List WorldServer::getPendingBlockUpdates(Chunk& chunkIn, bool remove)
+std::optional<> WorldServer::getPendingBlockUpdates(Chunk& chunkIn, bool remove)
 {
 	ChunkPos chunkpos = chunkIn.getPos();
 	auto i = (chunkpos.getx() << 4) - 2;
@@ -639,12 +646,12 @@ void WorldServer::updateEntityWithOptionalForce(Entity* entityIn, bool forceUpda
 {
 	if (!canSpawnAnimals() && (Util::instanceof <EntityAnimal>(entityIn) || Util::instanceof< EntityWaterMob>(entityIn)))
 	{
-		entityIn.setDead();
+		entityIn->setDead();
 	}
 
 	if (!canSpawnNPCs() && Util::instanceof<INpc>(entityIn))
 	{
-		entityIn.setDead();
+		entityIn->setDead();
 	}
 
 	World::updateEntityWithOptionalForce(entityIn, forceUpdate);
@@ -652,23 +659,25 @@ void WorldServer::updateEntityWithOptionalForce(Entity* entityIn, bool forceUpda
 
 bool WorldServer::isBlockModifiable(EntityPlayer* player, BlockPos& pos)
 {
-	return !server.isBlockProtected(this, pos, player) && getWorldBorder().contains(pos);
+	return !server->isBlockProtected(this, pos, player) && getWorldBorder().contains(pos);
 }
 
-List WorldServer::getPendingBlockUpdates(StructureBoundingBox& structureBB, bool remove)
+std::vector<NextTickListEntry> WorldServer::getPendingBlockUpdates(StructureBoundingBox& structureBB, bool remove)
 {
-	List list;
+	std::vector<NextTickListEntry> list;
 
-	for (int i = 0; i < 2; ++i)
+
+
+	for (auto i = 0; i < 2; ++i)
 	{
-		Iterator iterator;
+
 		if (i == 0) 
 		{
-			iterator = pendingTickListEntriesTreeSet.iterator();
+			auto iterator = pendingTickListEntriesTreeSet.begin();
 		}
 		else 
 		{
-			iterator = pendingTickListEntriesThisTick.iterator();
+			auto iterator = pendingTickListEntriesThisTick.begin();
 		}
 
 
@@ -682,15 +691,10 @@ List WorldServer::getPendingBlockUpdates(StructureBoundingBox& structureBB, bool
 				{
 					if (i == 0) 
 					{
-						pendingTickListEntriesHashSet.remove(nextticklistentry);
+						pendingTickListEntriesHashSet.erase(nextticklistentry);
 					}
 
 					iterator.remove();
-				}
-
-				if (list == null) 
-				{
-					list = Lists.newArrayList();
 				}
 
 				list.add(nextticklistentry);
@@ -701,10 +705,10 @@ List WorldServer::getPendingBlockUpdates(StructureBoundingBox& structureBB, bool
 	return list;
 }
 
-IChunkProvider WorldServer::createChunkProvider()
+IChunkProvider* WorldServer::createChunkProvider()
 {
-	IChunkLoader ichunkloader = saveHandler.getChunkLoader(provider);
-	return ChunkProviderServer(this, ichunkloader, provider.createChunkGenerator());
+	IChunkLoader* ichunkloader = saveHandler.getChunkLoader(provider);
+	return ChunkProviderServer(this, ichunkloader, provider->createChunkGenerator());
 }
 
 void WorldServer::createBonusChest()
@@ -713,8 +717,8 @@ void WorldServer::createBonusChest()
 
 	for (auto i = 0; i < 10; ++i) 
 	{
-		auto j = worldInfo.getSpawnX() + rand(6) - rand(6);
-		auto k = worldInfo.getSpawnZ() + rand(6) - rand(6);
+		int32_t j = worldInfo.getSpawnX() + rand(6) - rand(6);
+		int32_t k = worldInfo.getSpawnZ() + rand(6) - rand(6);
 		BlockPos pos(j, 0, k);
 		BlockPos blockpos = getTopSolidOrLiquidBlock(pos).up();
 		if (worldgeneratorbonuschest.generate(this, rand, blockpos)) 
@@ -724,9 +728,8 @@ void WorldServer::createBonusChest()
 	}
 }
 
-BlockPos WorldServer::getSpawnCoordinate()
-{
-	return provider.getSpawnCoordinate();
+std::optional<BlockPos> WorldServer::getSpawnCoordinate() const {
+	return provider->getSpawnCoordinate();
 }
 
 void WorldServer::saveAllChunks(bool all, IProgressUpdate* progressCallback)
@@ -837,12 +840,12 @@ void WorldServer::updateWeather()
 	World::updateWeather();
 	if (prevRainingStrength != rainingStrength) 
 	{
-		server.getPlayerList().sendPacketToAllPlayersInDimension(SPacketChangeGameState(7, rainingStrength), provider.getDimensionType().getId());
+		server.getPlayerList().sendPacketToAllPlayersInDimension(SPacketChangeGameState(7, rainingStrength), provider->getDimensionType().getId());
 	}
 
 	if (prevThunderingStrength != thunderingStrength) 
 	{
-		server.getPlayerList().sendPacketToAllPlayersInDimension(SPacketChangeGameState(8, thunderingStrength), provider.getDimensionType().getId());
+		server.getPlayerList().sendPacketToAllPlayersInDimension(SPacketChangeGameState(8, thunderingStrength), provider->getDimensionType().getId());
 	}
 
 	if (flag != isRaining()) 
@@ -945,7 +948,7 @@ bool WorldServer::addWeatherEffect(Entity* entityIn)
 {
 	if (World::addWeatherEffect(entityIn)) 
 	{
-		server.getPlayerList().sendToAllNearExcept(nullptr, entityIn.posX, entityIn.posY, entityIn.posZ, 512.0, provider.getDimensionType().getId(), SPacketSpawnGlobalEntity(entityIn));
+		server.getPlayerList().sendToAllNearExcept(nullptr, entityIn.posX, entityIn.posY, entityIn.posZ, 512.0, provider->getDimensionType().getId(), SPacketSpawnGlobalEntity(entityIn));
 		return true;
 	}
 	else 
@@ -961,9 +964,9 @@ void WorldServer::setEntityState(Entity* entityIn, std::byte state)
 
 void WorldServer::createSpawnPosition(WorldSettings& settings)
 {
-	if (!provider.canRespawnHere()) 
+	if (!provider->canRespawnHere()) 
 	{
-		worldInfo.setSpawn(BlockPos::ORIGIN.up(provider.getAverageGroundLevel()));
+		worldInfo.setSpawn(BlockPos::ORIGIN.up(provider->getAverageGroundLevel()));
 	}
 	else if (worldInfo.getTerrainType() == WorldType.DEBUG_ALL_BLOCK_STATES) 
 	{
@@ -972,12 +975,12 @@ void WorldServer::createSpawnPosition(WorldSettings& settings)
 	else 
 	{
 		findingSpawnPoint = true;
-		BiomeProvider biomeprovider = provider.getBiomeProvider();
+		BiomeProvider biomeprovider = provider->getBiomeProvider();
 		List list = biomeprovider.getBiomesToSpawnIn();
 		pcg32 random(getSeed());
 		BlockPos blockpos = biomeprovider.findBiomePosition(0, 0, 256, list, random);
 		auto i = 8;
-		auto j = provider.getAverageGroundLevel();
+		auto j = provider->getAverageGroundLevel();
 		auto k = 8;
 		if (blockpos) 
 		{
@@ -991,7 +994,7 @@ void WorldServer::createSpawnPosition(WorldSettings& settings)
 
 		auto l = 0;
 
-		while (!provider.canCoordinateBeSpawn(i, k)) 
+		while (!provider->canCoordinateBeSpawn(i, k)) 
 		{
 			i += random(64) - random(64);
 			k += random(64) - random(64);

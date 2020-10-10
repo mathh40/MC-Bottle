@@ -20,9 +20,9 @@ public:
 	int32_t getInventoryStackLimit() const;
 	void update() override;
 	bool isEmpty();
-	bool pullItems(IHopper* hopper);
-	bool putDropInInventoryAllSlots(IInventory* source, IInventory* destination, EntityItem* entity);
-	ItemStack putStackInInventoryAllSlots(IInventory* source, IInventory* destination, ItemStack stack, std::optional<EnumFacing> direction);
+	static bool pullItems(IHopper* hopper);
+	static bool putDropInInventoryAllSlots(IInventory* source, IInventory* destination, EntityItem* entity);
+	static ItemStack putStackInInventoryAllSlots(IInventory* source, IInventory* destination, ItemStack stack, std::optional<EnumFacing> direction);
 	IInventory* getSourceInventory(IHopper* hopper);
 	std::vector<Entity*> getCaptureItems(World* worldIn, double p_184292_1_, double p_184292_3_, double p_184292_5_);
 	IInventory* getInventoryAtPosition(World* worldIn, double x, double y, double z);
@@ -30,7 +30,7 @@ public:
 	double getYPos() override;
 	double getZPos() override;
 	std::string getGuiID() const;
-	Container createContainer(InventoryPlayer* playerInventory, EntityPlayer* playerIn);
+	Container* createContainer(InventoryPlayer* playerInventory, EntityPlayer* playerIn);
 protected:
 	std::vector<ItemStack> getItems() override;
 private:

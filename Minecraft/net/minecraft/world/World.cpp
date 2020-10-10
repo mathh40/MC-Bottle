@@ -2396,9 +2396,9 @@ bool World::tickUpdates(bool runAllPending)
 	return false;
 }
 
-std::optional<> World::getPendingBlockUpdates(Chunk& chunkIn, bool remove)
+std::vector<NextTickListEntry> World::getPendingBlockUpdates(Chunk& chunkIn, bool remove)
 {
-	return std::nullopt;
+	return std::vector<NextTickListEntry>();
 }
 
 std::vector<Entity*> World::getEntitiesWithinAABBExcludingEntity(Entity* entityIn, AxisAlignedBB& bb)
@@ -2406,9 +2406,9 @@ std::vector<Entity*> World::getEntitiesWithinAABBExcludingEntity(Entity* entityI
 	return getEntitiesInAABBexcluding(entityIn, bb, EntitySelectors::NOT_SPECTATING);
 }
 
-std::optional<> World::getPendingBlockUpdates(StructureBoundingBox& structureBB, bool remove)
+std::vector<NextTickListEntry> World::getPendingBlockUpdates(StructureBoundingBox& structureBB, bool remove)
 {
-	return std::nullopt;
+	return std::vector<NextTickListEntry>();
 }
 
 std::vector<Entity*> World::getEntitiesInAABBexcluding(Entity* entityIn, AxisAlignedBB& boundingBox, std::function<bool(Entity*)> predicate)

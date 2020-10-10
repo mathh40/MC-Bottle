@@ -12,6 +12,7 @@
 #include "WorldType.h"
 #include "WorldSettings.h"
 #include "../pathfinding/PathWorldListener.h"
+#include "../profiler/Profiler.h"
 #include "../scoreboard/Scoreboard.h"
 #include "../scoreboard/ServerScoreboard.h"
 #include "../tileentity/TileEntity.h"
@@ -26,7 +27,7 @@
 #include "gen/ChunkGeneratorEnd.h"
 
 
-class Profiler;
+class NextTickListEntry;
 class Packet;
 class StructureBoundingBox;
 class WorldSettings;
@@ -165,8 +166,8 @@ public:
 	bool checkLight(BlockPos& pos);
 	bool checkLightFor(EnumSkyBlock lightType, BlockPos& pos);
 	virtual bool tickUpdates(bool runAllPending);
-	std::optional<> getPendingBlockUpdates(Chunk& chunkIn, bool remove);
-	std::optional<> getPendingBlockUpdates(StructureBoundingBox& structureBB, bool remove);
+    virtual std::vector<NextTickListEntry> getPendingBlockUpdates(Chunk& chunkIn, bool remove);
+    virtual std::vector<NextTickListEntry> getPendingBlockUpdates(StructureBoundingBox& structureBB, bool remove);
 	std::vector<Entity*> getEntitiesWithinAABBExcludingEntity(Entity* entityIn, AxisAlignedBB& bb);
 	std::vector<Entity*> getEntitiesInAABBexcluding(Entity* entityIn, AxisAlignedBB& boundingBox, std::function<bool(Entity*)> predicate);
 	template<class Class,typename Predicate>
@@ -176,7 +177,7 @@ public:
 	template<class Class>
 	std::vector<Class*> getEntitiesWithinAABB(const AxisAlignedBB& bb);
 	template<class Class, typename Predicate>
-	std::vector<Class*> getEntitiesWithinAABB(const AxisAlignedBB& aabb, std::optional<Predicate> filter);
+	std::vector<Class*> getEntitiesWithinAABB(const AxisAlignedBB& aabb, Predicate filter);
 	template<class Class>
 	Entity* findNearestEntityWithinAABB(AxisAlignedBB& aabb, Entity* closestTo);
 	Entity* getEntityByID(int32_t id);
@@ -205,7 +206,7 @@ public:
 	EntityPlayer* getNearestAttackablePlayer(Entity* entityIn, double maxXZDistance, double maxYDistance);
 	EntityPlayer* getNearestAttackablePlayer(BlockPos& pos, double maxXZDistance, double maxYDistance);
 	template<class Predicate, class Function>
-	EntityPlayer* getNearestAttackablePlayer(double posX, double posY, double posZ, double maxXZDistance, double maxYDistance, std::optional<Function> playerToDouble, std::optional<Predicate> predicate);
+	EntityPlayer* getNearestAttackablePlayer(double posX, double posY, double posZ, double maxXZDistance, double maxYDistance, std::optional<Function> playerToDouble, Predicate predicate);
 	EntityPlayer* getPlayerEntityByName(std::string name);
 	EntityPlayer* getPlayerEntityByUUID(xg::Guid& uuid);
 	void sendQuittingDisconnectingPacket();
@@ -357,7 +358,7 @@ std::vector<Class*> World::getEntitiesWithinAABB(const AxisAlignedBB& bb)
 }
 
 template <class Class, typename Predicate>
-std::vector<Class*> World::getEntitiesWithinAABB(const AxisAlignedBB& aabb, std::optional<Predicate> filter)
+std::vector<Class*> World::getEntitiesWithinAABB(const AxisAlignedBB& aabb, Predicate filter)
 {
 	auto j2 = MathHelper::floor((aabb.getminX() - 2.0) / 16.0);
 	auto k2 = MathHelper::ceil((aabb.getmaxX() + 2.0) / 16.0);
@@ -388,7 +389,7 @@ Entity* World::findNearestEntityWithinAABB(AxisAlignedBB& aabb, Entity* closestT
 
 	for (auto t1 : list)
 	{
-		if (t1 != closestTo && EntitySelectors.NOT_SPECTATING.apply(t1)) 
+		if (t1 != closestTo && EntitySelectors::NOT_SPECTATING(t1)) 
 		{
 			double d1 = closestTo->getDistanceSq(t1);
 			if (d1 <= d0) 
@@ -450,7 +451,7 @@ EntityPlayer* World::getClosestPlayer(double x, double y, double z, double dista
 
 template <class Predicate, class Function>
 EntityPlayer* World::getNearestAttackablePlayer(double posX, double posY, double posZ, double maxXZDistance,
-	double maxYDistance, std::optional<Function> playerToDouble, std::optional<Predicate> predicate)
+	double maxYDistance, std::optional<Function> playerToDouble, Predicate predicate)
 {
 	double d0 = -1.0;
 	EntityPlayer* entityplayer = nullptr;

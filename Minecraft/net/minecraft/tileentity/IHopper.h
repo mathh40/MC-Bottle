@@ -1,3 +1,4 @@
+#pragma once
 #include "../world/World.h"
 
 class IHopper : public IInventory

@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include "../util/text/ITextComponent.h"
+#include <string>
 
 class IWorldNameable
 {

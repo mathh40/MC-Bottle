@@ -1,11 +1,10 @@
 #pragma once
-#include "concurrentqueue.h"
 #include "math/ChunkPos.h"
 #include "../../../../../spdlog/include/spdlog/logger.h"
 #include "../../tileentity/TileEntity.h"
 #include "math/AxisAlignedBB.h"
-#include "state/IBlockState.h"
 
+class IChunkProvider;
 class World;
 class ChunkPrimer;
 class IChunkGenerator;

@@ -1,6 +1,7 @@
 #include "BlockStateContainer.h"
 #include "../../util/math/Cartesian.h"
 #include "../../util/MapPopulator.h"
+
 namespace state {
     std::regex BlockStateContainer::NAME_PATTERN("^[a-z0-9_]+$");
 
@@ -51,7 +52,8 @@ namespace state {
                 }
 
                 s1 = property->getName(t);
-            } while (std::regex_match(s1, NAME_PATTERN));
+            }
+            while (std::regex_match(s1, NAME_PATTERN));
 
             throw std::runtime_error("Block: " + block->getLocalizedName() + " has property: " + s +
                                      " with invalidly named value: " + s1);
@@ -99,7 +101,9 @@ namespace state {
     StateImplementation::StateImplementation(Block *blockIn,
                                              std::unordered_map<std::string, IProperty *> propertiesIn) :
         block(blockIn),
-        properties(propertiesIn) {}
+        properties(propertiesIn) {
+    }
+
     std::string StateImplementation::getValue(IProperty *propertys) {
         auto comparable = (Comparable)properties.get(propertys);
         if (comparable == nullptr) {

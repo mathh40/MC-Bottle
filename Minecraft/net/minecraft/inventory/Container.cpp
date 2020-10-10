@@ -519,7 +519,7 @@ int32_t Container::calcRedstone(TileEntity *te) const
     return Util::instanceof<IInventory>(te)? calcRedstoneFromInventory((IInventory*)te) : 0;
 }
 
-int32_t Container::calcRedstoneFromInventory(IInventory *inv) const
+int32_t Container::calcRedstoneFromInventory(IInventory *inv) 
 {
     if (inv == nullptr) 
     {
@@ -710,4 +710,4 @@ void Container::slotChangedCraftingGrid(World *p_192389_1_, EntityPlayer *p_1923
         entityplayermp->connection.sendPacket(SPacketSetSlot(windowId, 0, itemstack));
     }
 }
-Container::~Container() {}
+Container::~Container() = default;

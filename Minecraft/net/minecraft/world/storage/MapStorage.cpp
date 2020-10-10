@@ -1,4 +1,8 @@
 #include "MapStorage.h"
+
+
+#include "CompressedStreamTools.h"
+#include "NBTTagCompound.h"
 #include "NBTTagShort.h"
 
 MapStorage::MapStorage(ISaveHandler* saveHandlerIn)
@@ -9,9 +13,11 @@ MapStorage::MapStorage(ISaveHandler* saveHandlerIn)
 
 void MapStorage::setData(std::string_view dataIdentifier, WorldSavedData* data)
 {
-	if (loadedDataMap.find(std::string(dataIdentifier)) != loadedDataMap.end()) 
+	auto ite = loadedDataMap.find(std::string(dataIdentifier));
+	if (ite != loadedDataMap.end())
 	{
-		loadedDataList.erase(loadedDataMap.erase(std::string(dataIdentifier)));
+		loadedDataMap.erase(ite);
+		loadedDataList.erase(std::remove_if(loadedDataList.begin(),loadedDataList.end(),ite->second()),loadedDataList.end());
 	}
 
 	loadedDataMap.emplace(dataIdentifier, data);
@@ -103,11 +109,10 @@ void MapStorage::loadIdCounts()
 		if (exists(file1))
 		{
 			auto nbttagcompound = CompressedStreamTools::read(file1);
-			Iterator var4 = nbttagcompound.getKeySet().iterator();
 
 			for(auto s : nbttagcompound->getCompoundMap())
 			{
-				auto nbtbase = nbttagcompound->getTag(s);
+				auto nbtbase = nbttagcompound->getTag(s.first);
 				if (Util::instanceof <NBTTagShort>(nbtbase)) 
 				{
 					auto nbttagshort = (NBTTagShort*)nbtbase;

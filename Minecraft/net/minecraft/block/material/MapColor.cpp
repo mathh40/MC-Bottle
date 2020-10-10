@@ -1,21 +1,69 @@
 #include "MapColor.h"
 
-MapColor::BLOCK_COLORS[EnumDyeColor::WHITE.getMetadata()] = &SNOW;
-MapColor::BLOCK_COLORS[EnumDyeColor::ORANGE.getMetadata()] = &ADOBE;
-MapColor::BLOCK_COLORS[EnumDyeColor::MAGENTA.getMetadata()] = &MAGENTA;
-MapColor::BLOCK_COLORS[EnumDyeColor::LIGHT_BLUE.getMetadata()] = &LIGHT_BLUE;
-MapColor::BLOCK_COLORS[EnumDyeColor::YELLOW.getMetadata()] = &YELLOW;
-MapColor::BLOCK_COLORS[EnumDyeColor::LIME.getMetadata()] = &LIME;
-MapColor::BLOCK_COLORS[EnumDyeColor::PINK.getMetadata()] = &PINK;
-MapColor::BLOCK_COLORS[EnumDyeColor::GRAY.getMetadata()] = &GRAY;
-MapColor::BLOCK_COLORS[EnumDyeColor::SILVER.getMetadata()] = &SILVER;
-MapColor::BLOCK_COLORS[EnumDyeColor::CYAN.getMetadata()] = &CYAN;
-MapColor::BLOCK_COLORS[EnumDyeColor::PURPLE.getMetadata()] = &PURPLE;
-MapColor::BLOCK_COLORS[EnumDyeColor::BLUE.getMetadata()] = &BLUE;
-MapColor::BLOCK_COLORS[EnumDyeColor::BROWN.getMetadata()] = &BROWN;
-MapColor::BLOCK_COLORS[EnumDyeColor::GREEN.getMetadata()] = &GREEN;
-MapColor::BLOCK_COLORS[EnumDyeColor::RED.getMetadata()] = &RED;
-MapColor::BLOCK_COLORS[EnumDyeColor::BLACK.getMetadata()] = &BLACK;
+MapColor::BLOCK_COLORS [EnumDyeColor::WHITE.getMetadata()]
+=
+&
+SNOW;
+MapColor::BLOCK_COLORS [EnumDyeColor::ORANGE.getMetadata()]
+=
+&
+ADOBE;
+MapColor::BLOCK_COLORS [EnumDyeColor::MAGENTA.getMetadata()]
+=
+&
+MAGENTA;
+MapColor::BLOCK_COLORS [EnumDyeColor::LIGHT_BLUE.getMetadata()]
+=
+&
+LIGHT_BLUE;
+MapColor::BLOCK_COLORS [EnumDyeColor::YELLOW.getMetadata()]
+=
+&
+YELLOW;
+MapColor::BLOCK_COLORS [EnumDyeColor::LIME.getMetadata()]
+=
+&
+LIME;
+MapColor::BLOCK_COLORS [EnumDyeColor::PINK.getMetadata()]
+=
+&
+PINK;
+MapColor::BLOCK_COLORS [EnumDyeColor::GRAY.getMetadata()]
+=
+&
+GRAY;
+MapColor::BLOCK_COLORS [EnumDyeColor::SILVER.getMetadata()]
+=
+&
+SILVER;
+MapColor::BLOCK_COLORS [EnumDyeColor::CYAN.getMetadata()]
+=
+&
+CYAN;
+MapColor::BLOCK_COLORS [EnumDyeColor::PURPLE.getMetadata()]
+=
+&
+PURPLE;
+MapColor::BLOCK_COLORS [EnumDyeColor::BLUE.getMetadata()]
+=
+&
+BLUE;
+MapColor::BLOCK_COLORS [EnumDyeColor::BROWN.getMetadata()]
+=
+&
+BROWN;
+MapColor::BLOCK_COLORS [EnumDyeColor::GREEN.getMetadata()]
+=
+&
+GREEN;
+MapColor::BLOCK_COLORS [EnumDyeColor::RED.getMetadata()]
+=
+&
+RED;
+MapColor::BLOCK_COLORS [EnumDyeColor::BLACK.getMetadata()]
+=
+&
+BLACK;
 
 static MapColor AIR(0, 0);
 static MapColor GRASS(1, 8368696);
@@ -71,44 +119,40 @@ static MapColor RED_STAINED_HARDENED_CLAY(50, 9321518);
 static MapColor BLACK_STAINED_HARDENED_CLAY(51, 2430480);
 
 
-MapColor(int32_t index, int32_t color)
-{
-	if (index >= 0 && index <= 63) {
-		colorIndex = index;
-		colorValue = color;
-		COLORS[index] = this;
-	}
-	else {
-		throw std::logic_error("Map colour ID must be between 0 and 63 (inclusive)");
-	}
+MapColor(int32_t index, int32_t color) {
+    if (index >= 0 && index <= 63) {
+        colorIndex = index;
+        colorValue = color;
+        COLORS[index] = this;
+    } else {
+        throw std::logic_error("Map colour ID must be between 0 and 63 (inclusive)");
+    }
 }
 
-int32_t MapColor::getMapColor(int32_t index)
-{
-	auto i = 220;
-	if (index == 3) {
-		i = 135;
-	}
+int32_t MapColor::getMapColor(int32_t index) {
+    auto i = 220;
+    if (index == 3) {
+        i = 135;
+    }
 
-	if (index == 2) {
-		i = 255;
-	}
+    if (index == 2) {
+        i = 255;
+    }
 
-	if (index == 1) {
-		i = 220;
-	}
+    if (index == 1) {
+        i = 220;
+    }
 
-	if (index == 0) {
-		i = 180;
-	}
+    if (index == 0) {
+        i = 180;
+    }
 
-	auto j = (colorValue >> 16 & 255) * i / 255;
-	auto k = (colorValue >> 8 & 255) * i / 255;
-	auto l = (colorValue & 255) * i / 255;
-	return -16777216 | j << 16 | k << 8 | l;
+    auto j = (colorValue >> 16 & 255) * i / 255;
+    auto k = (colorValue >> 8 & 255) * i / 255;
+    auto l = (colorValue & 255) * i / 255;
+    return -16777216 | j << 16 | k << 8 | l;
 }
 
-MapColor MapColor::getBlockColor(EnumDyeColor dyeColorIn)
-{
-	return BLOCK_COLORS[dyeColorIn.getMetadata()];
+MapColor MapColor::getBlockColor(EnumDyeColor dyeColorIn) {
+    return BLOCK_COLORS[dyeColorIn.getMetadata()];
 }
