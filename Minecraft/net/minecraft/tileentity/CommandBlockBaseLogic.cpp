@@ -24,7 +24,7 @@ NBTTagCompound* CommandBlockBaseLogic::writeToNBT(NBTTagCompound* p_189510_1_)
 	p_189510_1_->setString("CustomName", customName);
 	p_189510_1_->setBoolean("TrackOutput", trackOutput);
 	if (lastOutput != nullptr && trackOutput) {
-		p_189510_1_->setString("LastOutput", ITextComponent::Serializer.componentToJson(lastOutput));
+		p_189510_1_->setString("LastOutput", ITextComponent::Serializer::componentToJson(lastOutput));
 	}
 
 	p_189510_1_->setBoolean("UpdateLastExecution", updateLastExecution);
@@ -154,7 +154,7 @@ void CommandBlockBaseLogic::setName(std::string_view name)
 
 void CommandBlockBaseLogic::sendMessage(ITextComponent* component)
 {
-	if (trackOutput && getEntityWorld() != nullptr && !getEntityWorld().isRemote) 
+	if (trackOutput && getEntityWorld() != nullptr && !getEntityWorld()->isRemote) 
 	{
 		lastOutput = (new TextComponentString("[" + TIMESTAMP_FORMAT.format(new Date()) + "] ")).appendSibling(component);
 		updateCommand();

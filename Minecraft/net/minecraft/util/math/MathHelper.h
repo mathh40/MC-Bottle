@@ -180,4 +180,9 @@ namespace MathHelper
 	{
 		return std::fmod(x, x1);
 	}
+
+	template<class T>
+    T acos(T x) {
+	    return std::acos(x);
+	}
 }

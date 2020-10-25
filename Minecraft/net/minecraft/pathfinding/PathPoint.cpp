@@ -71,15 +71,15 @@ std::string PathPoint::toString()
   return fmt::format(x + ", " + y + ", " + z);
 }
 
-PathPoint PathPoint::createFromBuffer(const PacketBuffer& buf)
+PathPoint PathPoint::createFromBuffer(const ByteBuffer& buf)
 {
-  PathPoint pathpoint = PathPoint(buf.readInt(), buf.readInt(), buf.readInt());
-  pathpoint.distanceFromOrigin = buf.readFloat();
-  pathpoint.cost = buf.readFloat();
-  pathpoint.costMalus = buf.readFloat();
+  PathPoint pathpoint = PathPoint(buf.getInt(), buf.getInt(), buf.getInt());
+  pathpoint.distanceFromOrigin = buf.getFloat();
+  pathpoint.cost = buf.getFloat();
+  pathpoint.costMalus = buf.getFloat();
   pathpoint.visited = buf.readBoolean();
-  pathpoint.nodeType = PathNodeType::values()[buf.readInt()];
-  pathpoint.distanceToTarget = buf.readFloat();
+  pathpoint.nodeType = PathNodeType::values()[buf.getInt()];
+  pathpoint.distanceToTarget = buf.getFloat();
   return pathpoint;
 }
 

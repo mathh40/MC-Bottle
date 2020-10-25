@@ -1,5 +1,7 @@
 #include "StatList.h"
 
+#include "Block.h"
+
 StatBase StatList::LEAVE_GAME = StatBasic("stat.leaveGame", TextComponentTranslation("stat.leaveGame", new Object[0]))).initIndependentStat().registerStat();
 StatBase StatList::PLAY_ONE_MINUTE;
 StatBase StatList::TIME_SINCE_DEATH;

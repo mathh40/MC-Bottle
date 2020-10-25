@@ -21,7 +21,7 @@ public:
 	DimensionType& getDimensionType() override;
 	void onWorldSave() override;
 	void onWorldUpdateEntities() override;
-	DragonFightManager* getDragonFightManager();
+	std::optional<DragonFightManager> getDragonFightManager() const;
 private:
-	std::unique_ptr<DragonFightManager> dragonFightManager;
+	std::optional<DragonFightManager> dragonFightManager;
 };

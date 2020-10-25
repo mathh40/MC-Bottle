@@ -4,7 +4,7 @@
 class EntityCreature :public EntityLiving {
 public:
     EntityCreature(World* worldIn);
-    float getBlockPathWeight(BlockPos pos);
+    virtual float getBlockPathWeight(BlockPos pos);
     bool getCanSpawnHere() override;
     bool hasPath() const;
     bool isWithinHomeDistanceCurrentPosition() const;

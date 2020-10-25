@@ -1,5 +1,4 @@
 #pragma once
-#include <array>
 
 #include "PathPoint.h"
 
@@ -12,12 +11,13 @@ public:
   void changeDistance(PathPoint& point, float distance);
 
   PathPoint addPoint(PathPoint point);
+
+    bool isPathEmpty() const;
 private:
 
   void sortBack(int32_t index);
   void sortForward(int32_t index);
-  bool isPathEmpty() const;
-
+  
   std::vector<PathPoint> pathPoints;
   int32_t count;
 };

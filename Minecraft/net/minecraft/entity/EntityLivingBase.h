@@ -33,7 +33,7 @@ public:
     std::unordered_map<Potion,PotionEffect> getActivePotionMap() const;
     bool isPotionActive(Potion potionIn) const;
     std::optional<PotionEffect> getActivePotionEffect(Potion potionIn);
-    void addPotionEffect(PotionEffect potioneffectIn);
+    virtual void addPotionEffect(PotionEffect potioneffectIn);
     bool isPotionApplicable(PotionEffect potioneffectIn);
     bool isEntityUndead();
     PotionEffect removeActivePotionEffect(Potion* potioneffectin);
@@ -60,7 +60,7 @@ public:
     void handleStatusUpdate(std::byte id) override;
     IAttributeInstance* getEntityAttribute(IAttribute* attribute);
     AbstractAttributeMap* getAttributeMap();
-    EnumCreatureAttribute getCreatureAttribute();
+    virtual EnumCreatureAttribute getCreatureAttribute();
     ItemStack getHeldItemMainhand();
     ItemStack getHeldItemOffhand();
     ItemStack getHeldItem(EnumHand hand);
@@ -75,7 +75,7 @@ public:
     virtual void travel(float strafe, float vertical, float forward);
     float getAIMoveSpeed() const;
     virtual void setAIMoveSpeed(float speedIn);
-    bool attackEntityAsMob(Entity* entityIn);
+    virtual bool attackEntityAsMob(Entity* entityIn);
     bool isPlayerSleeping();
     void onUpdate() override;
     virtual void onLivingUpdate();
@@ -147,8 +147,8 @@ protected:
     virtual void applyEntityAttributes();
     void updateFallState(double y, bool onGroundIn, IBlockState* state, const BlockPos& pos) override;
     void frostWalk(const BlockPos& pos);
-    void onDeathUpdate();
-    bool canDropLoot();
+    virtual void onDeathUpdate();
+    virtual bool canDropLoot();
     int32_t decreaseAirSupply(int32_t air);
     virtual int32_t getExperiencePoints(EntityPlayer* player);
     bool isPlayer();
@@ -174,7 +174,7 @@ protected:
     void damageEntity(DamageSource::DamageSource damageSrc, float damageAmount);
     void outOfWorld() override;
     void updateArmSwingProgress();
-    float getSoundVolume();
+    virtual float getSoundVolume();
     float getSoundPitch();
     bool isMovementBlocked();
     float getJumpUpwardsMotion();

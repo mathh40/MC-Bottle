@@ -1,12 +1,17 @@
 #include "WorldProviderEnd.h"
+
+#include "NBTTagCompound.h"
 #include "WorldEntitySpawner.h"
 #include "biome/BiomeProviderSingle.h"
+#include "storage/WorldInfo.h"
 
 void WorldProviderEnd::init()
 {
 	biomeProvider = BiomeProviderSingle(Biomes::SKY);
-	auto nbttagcompound = world->getWorldInfo().getDimensionData(DimensionType::THE_END);
-	dragonFightManager = Util::instanceof<WorldServer>(world) ? std::make_unique<DragonFightManager>((WorldServer)world, nbttagcompound.getCompoundTag("DragonFight")) : nullptr;
+    const auto nbttagcompound = world->getWorldInfo().getDimensionData(DimensionType::THE_END);
+	if(Util::instanceof<WorldServer>(world)) {
+	    dragonFightManager = DragonFightManager((WorldServer*)world, nbttagcompound->getCompoundTag("DragonFight"));
+	}
 }
 
 IChunkGenerator* WorldProviderEnd::createChunkGenerator()
@@ -60,7 +65,7 @@ float WorldProviderEnd::getCloudHeight() const
 
 bool WorldProviderEnd::canCoordinateBeSpawn(int32_t x, int32_t z)
 {
-	return world->getGroundAboveSeaLevel(BlockPos(x, 0, z)).getMaterial().blocksMovement();
+	return world->getGroundAboveSeaLevel(BlockPos(x, 0, z))->getMaterial().blocksMovement();
 }
 
 std::optional<BlockPos> WorldProviderEnd::getSpawnCoordinate() const
@@ -86,7 +91,7 @@ DimensionType& WorldProviderEnd::getDimensionType()
 void WorldProviderEnd::onWorldSave()
 {
 	auto nbttagcompound = std::make_unique<NBTTagCompound>();
-	if (dragonFightManager != nullptr) 
+	if (dragonFightManager.has_value()) 
 	{
 		nbttagcompound->setTag("DragonFight", dragonFightManager->getCompound());
 	}
@@ -96,13 +101,12 @@ void WorldProviderEnd::onWorldSave()
 
 void WorldProviderEnd::onWorldUpdateEntities()
 {
-	if (dragonFightManager != nullptr) 
+	if (dragonFightManager.has_value()) 
 	{
-		dragonFightManager.tick();
+		dragonFightManager->tick();
 	}
 }
 
-DragonFightManager* WorldProviderEnd::getDragonFightManager()
-{
-	return dragonFightManager.get();
+std::optional<DragonFightManager> WorldProviderEnd::getDragonFightManager() const {
+	return dragonFightManager;
 }

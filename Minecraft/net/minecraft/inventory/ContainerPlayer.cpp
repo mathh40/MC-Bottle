@@ -1,7 +1,8 @@
 #include "ContainerPlayer.h"
-
+#include "InventoryCraftResult.h"
+#include "SlotCrafting.h"
+#include "../entity/EntityLiving.h"
 #include "../item/ItemArmor.h"
-#include "../pathfinding/NodeProcessor.h"
 
 class EquipmentSlot : public Slot
 {
@@ -144,7 +145,7 @@ ItemStack ContainerPlayer::transferStackInSlot(EntityPlayer *playerIn, int32_t i
                 return ItemStack::EMPTY;
             }
         }
-        else if (entityequipmentslot == EntityEquipmentSlot::OFFHAND && !(inventorySlots[45]->getHasStack()) 
+        else if (entityequipmentslot == EntityEquipmentSlot::OFFHAND && !(inventorySlots[45]->getHasStack())) 
         {
             if (!mergeItemStack(itemstack1, 45, 46, false)) 
             {

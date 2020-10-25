@@ -8,6 +8,9 @@
 #include "biome/BiomeEndDecorator.h"
 #include "EntitySelectors.h"
 #include "DragonSpawnManager.h"
+#include "../../tileentity/TileEntityEndPortal.h"
+#include "gen/feature/WorldGenEndPodium.h"
+#include "gen/feature/WorldGenSpikes.h"
 
 auto VALID_PLAYER = [](const Entity& lhs) { return EntitySelectors::IS_ALIVE(lhs) && EntitySelectors::withinRange(lhs,0.0, 128.0, 0.0, 192.0); };
 
@@ -349,7 +352,7 @@ void DragonFightManager::respawnDragon(std::vector<Entity*> crystalsIn)
 {
 	if (dragonKilled && respawnState == nullptr) 
 	{
-		for (BlockPattern.PatternHelper blockpattern$patternhelper = findExitPortal(); blockpattern$patternhelper != null; blockpattern$patternhelper = findExitPortal()) 
+		for (BlockPattern::PatternHelper blockpattern$patternhelper = findExitPortal(); blockpattern$patternhelper != null; blockpattern$patternhelper = findExitPortal()) 
 		{
 			for (auto i = 0; i < portalPattern.getPalmLength(); ++i) 
 			{
@@ -406,9 +409,9 @@ void DragonFightManager::onCrystalDestroyed(EntityEnderCrystal* crystal, DamageS
 	{
 		findAliveCrystals();
 		auto entity = world->getEntityFromUuid(dragonUniqueId);
-		if (entity instanceof EntityDragon) 
+		if (Util::instanceof<EntityDragon>(entity)) 
 		{
-			((EntityDragon)entity).onCrystalDestroyed(crystal,BlockPos(crystal), dmgSrc);
+			((EntityDragon*)entity)->onCrystalDestroyed(crystal,BlockPos(crystal), dmgSrc);
 		}
 	}
 }
@@ -465,14 +468,14 @@ void DragonFightManager::resetSpikeCrystals()
 
 	for (int var3 = 0; var3 < var2; ++var3) 
 	{
-		WorldGenSpikes.EndSpike worldgenspikes$endspike = var1[var3];
+		WorldGenSpikes::EndSpike worldgenspikes$endspike = var1[var3];
 		Iterator var5 = world->getEntitiesWithinAABB<EntityEnderCrystal>(worldgenspikes$endspike.getTopBoundingBox()).iterator();
 
 		while (var5.hasNext()) 
 		{
-			EntityEnderCrystal entityendercrystal = (EntityEnderCrystal)var5.next();
+			EntityEnderCrystal* entityendercrystal = (EntityEnderCrystal)var5.next();
 			entityendercrystal.setEntityInvulnerable(false);
-			entityendercrystal.setBeamTarget((BlockPos)null);
+			entityendercrystal.setBeamTarget(std::nullopt);
 		}
 	}
 }

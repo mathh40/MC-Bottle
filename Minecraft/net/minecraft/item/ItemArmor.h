@@ -20,7 +20,7 @@ public:
     void setColor(ItemStack stack, int32_t color);
     bool getIsRepairable(ItemStack toRepair, ItemStack repair) override;
     ActionResult onItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand handIn) override;
-    std::unordered_multimap<std::string,AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot);
+    std::unordered_multimap<std::string,AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) override;
 
     static constexpr std::array<const char *, 4> EMPTY_SLOT_NAMES = {"minecraft:items/empty_armor_slot_boots",
                                                                      "minecraft:items/empty_armor_slot_leggings",

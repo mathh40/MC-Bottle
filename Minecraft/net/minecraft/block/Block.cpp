@@ -1,5 +1,6 @@
 #include "Block.h"
 #include "../item/ItemBlock.h"
+#include "../stats/StatList.h"
 #include "../util/BlockRenderLayer.h"
 #include "../util/Mirror.h"
 #include "../util/Util.h"
@@ -19,8 +20,8 @@ int32_t Block::getIdFromBlock(Block *blockIn) {
 }
 
 int32_t Block::getStateId(IBlockState *state) {
-    auto block = state->getBlock();
-    return getIdFromBlock(block) + (block.getMetaFromState(state) << 12);
+    const auto block = state->getBlock();
+    return getIdFromBlock(block) + (block->getMetaFromState(state) << 12);
 }
 
 Block *Block::getBlockById(int32_t id) {
@@ -1199,7 +1200,7 @@ int32_t Block::getStrongPower(IBlockState *blockState, IBlockAccess *blockAccess
 
 void Block::harvestBlock(World *worldIn, EntityPlayer *player, const BlockPos &pos, IBlockState *state, TileEntity *te,
                          ItemStack stack) {
-    player->addStat(StatList.getBlockStats(this));
+    player->addStat(StatList::getBlockStats(this));
     player->addExhaustion(0.005F);
     if (canSilkHarvest() && EnchantmentHelper::getEnchantmentLevel(Enchantments::SILK_TOUCH, stack) > 0) {
         ItemStack itemstack = getSilkTouchDrop(state);

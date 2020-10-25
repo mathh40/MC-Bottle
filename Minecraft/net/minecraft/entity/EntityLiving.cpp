@@ -1,5 +1,6 @@
 #include "EntityLiving.h"
 #include "NBTTagFloat.h"
+#include "SharedMonsterAttributes.h"
 #include "../inventory/EntityEquipmentSlot.h"
 #include "../item/ItemArmor.h"
 #include "../pathfinding/PathNavigateGround.h"

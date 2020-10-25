@@ -129,7 +129,7 @@ public:
     void setWorld(World* worldIn);
     void setPositionAndRotation(double x, double y, double z, float yaw, float pitch);
     void moveToBlockPosAndAngles(BlockPos pos, float rotationYawIn, float rotationPitchIn);
-    void setLocationAndAngles(double x, double y, double z, float yaw, float pitch);
+    virtual void setLocationAndAngles(double x, double y, double z, float yaw, float pitch);
     float getDistance(Entity* entityIn) const;
     double getDistanceSq(double x, double y, double z) const;
     double getDistanceSq(const BlockPos& pos) const;
@@ -157,7 +157,7 @@ public:
     EntityItem* dropItemWithOffset(const Item* itemIn, int32_t size, float offsetY);
     virtual EntityItem* entityDropItem(ItemStack stack, float offsetY);
     bool isEntityAlive() const;
-    bool isEntityInsideOpaqueBlock();
+    bool isEntityInsideOpaqueBlock() const;
     virtual bool processInitialInteract(EntityPlayer* player, EnumHand hand);
     virtual std::optional<AxisAlignedBB> getCollisionBox(Entity* entityIn);
     virtual void updateRidden();
@@ -202,9 +202,9 @@ public:
     void setAir(int32_t air);
     virtual void onStruckByLightning(EntityLightningBolt* lightningBolt);
     void onKillEntity(EntityLivingBase* entityLivingIn);
-    void setInWeb();
-    std::string getName() override;
-    std::vector<Entity*> getParts();
+    virtual void setInWeb();
+    std::string getName() const override;
+    virtual std::vector<Entity*> getParts();
     virtual bool isEntityEqual(Entity* entityIn);
     virtual float getRotationYawHead();
     virtual void setRotationYawHead(float rotation);
@@ -217,7 +217,7 @@ public:
     void setEntityInvulnerable(bool isInvulnerable);
     void copyLocationAndAnglesFrom(Entity* entityIn);
     virtual Entity* changeDimension(int32_t dimensionIn);
-    bool isNonBoss();
+    virtual bool isNonBoss();
     virtual float getExplosionResistance(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn);
     virtual bool canExplosionDestroyBlock(Explosion explosionIn, World* worldIn, BlockPos pos, IBlockState* blockStateIn, float p_174816_5_);
     virtual int32_t getMaxFallHeight();
@@ -232,7 +232,7 @@ public:
     bool isPushedByWater();
     static double getRenderDistanceWeight();
     static void setRenderDistanceWeight(double renderDistWeight);
-    ITextComponent* getDisplayName() override;
+    ITextComponent* getDisplayName() const override;
     void setCustomNameTag(std::string name);
     std::string getCustomNameTag();
     virtual bool hasCustomName() const;
@@ -247,7 +247,7 @@ public:
     AxisAlignedBB getEntityBoundingBox() const;
     AxisAlignedBB getRenderBoundingBox() const;
     void setEntityBoundingBox(AxisAlignedBB bb);
-    float getEyeHeight() const;
+    virtual float getEyeHeight() const;
     bool isOutsideBorder() const;
     void setOutsideBorder(bool outsideBorder);
     virtual bool replaceItemInInventory(int32_t inventorySlot, ItemStack itemStackIn);
@@ -264,8 +264,8 @@ public:
     void setCommandStats(Entity* entityIn);
     virtual EnumActionResult applyPlayerInteraction(EntityPlayer* player, Vec3d vec, EnumHand hand);
     virtual bool isImmuneToExplosions();
-    void addTrackingPlayer(EntityPlayerMP* player);
-    void removeTrackingPlayer(EntityPlayerMP* player);
+    virtual void addTrackingPlayer(EntityPlayerMP* player);
+    virtual void removeTrackingPlayer(EntityPlayerMP* player);
     float getRotatedYaw(Rotation transformRotation) const;
     float getMirroredYaw(Mirror transformMirror) const;
     virtual bool ignoreItemEntityData();
@@ -293,8 +293,8 @@ protected:
     void decrementTimeUntilPortal();
     void setOnFireFromLava();
     virtual void outOfWorld();
-    SoundEvent getSwimSound();
-    SoundEvent getSplashSound();
+    virtual SoundEvent getSwimSound();
+    virtual SoundEvent getSplashSound();
     virtual void doBlockCollisions();
     virtual void onInsideBlock(IBlockState* p_191955_1_);
     void playStepSound(BlockPos pos, Block* blockIn);
@@ -313,7 +313,7 @@ protected:
     virtual void writeEntityToNBT(NBTTagCompound* var1) = 0;
     NBTTagList* newDoubleNBTList(std::initializer_list<double> numbers);
     NBTTagList* newFloatNBTList(std::initializer_list<float> numbers);
-    bool canBeRidden(Entity* entityIn);
+    virtual bool canBeRidden(Entity* entityIn);
     void addPassenger(Entity* passenger);
     void removePassenger(Entity* passenger);
     virtual bool canFitPassenger(Entity* passenger);

@@ -1,16 +1,14 @@
 #pragma once
+#include "ByteBuffer.h"
+#include "PathNodeType.h"
+
+
 #include <cstdint>
 #include <string>
-#include <vector>
-
-
-
-#include "PathNodeType.h"
 
 class PathPoint
 {
 public:
-
   PathPoint(int32_t x, int32_t y, int32_t z);
   PathPoint cloneMove(int32_t x, int32_t y, int32_t z) const;
   static int32_t makeHash(int32_t x, int32_t y, int32_t z);
@@ -20,7 +18,7 @@ public:
   int32_t hashCode() const;
   bool isAssigned() const;
   std::string toString();
-  static PathPoint createFromBuffer(const PacketBuffer& buf);
+  static PathPoint createFromBuffer(const ByteBuffer& buf);
 
   friend bool operator==(const PathPoint& a,const PathPoint& b);
 

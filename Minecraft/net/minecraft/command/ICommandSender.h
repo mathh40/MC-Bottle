@@ -1,4 +1,4 @@
-#include <string>
+#pragma once
 #include "math/BlockPos.h"
 #include "math/Vec3d.h"
 
@@ -6,14 +6,13 @@ class ITextComponent;
 class World;
 class MinecraftServer;
 class CommandResultStatsType;
-class ICommandSender 
+class ICommandSender
 {
 public:
+    virtual std::string getName() const = 0;
+	virtual ITextComponent* getDisplayName() const = 0;
+
     virtual ~ICommandSender() = default;
-    virtual std::string getName() = 0;
-
-   virtual ITextComponent* getDisplayName();
-
 
    virtual void sendMessage(ITextComponent* component);
 

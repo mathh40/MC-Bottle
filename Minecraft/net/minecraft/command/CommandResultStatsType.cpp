@@ -36,12 +36,10 @@ std::vector<CommandResultStatsType *> CommandResultStatsType::values()
 
 CommandResultStatsType* CommandResultStatsType::getTypeByName(std::string_view name)
 {
-    for(auto commandresultstats$type : values())
+    const auto ite = std::ranges::find_if(value,[&](CommandResultStatsType* s){return s->getTypeName() == name;});
+    if (ite != value.end()) 
     {
-        if (commandresultstats$type->getTypeName() == name) 
-        {
-            return commandresultstats$type;
-        }
+        return *ite;
     }
 
     return nullptr;

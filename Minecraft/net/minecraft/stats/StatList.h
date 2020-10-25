@@ -64,7 +64,7 @@ public:
 	static StatBase SLEEP_IN_BED;
 	static StatBase OPEN_SHULKER_BOX;
 
-	StatBase* getBlockStats(Block* blockIn);
+    static StatBase* getBlockStats(Block* blockIn);
 	StatBase* getCraftStats(Item* itemIn);
 	StatBase* getObjectUseStats(Item* itemIn);
 	StatBase* getObjectBreakStats(Item* itemIn);

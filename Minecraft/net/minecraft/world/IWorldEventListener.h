@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 #include <initializer_list>
 class World;

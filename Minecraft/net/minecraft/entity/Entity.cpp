@@ -32,7 +32,7 @@
 #include "math/Vec2f.h"
 #include "text/translation/I18n.h"
 
-std::shared_ptr<spdlog::logger> Entity::LOGGER = spdlog::get("Minecraft")->clone("EntityAIFindEntityNearestPlayer");
+std::shared_ptr<spdlog::logger> Entity::LOGGER = spdlog::get("Minecraft")->clone("Entity");
 
 DataParameter Entity::FLAGS = EntityDataManager.createKey(Entity.class, DataSerializers.BYTE);
 DataParameter Entity::AIR = EntityDataManager.createKey(Entity.class, DataSerializers.VARINT);
@@ -1696,25 +1696,24 @@ bool Entity::isEntityAlive() const
     return !isDead;
 }
 
-bool Entity::isEntityInsideOpaqueBlock()
-{
+bool Entity::isEntityInsideOpaqueBlock() const {
     if (noClip) 
     {
         return false;
     }
     else 
     {
-        BlockPos blockpos$pooledmutableblockpos;
+        BlockPos block_pos;
 
         for(auto i = 0; i < 8; ++i) 
         {
-            auto j = MathHelper::floor(posY + ((i >> 0) % 2) - 0.5F) * 0.1F) + getEyeHeight();
+            auto j = MathHelper::floor(posY + ((i >> 0) % 2) - 0.5F) * 0.1F + getEyeHeight();
             auto k = MathHelper::floor(posX + ((i >> 1) % 2) - 0.5F) * width * 0.8F;
             auto l = MathHelper::floor(posZ + ((i >> 2) % 2) - 0.5F) * width * 0.8F;
-            if (blockpos$pooledmutableblockpos.getx() != k || blockpos$pooledmutableblockpos.gety() != j || blockpos$pooledmutableblockpos.getz() != l) 
+            if (block_pos.getx() != k || block_pos.gety() != j || block_pos.getz() != l) 
             {
-                blockpos$pooledmutableblockpos.setPos(k, j, l);
-                if (world->getBlockState(blockpos$pooledmutableblockpos)->causesSuffocation()) 
+                block_pos.setPos(k, j, l);
+                if (world->getBlockState(block_pos)->causesSuffocation()) 
                 {
                     return true;
                 }
@@ -1737,7 +1736,7 @@ std::optional<AxisAlignedBB> Entity::getCollisionBox(Entity *entityIn)
 void Entity::updateRidden()
 {
     auto entity = getRidingEntity();
-    if (isRiding() && entity.isDead) 
+    if (isRiding() && entity->isDead) 
     {
         dismountRidingEntity();
     }
@@ -1749,7 +1748,7 @@ void Entity::updateRidden()
         onUpdate();
         if (isRiding()) 
         {
-            entity.updatePassenger(this);
+            entity->updatePassenger(this);
         }
     }
 }
@@ -2369,18 +2368,18 @@ Entity * Entity::changeDimension(int32_t dimensionIn)
         Entity* entity = EntityList.newEntity(getClass(), worldserver1);
         if (entity != nullptr) 
         {
-            entity.copyDataFromOld(this);
+            entity->copyDataFromOld(this);
             if (i == 1 && dimensionIn == 1) 
             {
                 BlockPos blockpos1 = worldserver1->getTopSolidOrLiquidBlock(worldserver1->getSpawnPoint());
-                entity->moveToBlockPosAndAngles(blockpos1, entity.rotationYaw, entity.rotationPitch);
+                entity->moveToBlockPosAndAngles(blockpos1, entity->rotationYaw, entity->rotationPitch);
             }
             else 
             {
-                entity->moveToBlockPosAndAngles(blockpos, entity.rotationYaw, entity.rotationPitch);
+                entity->moveToBlockPosAndAngles(blockpos, entity->rotationYaw, entity->rotationPitch);
             }
 
-            bool flag = entity.forceSpawn;
+            bool flag = entity->forceSpawn;
             entity->forceSpawn = true;
             worldserver1->spawnEntity(entity);
             entity->forceSpawn = flag;
@@ -2634,16 +2633,16 @@ SoundEvent Entity::getSplashSound()
 void Entity::doBlockCollisions()
 {
     AxisAlignedBB axisalignedbb = getEntityBoundingBox();
-    BlockPos blockpos$pooledmutableblockpos(axisalignedbb.getminX() + 0.001, axisalignedbb.getminY() + 0.001, axisalignedbb.getminZ() + 0.001);
+    BlockPos block_pos(axisalignedbb.getminX() + 0.001, axisalignedbb.getminY() + 0.001, axisalignedbb.getminZ() + 0.001);
     BlockPos blockpos$pooledmutableblockpos1(axisalignedbb.getmaxX() - 0.001, axisalignedbb.getmaxY() - 0.001, axisalignedbb.getmaxZ() - 0.001);
     BlockPos blockpos$pooledmutableblockpos2;
-    if (world->isAreaLoaded(blockpos$pooledmutableblockpos, blockpos$pooledmutableblockpos1)) 
+    if (world->isAreaLoaded(block_pos, blockpos$pooledmutableblockpos1)) 
     {
-        for(int32_t i = blockpos$pooledmutableblockpos.getx(); i <= blockpos$pooledmutableblockpos1.getx(); ++i) 
+        for(int32_t i = block_pos.getx(); i <= blockpos$pooledmutableblockpos1.getx(); ++i) 
         {
-            for(int32_t j = blockpos$pooledmutableblockpos.gety(); j <= blockpos$pooledmutableblockpos1.gety(); ++j) 
+            for(int32_t j = block_pos.gety(); j <= blockpos$pooledmutableblockpos1.gety(); ++j) 
             {
-                for(int32_t k = blockpos$pooledmutableblockpos.getz(); k <= blockpos$pooledmutableblockpos1.getz(); ++k) 
+                for(int32_t k = block_pos.getz(); k <= blockpos$pooledmutableblockpos1.getz(); ++k) 
                 {
                     blockpos$pooledmutableblockpos2.setPos(i, j, k);
                     IBlockState* iblockstate = world->getBlockState(blockpos$pooledmutableblockpos2);
@@ -2672,7 +2671,7 @@ void Entity::onInsideBlock(IBlockState *p_191955_1_)
 
 void Entity::playStepSound(BlockPos pos, Block *blockIn)
 {
-    SoundType soundtype = blockIn->getSoundType();^
+    SoundType soundtype = blockIn->getSoundType();
     if (world->getBlockState(pos.up())->getBlock() == Blocks::SNOW_LAYER) 
     {
         soundtype = Blocks::SNOW_LAYER.getSoundType();
@@ -2699,7 +2698,7 @@ bool Entity::canTriggerWalking()
     return true;
 }
 
-void Entity::updateFallState(double y, bool onGroundIn, IBlockState *state, BlockPos pos)
+void Entity::updateFallState(double y, bool onGroundIn, IBlockState *state, const BlockPos& pos)
 {
     if (onGroundIn) 
     {
@@ -2764,7 +2763,7 @@ void Entity::createRunningParticles()
     IBlockState* iblockstate = world->getBlockState(blockpos);
     if (iblockstate->getRenderType() != EnumBlockRenderType::INVISIBLE) 
     {
-        world->spawnParticle(EnumParticleTypes::BLOCK_CRACK, posX + (MathHelper::nextFloat(rand) - 0.5) * width, getEntityBoundingBox().minY + 0.1, posZ + (MathHelper::nextFloat(rand) - 0.5) * width, -motionX * 4.0, 1.5, -motionZ * 4.0, Block::getStateId(iblockstate));
+        world->spawnParticle(EnumParticleTypes::BLOCK_CRACK, posX + (MathHelper::nextFloat(rand) - 0.5) * width, getEntityBoundingBox().minY + 0.1, posZ + (MathHelper::nextFloat(rand) - 0.5) * width, -motionX * 4.0, 1.5, -motionZ * 4.0, Block::getStateId(iblockstate),{});
     }
 }
 

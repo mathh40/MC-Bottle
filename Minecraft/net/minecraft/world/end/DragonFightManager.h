@@ -2,6 +2,7 @@
 #include "math/BlockPos.h"
 #include "WorldServer.h"
 #include "BossInfoServer.h"
+#include "DragonSpawnManager.h"
 
 class EntityEnderCrystal;
 class EntityDragon;
@@ -43,7 +44,7 @@ private:
 	std::optional<BlockPos> exitPortalLocation;
 	DragonSpawnManager respawnState;
 	int32_t respawnStateTicks;
-	List crystals;
+	std::vector<Entity*> crystals;
 
 	bool hasDragonBeenKilled();
 	BlockPattern::PatternHelper findExitPortal();

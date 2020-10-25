@@ -1,10 +1,25 @@
 #include "EntityMinecartCommandBlock.h"
 #include "../../tileentity/TileEntityCommandBlock.h"
 #include "datafix/DataFixer.h"
+#include "datafix/IDataWalker.h"
 #include "text/TextComponentString.h"
 
 DataParameter MinecartCommandBlockLogic::COMMAND = EntityDataManager::createKey(EntityMinecartCommandBlock.class, DataSerializers::STRING);
 DataParameter MinecartCommandBlockLogic::LAST_OUTPUT = EntityDataManager::createKey(EntityMinecartCommandBlock.class, DataSerializers::TEXT_COMPONENT);
+
+class MinecartCommand : public IDataWalker {
+public:
+    NBTTagCompound* process(IDataFixer* fixer, NBTTagCompound* compound, int32_t versionIn) {
+            if (TileEntity::getKey(TileEntityCommandBlock.class) == ResourceLocation(compound->getString("id"))) {
+               compound->setString("id", "Control");
+               fixer->process(FixTypes::BLOCK_ENTITY, compound, versionIn);
+               compound->setString("id", "MinecartCommandBlock");
+            }
+
+            return compound;
+         }
+};
+
 
 MinecartCommandBlockLogic::MinecartCommandBlockLogic(EntityMinecartCommandBlock *block)
     :block(block){
@@ -54,17 +69,7 @@ EntityMinecartCommandBlock::EntityMinecartCommandBlock(World *worldIn, double x,
 
 void EntityMinecartCommandBlock::registerFixesMinecartCommand(DataFixer fixer) {
     EntityMinecart::registerFixesMinecart(fixer, EntityMinecartCommandBlock.class);
-      fixer.registerWalker(FixTypes::ENTITY, new IDataWalker() {
-         public NBTTagCompound process(IDataFixer fixer, NBTTagCompound* compound, int32_t versionIn) {
-            if (TileEntity::getKey(TileEntityCommandBlock.class).equals(ResourceLocation(compound.getString("id")))) {
-               compound.setString("id", "Control");
-               fixer.process(FixTypes.BLOCK_ENTITY, compound, versionIn);
-               compound.setString("id", "MinecartCommandBlock");
-            }
-
-            return compound;
-         }
-      });
+      fixer.registerWalker(FixTypes::ENTITY, new MinecartCommand());
 }
 
 EntityMinecart::Type EntityMinecartCommandBlock::getType() {

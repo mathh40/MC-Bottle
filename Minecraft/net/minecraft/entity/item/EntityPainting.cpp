@@ -30,10 +30,110 @@
 EntityPainting::EnumArt::EnumArt(std::string_view titleIn, int32_t width, int32_t height, int32_t textureU,
     int32_t textureV)
         :title(titleIn),sizeX(width),sizeY(height),offsetX(textureU),offsetY(textureV){
+    valu.emplace_back(this);
+}
 
+std::vector<EntityPainting::EnumArt *> EntityPainting::EnumArt::values() {
+    return valu;
 }
 
 EntityPainting::EntityPainting(World *worldIn)
     :EntityHanging(worldIn){
 
+}
+
+EntityPainting::EntityPainting(World *worldIn, BlockPos pos, EnumFacing facing)
+    :EntityHanging(worldIn,pos){
+    std::vector<EntityPainting::EnumArt *> list = Lists.newArrayList();
+      int32_t i = 0;
+
+        for(auto entitypainting$enumart : EntityPainting::EnumArt::values()) {
+         art = entitypainting$enumart;
+         updateFacingWithBoundingBox(facing);
+         if (onValidSurface()) {
+            list.emplace_back(entitypainting$enumart);
+            const int32_t j = entitypainting$enumart->sizeX * entitypainting$enumart->sizeY;
+            if (j > i) {
+               i = j;
+            }
+         }
+      }
+
+      if (!list.empty()) {
+
+          list.erase(std::remove_if(list.begin(),list.end(),[&](EntityPainting::EnumArt * enumart1){return enumart1->sizeX * enumart1->sizeY < i;}),list.end());
+
+         art = list[rand(list.size())];
+      }
+
+      updateFacingWithBoundingBox(facing);
+}
+
+EntityPainting::EntityPainting(World *worldIn, BlockPos pos, EnumFacing facing, std::string_view title)
+    :    EntityPainting(worldIn, pos, facing){
+
+    for(auto entitypainting$enumart : EntityPainting::EnumArt::values()){
+         if (entitypainting$enumart->title == title) {
+            art = entitypainting$enumart;
+            break;
+         }
+      }
+
+      updateFacingWithBoundingBox(facing);
+}
+
+void EntityPainting::writeEntityToNBT(NBTTagCompound *compound) {
+    compound->setString("Motive", art->title);
+    EntityHanging::writeEntityToNBT(compound);
+}
+
+void EntityPainting::readEntityFromNBT(NBTTagCompound *compound) {
+    auto s = compound->getString("Motive");
+        for(auto entitypainting$enumart : EntityPainting::EnumArt::values()){
+         if (entitypainting$enumart->title == s) {
+            art = entitypainting$enumart;
+         }
+      }
+
+      if (art == nullptr) {
+         art = &EntityPainting::EnumArt::KEBAB;
+      }
+
+      EntityHanging::readEntityFromNBT(compound);
+}
+
+int32_t EntityPainting::getWidthPixels() {
+    return art->sizeX;
+}
+
+int32_t EntityPainting::getHeightPixels() {
+    return art->sizeY;
+}
+
+void EntityPainting::onBroken(Entity *brokenEntity) {
+    if (world->getGameRules().getBoolean("doEntityDrops")) {
+         playSound(SoundEvents::ENTITY_PAINTING_BREAK, 1.0F, 1.0F);
+         if (Util::instanceof<EntityPlayer>(brokenEntity)) {
+            auto entityplayer = (EntityPlayer*)brokenEntity;
+            if (entityplayer->capabilities.isCreativeMode) {
+               return;
+            }
+         }
+
+         entityDropItem(ItemStack(Items::PAINTING), 0.0F);
+      }
+}
+
+void EntityPainting::playPlaceSound() {
+    playSound(SoundEvents::ENTITY_PAINTING_PLACE, 1.0F, 1.0F);
+}
+
+void EntityPainting::setLocationAndAngles(double x, double y, double z, float yaw, float pitch) {
+    setPosition(x, y, z);
+}
+
+void EntityPainting::setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
+    int32_t posRotationIncrements, bool teleport) {
+    BlockPos blockpos = hangingPosition.add(x - posX, y - posY, z - posZ);
+    setPosition((double)blockpos.getx(), (double)blockpos.gety(), (double)blockpos.getz());
 }

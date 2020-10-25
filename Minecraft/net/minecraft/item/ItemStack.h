@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include "ActionResult.h"
 #include "EnumAction.h"
 #include "EnumActionResult.h"
 #include "EnumRarity.h"

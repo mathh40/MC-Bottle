@@ -58,7 +58,7 @@ public:
     void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) override;
     static EntityEquipmentSlot getSlotForItemStack(ItemStack stack);
     static Item* getArmorByChance(EntityEquipmentSlot slotIn, int32_t chance);
-    IEntityLivingData* onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData* livingdata);
+    virtual IEntityLivingData* onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData* livingdata);
     bool canBeSteered();
     void enablePersistence();
     void setDropChance(EntityEquipmentSlot slotIn, float chance);
@@ -93,7 +93,7 @@ protected:
     void playHurtSound(DamageSource::DamageSource source) override;
     int32_t getExperiencePoints(EntityPlayer* player) override;
     float updateDistance(float p_110146_1_, float p_110146_2_) override;
-    SoundEvent getAmbientSound();
+    virtual SoundEvent getAmbientSound();
     Item* getDropItem();
     void dropFewItems(bool wasRecentlyHit, int32_t lootingModifier) override;
     std::optional<ResourceLocation> getLootTable();
@@ -101,11 +101,11 @@ protected:
     void updateEquipmentIfNeeded(EntityItem* itemEntity);
     bool canEquipItem(ItemStack stack);
     bool canDespawn();
-    void despawnEntity();
+    virtual void despawnEntity();
     void updateEntityActionState() override;
-    void updateAITasks();
+    virtual void updateAITasks();
     void dropEquipment(bool wasRecentlyHit, int32_t lootingModifier) override;
-    void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty);
+    virtual void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty);
     void setEnchantmentBasedOnDifficulty(DifficultyInstance difficulty);
     virtual bool processInteract(EntityPlayer* player, EnumHand hand);
     virtual void updateLeashedState();
