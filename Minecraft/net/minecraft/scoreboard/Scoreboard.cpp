@@ -42,7 +42,7 @@ ScoreObjective Scoreboard::addScoreObjective(std::string_view name, IScoreCriter
    }
 }
 
-std::vector<ScoreObjective> Scoreboard::getObjectivesFromCriteria(IScoreCriteria criteria)
+std::vector<ScoreObjective> Scoreboard::getObjectivesFromCriteria(IScoreCriteria* criteria)
 {
    auto collection = scoreObjectiveCriterias.at(criteria);
    return collection.empty() ? std::vector<ScoreObjective>() : collection;

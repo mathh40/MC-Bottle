@@ -9,7 +9,7 @@ class ScorePlayerTeam :public Team
 public:
   ScorePlayerTeam(Scoreboard* scoreboardIn, std::string_view name);
   std::string getName() override;
-  std::string getDisplayName();
+  std::string getDisplayName() const;
   void setDisplayName(std::string_view name);
   Collection getMembershipCollection();
   std::string getPrefix() const;

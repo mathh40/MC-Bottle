@@ -107,12 +107,12 @@ void InventoryBasic::setInventorySlotContents(int32_t index, ItemStack stack)
     markDirty();
 }
 
-int32_t InventoryBasic::getSizeInventory()
+int32_t InventoryBasic::getSizeInventory() const
 {
     return slotsCount;
 }
 
-bool InventoryBasic::isEmpty()
+bool InventoryBasic::isEmpty() const
 {
     return inventoryContents.empty();
 }
@@ -175,7 +175,7 @@ void InventoryBasic::clear()
     inventoryContents.clear();
 }
 
-std::unique_ptr<ITextComponent> InventoryBasic::getDisplayName() const
+ITextComponent* InventoryBasic::getDisplayName() const
 {
     return (ITextComponent)(hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(getName(), new Object[0]));
 }

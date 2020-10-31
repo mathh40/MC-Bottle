@@ -102,8 +102,8 @@ public:
 	std::optional<RayTraceResult> rayTraceBlocks(Vec3d& start, Vec3d& end);
 	std::optional<RayTraceResult> rayTraceBlocks(Vec3d& start, Vec3d& end, bool stopOnLiquid);
 	std::optional<RayTraceResult> rayTraceBlocks(Vec3d& vec31, Vec3d& vec32, bool stopOnLiquid, bool ignoreBlockWithoutBoundingBox, bool returnLastUncollidableBlock);
-	void playSound(std::optional<EntityPlayer> player, BlockPos pos, SoundEvent soundIn, SoundCategory category, float volume, float pitch);
-	void playSound(std::optional<EntityPlayer> player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch);
+	void playSound(EntityPlayer* player, BlockPos pos, SoundEvent soundIn, SoundCategory category, float volume, float pitch);
+	void playSound(EntityPlayer* player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch);
 	void playSound(double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch, bool distanceDelay);
 	void playRecord(BlockPos& blockPositionIn, std::optional <SoundEvent> soundEventIn);
 

@@ -1,4 +1,6 @@
 #pragma once
+#include "../../../../authlib/com/mojang/authlib/GameProfile.h"
+
 #include <string>
 #include <optional>
 #include <vector>
@@ -12,4 +14,5 @@ namespace StringUtils
 	int indexOfDifference(std::vector<std::string> cs1);
 	std::string replace_all(std::string str, std::string_view from, std::string& to);
 	bool isBlank(std::string_view str);
+    bool isNotBlank(std::string_view str);
 }

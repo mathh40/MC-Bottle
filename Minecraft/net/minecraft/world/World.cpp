@@ -1075,13 +1075,13 @@ std::optional<RayTraceResult> World::rayTraceBlocks(Vec3d& vec31, Vec3d& vec32, 
 	}
 }
 
-void World::playSound(std::optional<EntityPlayer> player, BlockPos pos, SoundEvent soundIn, SoundCategory category,
+void World::playSound(EntityPlayer* player, BlockPos pos, SoundEvent soundIn, SoundCategory category,
 	float volume, float pitch)
 {
 	playSound(player, (double)pos.getx() + 0.5, (double)pos.gety() + 0.5, (double)pos.getz() + 0.5, soundIn, category, volume, pitch);
 }
 
-void World::playSound(std::optional<EntityPlayer> player, double x, double y, double z, SoundEvent soundIn,
+void World::playSound(EntityPlayer* player, double x, double y, double z, SoundEvent soundIn,
 	SoundCategory category, float volume, float pitch)
 {
 	for(auto event : eventListeners)

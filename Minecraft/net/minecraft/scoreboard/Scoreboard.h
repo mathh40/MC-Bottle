@@ -13,7 +13,7 @@ class Scoreboard
 public:
 	ScoreObjective getObjective(std::string_view name);
 	ScoreObjective addScoreObjective(std::string_view name, IScoreCriteria* criteria);
-	std::vector<ScoreObjective> getObjectivesFromCriteria(IScoreCriteria criteria);
+	std::vector<ScoreObjective> getObjectivesFromCriteria(IScoreCriteria* criteria);
 	bool entityHasObjective(std::string_view name, ScoreObjective objective);
 	Score getOrCreateScore(std::string_view username, ScoreObjective objective);
 	std::vector<Score*> getSortedScores(ScoreObjective objective);

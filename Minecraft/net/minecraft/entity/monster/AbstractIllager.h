@@ -12,7 +12,7 @@ public:
 
     AbstractIllager(World* world);
     EnumCreatureAttribute getCreatureAttribute() override;
-    AbstractIllager::IllagerArmPose getArmPose();
+    virtual AbstractIllager::IllagerArmPose getArmPose();
 
 protected:
     void entityInit() override;

@@ -1,4 +1,9 @@
 #include "Explosion.h"
+
+#include "../entity/Entity.h"
+#include "../entity/item/EntityTNTPrimed.h"
+
+
 #include <random>
 #include <unordered_set>
 #include "../util/DamageSource.h"
@@ -93,7 +98,7 @@ void Explosion::doExplosionA()
 					double d11 = d10;
 					if (Util::instanceof<EntityLivingBase>(entity))
 					{
-						d11 = EnchantmentProtection.getBlastDamageReduction((EntityLivingBase)entity, d10);
+						d11 = EnchantmentProtection::getBlastDamageReduction((EntityLivingBase*)entity, d10);
 					}
 
 					entity->motionX += d5 * d11;
@@ -102,9 +107,9 @@ void Explosion::doExplosionA()
 					if (Util::instanceof<EntityPlayer>(entity)) 
 					{
 						EntityPlayer* entityplayer = reinterpret_cast<EntityPlayer*>(entity);
-						if (!entityplayer.isSpectator() && (!entityplayer.isCreative() || !entityplayer.capabilities.isFlying)) 
+						if (!entityplayer->isSpectator() && (!entityplayer->isCreative() || !entityplayer->capabilities.isFlying)) 
 						{
-							playerKnockbackMap.put(entityplayer, Vec3d(d5 * d10, d7 * d10, d9 * d10));
+							playerKnockbackMap.emplace(entityplayer, Vec3d(d5 * d10, d7 * d10, d9 * d10));
 						}
 					}
 				}
@@ -116,13 +121,13 @@ void Explosion::doExplosionA()
 void Explosion::doExplosionB(bool spawnParticles)
 {
 	std::uniform_real_distribution<float> e;
-	world->playSound(nullptr, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory::BLOCKS, 4.0F, (1.0F + (e(world->rand) - e(world->rand)) * 0.2F) * 0.7F);
+	world->playSound(nullptr, x, y, z, SoundEvents::ENTITY_GENERIC_EXPLODE, SoundCategory::BLOCKS, 4.0F, (1.0F + (e(world->rand) - e(world->rand)) * 0.2F) * 0.7F);
 	if (size >= 2.0F && damagesTerrain) 
 	{
-		world->spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, x, y, z, 1.0, 0.0, 0.0);
+		world->spawnParticle(EnumParticleTypes::EXPLOSION_HUGE, x, y, z, 1.0, 0.0, 0.0);
 	}
 	else {
-		world->spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, x, y, z, 1.0, 0.0, 0.0);
+		world->spawnParticle(EnumParticleTypes::EXPLOSION_LARGE, x, y, z, 1.0, 0.0, 0.0);
 	}
 
 	if (damagesTerrain) 
@@ -148,19 +153,19 @@ void Explosion::doExplosionB(bool spawnParticles)
 				d3 *= d7;
 				d4 *= d7;
 				d5 *= d7;
-				world->spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d0 + x) / 2.0, (d1 + y) / 2.0, (d2 + z) / 2.0, d3, d4, d5);
-				world->spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
+				world->spawnParticle(EnumParticleTypes::EXPLOSION_NORMAL, (d0 + x) / 2.0, (d1 + y) / 2.0, (d2 + z) / 2.0, d3, d4, d5);
+				world->spawnParticle(EnumParticleTypes::SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
 			}
 
 			if (iblockstate->getMaterial() != Material::AIR) 
 			{
-				if (block.canDropFromExplosion(this)) 
+				if (block->canDropFromExplosion(this)) 
 				{
-					block.dropBlockAsItemWithChance(world, blockpos, world->getBlockState(blockpos), 1.0F / size, 0);
+					block->dropBlockAsItemWithChance(world, blockpos, world->getBlockState(blockpos), 1.0F / size, 0);
 				}
 
-				world->setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
-				block.onExplosionDestroy(world, blockpos, this);
+				world->setBlockState(blockpos, Blocks::AIR->getDefaultState(), 3);
+				block->onExplosionDestroy(world, blockpos, this);
 			}
 		}
 	}
@@ -169,15 +174,15 @@ void Explosion::doExplosionB(bool spawnParticles)
 	{
 		for (BlockPos blockpos : affectedBlockPositions)
 		{
-			if (world->getBlockState(blockpos).getMaterial() == Material::AIR && world->getBlockState(blockpos.down()).isFullBlock() && world->rand(3) == 0) 
+			if (world->getBlockState(blockpos)->getMaterial() == Material::AIR && world->getBlockState(blockpos.down())->isFullBlock() && world->rand(3) == 0) 
 			{
-				world->setBlockState(blockpos, Blocks.FIRE.getDefaultState());
+				world->setBlockState(blockpos, Blocks::FIRE->getDefaultState());
 			}
 		}
 	}
 }
 
-Map Explosion::getPlayerKnockbackMap()
+std::unordered_map<EntityPlayer *, Vec3d> &Explosion::getPlayerKnockbackMap()
 {
 	return playerKnockbackMap;
 }

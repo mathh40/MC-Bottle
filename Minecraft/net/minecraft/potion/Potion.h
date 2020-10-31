@@ -2,6 +2,10 @@
 #include "registry/RegistryNamespaced.h"
 #include "ResourceLocation.h"
 
+class AbstractAttributeMap;
+class AttributeModifier;
+class IAttribute;
+class PotionEffect;
 class Entity;
 class EntityLivingBase;
 

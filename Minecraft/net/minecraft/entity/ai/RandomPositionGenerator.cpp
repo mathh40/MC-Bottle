@@ -1,15 +1,16 @@
 #include "RandomPositionGenerator.h"
 
+
+#include "EntityCreature.h"
 #include "../../pathfinding/PathNavigate.h"
 #include "math/Vec3d.h"
 
 namespace RandomPositionGenerator
 {
-    Vec3d staticVector = Vec3d::ZERO;
-    Vec3d findRandomTargetBlock(EntityCreature* entitycreatureIn, int32_t xz, int32_t y, std::optional<Vec3d> targetVec3);
-    std::optional<Vec3d> generateRandomPos(EntityCreature* p_191379_0_, int32_t p_191379_1_, int32_t p_191379_2_,std::optional<Vec3d> p_191379_3_, bool p_191379_4_);
-    BlockPos moveAboveSolid(BlockPos p_191378_0_, EntityCreature* p_191378_1_);
-    bool isWaterDestination(BlockPos p_191380_0_, EntityCreature* p_191380_1_);
+    std::optional<Vec3d> findRandomTargetBlock(EntityCreature* entitycreatureIn, int32_t xz, int32_t y, std::optional<Vec3d> targetVec3);
+    std::optional<Vec3d> generateRandomPos(EntityCreature *p_191379_0_, int32_t p_191379_1_, int32_t p_191379_2_,std::optional<Vec3d> p_191379_3_, bool p_191379_4_);
+    BlockPos moveAboveSolid(BlockPos p_191378_0_, EntityCreature *p_191378_1_);
+    bool isWaterDestination(BlockPos p_191380_0_, EntityCreature *p_191380_1_);
 
     std::optional<Vec3d> findRandomTarget(EntityCreature *entitycreatureIn, int32_t xz, int32_t y)
     {
@@ -23,13 +24,13 @@ namespace RandomPositionGenerator
 
     std::optional<Vec3d> findRandomTargetBlockTowards(EntityCreature *entitycreatureIn, int32_t xz, int32_t y, Vec3d targetVec3)
     {
-        staticVector = targetVec3.subtract(entitycreatureIn->posX, entitycreatureIn->posY, entitycreatureIn->posZ);
+        auto staticVector = targetVec3.subtract(entitycreatureIn->posX, entitycreatureIn->posY, entitycreatureIn->posZ);
         return findRandomTargetBlock(entitycreatureIn, xz, y, staticVector);
     }
 
     std::optional<Vec3d> findRandomTargetBlockAwayFrom(EntityCreature *entitycreatureIn, int32_t xz, int32_t y, Vec3d targetVec3)
     {
-        staticVector = Vec3d(entitycreatureIn->posX, entitycreatureIn->posY, entitycreatureIn->posZ).subtract(targetVec3);
+        auto staticVector = Vec3d(entitycreatureIn->posX, entitycreatureIn->posY, entitycreatureIn->posZ).subtract(targetVec3);
         return findRandomTargetBlock(entitycreatureIn, xz, y, staticVector);
     }
 
@@ -128,13 +129,13 @@ namespace RandomPositionGenerator
 
     BlockPos moveAboveSolid(BlockPos p_191378_0_, EntityCreature *p_191378_1_)
     {
-        if (!p_191378_1_->world.getBlockState(p_191378_0_).getMaterial().isSolid()) {
+        if (!p_191378_1_->world->getBlockState(p_191378_0_)->getMaterial().isSolid()) {
             return p_191378_0_;
         }
         else 
         {
             BlockPos blockpos;
-            for(blockpos = p_191378_0_.up(); blockpos.gety() < p_191378_1_->world.getHeight() && p_191378_1_->world.getBlockState(blockpos).getMaterial().isSolid(); blockpos = blockpos.up()) 
+            for(blockpos = p_191378_0_.up(); blockpos.gety() < p_191378_1_->world->getHeight() && p_191378_1_->world->getBlockState(blockpos)->getMaterial().isSolid(); blockpos = blockpos.up()) 
             {
             }
 
@@ -144,7 +145,7 @@ namespace RandomPositionGenerator
 
     bool isWaterDestination(BlockPos p_191380_0_, EntityCreature *p_191380_1_)
     {
-        return p_191380_1_->world.getBlockState(p_191380_0_).getMaterial() == Material::WATER;
+        return p_191380_1_->world->getBlockState(p_191380_0_)->getMaterial() == Material::WATER;
     }
 }
 

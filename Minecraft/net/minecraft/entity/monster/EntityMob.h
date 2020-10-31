@@ -15,7 +15,7 @@ public:
     bool isPreventingPlayerRest(EntityPlayer* playerIn);
 
 protected:
-    bool isValidLightLevel();
+    virtual bool isValidLightLevel();
     void applyEntityAttributes() override;
     bool canDropLoot() override;
 

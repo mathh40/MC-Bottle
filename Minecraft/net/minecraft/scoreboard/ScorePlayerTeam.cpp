@@ -13,8 +13,7 @@ std::string ScorePlayerTeam::getName()
   return name;
 }
 
-std::string ScorePlayerTeam::getDisplayName()
-{
+std::string ScorePlayerTeam::getDisplayName() const {
   return displayName;
 }
 

@@ -8,13 +8,13 @@ class InventoryCrafting :public IInventory
 {
 public:
     InventoryCrafting(Container* eventHandlerIn, int32_t width, int32_t height);
-    int32_t getSizeInventory() override;
-    bool isEmpty() override;
+    int32_t getSizeInventory() const override;
+    bool isEmpty() const override;
     ItemStack getStackInSlot(int32_t index) override;
     ItemStack getStackInRowAndColumn(int32_t row, int32_t column);
     std::string getName() const override;
     bool hasCustomName() const override;
-    std::unique_ptr<ITextComponent> getDisplayName() const override;
+    ITextComponent* getDisplayName() const override;
     ItemStack removeStackFromSlot(int32_t index) override;
     ItemStack decrStackSize(int32_t index, int32_t count) override;
     void setInventorySlotContents(int32_t index, ItemStack stack) override;

@@ -35,7 +35,7 @@ public:
       }
    };
 
-    static ResourceLocation LIGHTNING_BOLT = ResourceLocation("lightning_bolt");
+    static inline ResourceLocation LIGHTNING_BOLT = ResourceLocation("lightning_bolt");
     static RegistryNamespaced<ResourceLocation,std::type_index> REGISTRY;
     static std::unordered_map<ResourceLocation,EntityEggInfo> ENTITY_EGGS;
     static std::unordered_set<ResourceLocation> KNOWN_TYPES;
@@ -60,7 +60,7 @@ protected:
 
 private:
        
-    static ResourceLocation PLAYER = ResourceLocation("player");
+    static inline ResourceLocation PLAYER = ResourceLocation("player");
     static std::shared_ptr<spdlog::logger> LOGGER; 
     static std::vector<std::string> OLD_NAMES;
     static std::unordered_map<std::string,std::function<Entity*(World*)>> conname;

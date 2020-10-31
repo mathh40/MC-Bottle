@@ -19,7 +19,8 @@ public:
     static EntityEquipmentSlot HEAD;
     EntityEquipmentSlot(EquipmentType slotTypeIn, int32_t indexIn, int32_t slotIndexIn, std::string_view nameIn);
     static EntityEquipmentSlot fromString(std::string_view targetName);
-
+    friend auto operator==(const EntityEquipmentSlot& lhs, const EntityEquipmentSlot& rhs) -> bool;
+    friend auto operator!=(const EntityEquipmentSlot& lhs, const EntityEquipmentSlot& rhs) -> bool;
 
     EquipmentType getSlotType() const;
     int32_t getIndex() const;

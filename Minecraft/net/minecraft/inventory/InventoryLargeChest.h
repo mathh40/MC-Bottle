@@ -1,6 +1,6 @@
 #pragma once
 #include "Container.h"
-#include "ILockableContainer.h"
+#include "../world/ILockableContainer.h"
 
 class InventoryPlayer;
 

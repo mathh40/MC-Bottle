@@ -11,7 +11,7 @@ public:
     void setMoveTo(double x, double y, double z, double speedIn);
     void strafe(float forward, float strafe);
     void read(const EntityMoveHelper& that);
-    void onUpdateMoveHelper();
+    virtual void onUpdateMoveHelper();
     double getX() const;
     double getY() const;
     double getZ() const;

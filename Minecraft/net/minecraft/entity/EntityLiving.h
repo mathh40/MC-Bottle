@@ -27,10 +27,10 @@ public:
     PathNavigate* getNavigator();
     EntitySenses& getEntitySenses();
     EntityLivingBase* getAttackTarget();
-    void setAttackTarget(EntityLivingBase* entitylivingbaseIn);
+    virtual void setAttackTarget(EntityLivingBase* entitylivingbaseIn);
     bool canAttackClass(std::type_index cls);
     void eatGrassBonus();
-    int32_t getTalkInterval();
+    virtual int32_t getTalkInterval();
     void playLivingSound();
     void onEntityUpdate() override;
     void spawnExplosionParticle();
@@ -44,11 +44,11 @@ public:
     void setMoveStrafing(float amount);
     void setAIMoveSpeed(float speedIn) override;
     void onLivingUpdate() override;
-    int32_t getVerticalFaceSpeed();
+    virtual int32_t getVerticalFaceSpeed();
     int32_t getHorizontalFaceSpeed();
     void faceEntity(Entity* entityIn, float maxYawIncrease, float maxPitchIncrease);
     virtual bool getCanSpawnHere();
-    bool isNotColliding();
+    virtual bool isNotColliding();
     float getRenderSizeModifier();
     int32_t getMaxSpawnedInChunk();
     int32_t getMaxFallHeight() override;
@@ -87,7 +87,7 @@ public:
 protected:
     virtual void initEntityAI();
     void applyEntityAttributes() override;
-    PathNavigate* createNavigator(World* worldIn);
+    virtual PathNavigate* createNavigator(World* worldIn);
     EntityBodyHelper createBodyHelper();
     void entityInit() override;
     void playHurtSound(DamageSource::DamageSource source) override;
@@ -96,7 +96,7 @@ protected:
     virtual SoundEvent getAmbientSound();
     Item* getDropItem();
     void dropFewItems(bool wasRecentlyHit, int32_t lootingModifier) override;
-    std::optional<ResourceLocation> getLootTable();
+    virtual std::optional<ResourceLocation> getLootTable();
     void dropLoot(bool wasRecentlyHit, int32_t lootingModifier, DamageSource::DamageSource source) override;
     void updateEquipmentIfNeeded(EntityItem* itemEntity);
     bool canEquipItem(ItemStack stack);
@@ -123,8 +123,6 @@ private:
     void applyEntityAI();
     float updateRotation(float angle, float targetAngle, float maxIncrease) const;
     void recreateLeash();
-
-
 
     static DataParameter AI_FLAGS;
     EntityLookHelper lookHelper;

@@ -15,12 +15,12 @@ public:
     ItemStack addItem(ItemStack stack);
     ItemStack removeStackFromSlot(int32_t index) override;
     void setInventorySlotContents(int32_t index, ItemStack stack) override;
-    int32_t getSizeInventory() override;
-    bool isEmpty() override;
+    int32_t getSizeInventory() const override;
+    bool isEmpty() const override;
     std::string getName() const override;
     bool hasCustomName() const override;
     void setCustomName(std::string_view inventoryTitleIn);
-    std::unique_ptr<ITextComponent> getDisplayName() const override;
+    ITextComponent* getDisplayName() const override;
     int32_t getInventoryStackLimit() const override;
     void markDirty() override;
     bool isUsableByPlayer(EntityPlayer* player) override;

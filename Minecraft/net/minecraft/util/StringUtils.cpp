@@ -1,4 +1,7 @@
 #include "StringUtils.h"
+
+#include "ByteBuffer.h"
+
 #include <regex>
 #include <algorithm>
 
@@ -125,6 +128,10 @@ std::string StringUtils::replace_all(std::string str, std::string_view from, std
 		start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
 	}
 	return str;
+}
+
+bool StringUtils::isNotBlank(std::string_view str) {
+    return !isBlank(str);
 }
 
 bool isBlank(std::string_view str)

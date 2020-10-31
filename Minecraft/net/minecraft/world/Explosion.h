@@ -1,6 +1,14 @@
 #pragma once
-#include "../util/EntitySelectors.h"
-#include "World.h"
+#include "math/BlockPos.h"
+
+
+#include <unordered_map>
+#include <vector>
+
+class EntityLivingBase;
+class EntityPlayer;
+class Entity;
+class World;
 
 class Explosion
 {
@@ -14,7 +22,7 @@ public:
     std::unordered_map<EntityPlayer*,Vec3d>& getPlayerKnockbackMap();
 	EntityLivingBase* getExplosivePlacedBy();
 	void clearAffectedBlockPositions();
-	std::vector<BlockPos> getAffectedBlockPositions();
+	std::vector<BlockPos> getAffectedBlockPositions() const;
 private:
 	bool causesFire;
 	bool damagesTerrain;

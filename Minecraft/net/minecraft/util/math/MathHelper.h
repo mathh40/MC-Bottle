@@ -185,4 +185,9 @@ namespace MathHelper
     T acos(T x) {
 	    return std::acos(x);
 	}
+
+    template<class T>
+    T atan(T x) {
+	    return std::atan(x);
+	}
 }

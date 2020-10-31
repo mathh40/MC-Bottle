@@ -53,3 +53,11 @@ std::vector<EntityEquipmentSlot *> & EntityEquipmentSlot::values()
 {
     return value;
 }
+
+auto operator==(const EntityEquipmentSlot &lhs, const EntityEquipmentSlot &rhs) -> bool {
+    return lhs.getIndex() == rhs.getIndex();
+}
+
+auto operator!=(const EntityEquipmentSlot &lhs, const EntityEquipmentSlot &rhs) -> bool {
+    return !(lhs == rhs);
+}

@@ -206,18 +206,18 @@ void EntityLivingBase::writeEntityToNBT(NBTTagCompound *compound) {
 
     ItemStack itemstack1 = ItemStack::EMPTY;
     for (auto entityequipmentslot1 : var2) {
-        itemstack1 = getItemStackFromSlot(entityequipmentslot1);
+        itemstack1 = getItemStackFromSlot(*entityequipmentslot1);
         if (!itemstack1.isEmpty()) {
-            getAttributeMap()->removeAttributeModifiers(itemstack1.getAttributeModifiers(entityequipmentslot1));
+            getAttributeMap()->removeAttributeModifiers(itemstack1.getAttributeModifiers(*entityequipmentslot1));
         }
     }
 
     compound->setTag("Attributes", SharedMonsterAttributes::writeBaseAttributeMapToNBT(getAttributeMap()));
     var2 = EntityEquipmentSlot::values();
     for (auto entityequipmentslot1 : var2) {
-        itemstack1 = getItemStackFromSlot(entityequipmentslot1);
+        itemstack1 = getItemStackFromSlot(*entityequipmentslot1);
         if (!itemstack1.isEmpty()) {
-            getAttributeMap()->applyAttributeModifiers(itemstack1.getAttributeModifiers(entityequipmentslot1));
+            getAttributeMap()->applyAttributeModifiers(itemstack1.getAttributeModifiers(*entityequipmentslot1));
         }
     }
 

@@ -6,7 +6,10 @@
 class Team
 {
 public:
-   class EnumVisible
+    virtual ~Team() = default;
+    bool isSameTeam(Team * team);
+
+    class EnumVisible
    {
    public:
       static EnumVisible ALWAYS;
@@ -47,7 +50,7 @@ public:
    };
 
 
-   friend bool operator==(const Team& other);
+   friend bool operator==(const Team& lhs,const Team& other);
 
    virtual std::string getName() = 0;
 

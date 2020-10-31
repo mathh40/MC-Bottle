@@ -108,7 +108,7 @@ public:
     bool isOffsetPositionInLiquid(double x, double y, double z);
     virtual void move(const MoverType& type, double x, double y, double z);
     void resetPositionToBB();
-    void playSound(SoundEvent soundIn, float volume, float pitch);
+    virtual void playSound(SoundEvent soundIn, float volume, float pitch);
     bool isSilent();
     void setSilent(bool isSilent);
     bool hasNoGravity();
@@ -145,7 +145,7 @@ public:
     std::optional<RayTraceResult> rayTrace(double blockReachDistance, float partialTicks);
     virtual bool canBeCollidedWith();
     virtual bool canBePushed();
-    void awardKillScore(Entity* p_191956_1_, int32_t p_191956_2_, DamageSource::DamageSource p_191956_3_);
+    virtual void awardKillScore(Entity* p_191956_1_, int32_t p_191956_2_, DamageSource::DamageSource p_191956_3_);
     virtual bool isInRangeToRender3d(double x, double y, double z);
     virtual bool isInRangeToRenderDist(double distance);
     bool writeToNBTAtomically(NBTTagCompound* compound);
@@ -157,7 +157,7 @@ public:
     EntityItem* dropItemWithOffset(const Item* itemIn, int32_t size, float offsetY);
     virtual EntityItem* entityDropItem(ItemStack stack, float offsetY);
     bool isEntityAlive() const;
-    bool isEntityInsideOpaqueBlock() const;
+    virtual bool isEntityInsideOpaqueBlock() const;
     virtual bool processInitialInteract(EntityPlayer* player, EnumHand hand);
     virtual std::optional<AxisAlignedBB> getCollisionBox(Entity* entityIn);
     virtual void updateRidden();
@@ -175,7 +175,7 @@ public:
     Vec2f getPitchYaw() const;
     Vec3d getForward() const;
     void setPortal(const BlockPos& pos);
-    int32_t getPortalCooldown();
+    virtual int32_t getPortalCooldown();
     virtual void setVelocity(double x, double y, double z);
     virtual void handleStatusUpdate(std::byte id);
     virtual void performHurtAnimation();
@@ -183,7 +183,7 @@ public:
     std::vector<> getArmorInventoryList();
     std::vector<> getEquipmentAndArmor();
     void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack);
-    bool isBurning();
+    virtual bool isBurning();
     bool isRiding();
     bool isBeingRidden();
     bool isSneaking();
@@ -193,15 +193,15 @@ public:
     bool isGlowing();
     void setGlowing(bool glowingIn);
     bool isInvisible();
-    bool isInvisibleToPlayer(EntityPlayer* player);
-    Team* getTeam();
-    bool isOnSameTeam(Entity* entityIn);
+    virtual bool isInvisibleToPlayer(EntityPlayer* player);
+    virtual Team* getTeam();
+    virtual bool isOnSameTeam(Entity* entityIn);
     bool isOnScoreboardTeam(Team* teamIn);
     virtual void setInvisible(bool invisible);
     int32_t getAir();
     void setAir(int32_t air);
     virtual void onStruckByLightning(EntityLightningBolt* lightningBolt);
-    void onKillEntity(EntityLivingBase* entityLivingIn);
+    virtual void onKillEntity(EntityLivingBase* entityLivingIn);
     virtual void setInWeb();
     std::string getName() const override;
     virtual std::vector<Entity*> getParts();
@@ -212,7 +212,7 @@ public:
     virtual bool canBeAttackedWithItem();
     virtual bool hitByEntity(Entity* entityIn);
     std::string toString();
-    bool isEntityInvulnerable(DamageSource::DamageSource source);
+    virtual bool isEntityInvulnerable(DamageSource::DamageSource source);
     bool getIsInvulnerable() const;
     void setEntityInvulnerable(bool isInvulnerable);
     void copyLocationAndAnglesFrom(Entity* entityIn);
@@ -229,7 +229,7 @@ public:
     void setUniqueId(xg::Guid uniqueIdIn);
     xg::Guid getUniqueID() const;
     std::string_view getCachedUniqueIdString() const;
-    bool isPushedByWater();
+    virtual bool isPushedByWater();
     static double getRenderDistanceWeight();
     static void setRenderDistanceWeight(double renderDistWeight);
     ITextComponent* getDisplayName() const override;
@@ -243,7 +243,7 @@ public:
     virtual void notifyDataManagerChange(DataParameter key);
     EnumFacing getHorizontalFacing() const;
     virtual EnumFacing getAdjustedHorizontalFacing() const;
-    bool isSpectatedByPlayer(EntityPlayerMP* player);
+    virtual bool isSpectatedByPlayer(EntityPlayerMP* player);
     AxisAlignedBB getEntityBoundingBox() const;
     AxisAlignedBB getRenderBoundingBox() const;
     void setEntityBoundingBox(AxisAlignedBB bb);
@@ -287,7 +287,7 @@ public:
 
 protected:
     virtual void entityInit() = 0;
-    void preparePlayerToSpawn();
+    virtual void preparePlayerToSpawn();
     virtual void setSize(float width, float height);
     void setRotation(float yaw, float pitch);
     void decrementTimeUntilPortal();
@@ -297,13 +297,13 @@ protected:
     virtual SoundEvent getSplashSound();
     virtual void doBlockCollisions();
     virtual void onInsideBlock(IBlockState* p_191955_1_);
-    void playStepSound(BlockPos pos, Block* blockIn);
+    virtual void playStepSound(BlockPos pos, Block* blockIn);
     float playFlySound(float p_191954_1_);
     bool makeFlySound();
     virtual bool canTriggerWalking();
     virtual void updateFallState(double y, bool onGroundIn, IBlockState* state, const BlockPos& pos);
     virtual void dealFireDamage(int32_t amount);
-    void doWaterSplashEffect();
+    virtual void doWaterSplashEffect();
     void createRunningParticles();
     virtual void markVelocityChanged();
     Vec3d getVectorForRotation(float pitch, float yaw);
@@ -322,7 +322,7 @@ protected:
     bool pushOutOfBlocks(double x, double y, double z);
     HoverEvent getHoverEvent();
     void applyEnchantments(EntityLivingBase* entityLivingBaseIn, Entity* entityIn);
-    int32_t getFireImmuneTicks();
+    virtual int32_t getFireImmuneTicks();
 
 
     int32_t rideCooldown;

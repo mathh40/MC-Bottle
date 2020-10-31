@@ -1,7 +1,9 @@
 #pragma once
 #include "IStatType.h"
 #include <string>
-#include "text/ITextComponent.h"
+
+class ITextComponent;
+class IScoreCriteria;
 
 class StatBase
 {
