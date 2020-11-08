@@ -238,7 +238,7 @@ public:
     virtual bool hasCustomName() const;
     void setAlwaysRenderNameTag(bool alwaysRenderNameTag);
     bool getAlwaysRenderNameTag();
-    void setPositionAndUpdate(double x, double y, double z);
+    virtual void setPositionAndUpdate(double x, double y, double z);
     virtual bool getAlwaysRenderNameTagForRender();
     virtual void notifyDataManagerChange(DataParameter key);
     EnumFacing getHorizontalFacing() const;
@@ -290,7 +290,7 @@ protected:
     virtual void preparePlayerToSpawn();
     virtual void setSize(float width, float height);
     void setRotation(float yaw, float pitch);
-    void decrementTimeUntilPortal();
+    virtual void decrementTimeUntilPortal();
     void setOnFireFromLava();
     virtual void outOfWorld();
     virtual SoundEvent getSwimSound();

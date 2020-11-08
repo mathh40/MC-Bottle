@@ -1,5 +1,4 @@
 #pragma once
-#include <regex>
 #include "../properties/IProperty.h"
 #include "BlockStateBase.h"
 
@@ -15,7 +14,6 @@ namespace state {
 
     protected:
     private:
-        static std::regex NAME_PATTERN;
         Block *block;
         std::unordered_map<std::string, IProperty *> properties{};
         std::vector<std::set<std::any>> validStates{};

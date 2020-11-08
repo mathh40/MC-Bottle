@@ -1,10 +1,10 @@
 #include "BlockStateContainer.h"
-#include "../../util/math/Cartesian.h"
+#include "../../../../../compile-time-regular-expressions/single-header/ctre.hpp"
 #include "../../util/MapPopulator.h"
+#include "../../util/math/Cartesian.h"
 
 namespace state {
-    std::regex BlockStateContainer::NAME_PATTERN("^[a-z0-9_]+$");
-
+    static constexpr auto NAME_PATTERN = ctll::fixed_string{ "^[a-z0-9_]+$" };
     BlockStateContainer::BlockStateContainer(Block *blockIn, std::initializer_list<IProperty *> listproperties) :
         block(blockIn) {
         std::unordered_map<std::string, IProperty *> map;
@@ -40,7 +40,8 @@ namespace state {
 
     std::string BlockStateContainer::validateProperty(Block *block, IProperty *property) {
         auto s = property->getName();
-        if (!std::regex_match(s, NAME_PATTERN)) {
+
+        if (!ctre::match<NAME_PATTERN>(s)) {
             throw std::runtime_error("Block: " + block->getLocalizedName() + " has invalidly named property: " + s);
         } else {
             auto t = property->getAllowedValues();
@@ -53,7 +54,7 @@ namespace state {
 
                 s1 = property->getName(t);
             }
-            while (std::regex_match(s1, NAME_PATTERN));
+            while (ctre::match<NAME_PATTERN>(s1));
 
             throw std::runtime_error("Block: " + block->getLocalizedName() + " has property: " + s +
                                      " with invalidly named value: " + s1);

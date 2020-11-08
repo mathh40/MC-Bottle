@@ -1,3 +1,4 @@
 #include "TextComponentTranslation.h"
+#include "../../../../../compile-time-regular-expressions/single-header/ctre.hpp"
 
-std::regex TextComponentTranslation::STRING_VARIABLE_PATTERN = std::regex("%(?:(\\d+)\\$)?([A-Za-z%]|$)")
+static constexpr auto STRING_VARIABLE_PATTERN = ctll::fixed_string{ R"(%(?:(\d+)\$)?([A-Za-z%]|$))"};

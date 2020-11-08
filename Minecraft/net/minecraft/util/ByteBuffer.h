@@ -12,9 +12,9 @@
 constexpr std::size_t BB_DEFAULT_SIZE = 4096;
 
 template <typename T>
-void SwapEndian(T &val,std::endian end)
+constexpr void SwapEndian(T &val,const std::endian& end)
 {
-    if constexpr(end != std::endian::native)
+    if (end != std::endian::native)
     {
         union U
         {

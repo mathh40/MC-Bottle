@@ -1,5 +1,9 @@
 #include "TextFormatting.h"
-std::regex TextFormatting::FORMATTING_CODE_PATTERN("(?i)$[0-9A-FK-OR]");
+#include "../../../../../compile-time-regular-expressions/single-header/ctre.hpp"
+#include <StringUtils.h>
+#include <algorithm>
+
+static constexpr auto FORMATTING_CODE_PATTERN = ctll::fixed_string{ R"(§[0-9a-fk-or])"};
 
 TextFormatting TextFormatting::BLACK("BLACK", '0', 0);
 TextFormatting TextFormatting::DARK_BLUE("DARK_BLUE", '1', 1);
@@ -59,9 +63,12 @@ std::string TextFormatting::toString() const
 
 std::optional<std::string> TextFormatting::getTextWithoutFormattingCodes(std::optional<std::string> text) const
 {
-	auto sm = std::regex_replace(text.value(), FORMATTING_CODE_PATTERN, "");
+    auto temp = ctre::search<FORMATTING_CODE_PATTERN>(text.value());
+    std::string result = "";
+    std::string replace = temp.str();
+    StringUtils::replaceFirstOccurrence(result,replace,"");
 
-	return text.has_value() ? std::optional<std::string>(sm) : std::nullopt;
+	return text.has_value() ? std::optional<std::string>(result) : std::nullopt;
 }
 
 std::optional<TextFormatting> TextFormatting::getValueByName(std::optional<std::string> friendlyName)

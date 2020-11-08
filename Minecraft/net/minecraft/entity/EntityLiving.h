@@ -21,9 +21,9 @@ public:
     EntityLiving(World* worldIn);
     float getPathPriority(PathNodeType nodeType);
     void setPathPriority(PathNodeType nodeType, float priority);
-    EntityLookHelper& getLookHelper();
-    EntityMoveHelper& getMoveHelper();
-    EntityJumpHelper& getJumpHelper();
+    EntityLookHelper* getLookHelper();
+    EntityMoveHelper* getMoveHelper();
+    EntityJumpHelper* getJumpHelper();
     PathNavigate* getNavigator();
     EntitySenses& getEntitySenses();
     EntityLivingBase* getAttackTarget();
@@ -50,7 +50,7 @@ public:
     virtual bool getCanSpawnHere();
     virtual bool isNotColliding();
     float getRenderSizeModifier();
-    int32_t getMaxSpawnedInChunk();
+    virtual int32_t getMaxSpawnedInChunk();
     int32_t getMaxFallHeight() override;
     std::vector<ItemStack>& getHeldEquipment() override;
     std::vector<ItemStack>& getArmorInventoryList() override; 
@@ -88,7 +88,7 @@ protected:
     virtual void initEntityAI();
     void applyEntityAttributes() override;
     virtual PathNavigate* createNavigator(World* worldIn);
-    EntityBodyHelper createBodyHelper();
+    std::unique_ptr<EntityBodyHelper> createBodyHelper();
     void entityInit() override;
     void playHurtSound(DamageSource::DamageSource source) override;
     int32_t getExperiencePoints(EntityPlayer* player) override;
@@ -100,7 +100,7 @@ protected:
     void dropLoot(bool wasRecentlyHit, int32_t lootingModifier, DamageSource::DamageSource source) override;
     void updateEquipmentIfNeeded(EntityItem* itemEntity);
     bool canEquipItem(ItemStack stack);
-    bool canDespawn();
+    virtual bool canDespawn();
     virtual void despawnEntity();
     void updateEntityActionState() override;
     virtual void updateAITasks();
@@ -112,8 +112,8 @@ protected:
 
 
     int32_t experienceValue;
-    EntityMoveHelper moveHelper;
-    EntityJumpHelper jumpHelper;
+    std::unique_ptr<EntityMoveHelper> moveHelper;
+    std::unique_ptr<EntityJumpHelper> jumpHelper;
     PathNavigate* navigator;
     EntityAITasks tasks;
     EntityAITasks targetTasks;
@@ -125,8 +125,8 @@ private:
     void recreateLeash();
 
     static DataParameter AI_FLAGS;
-    EntityLookHelper lookHelper;
-    EntityBodyHelper bodyHelper;
+    std::unique_ptr<EntityLookHelper> lookHelper;
+    std::unique_ptr<EntityBodyHelper> bodyHelper;
     EntityLivingBase* attackTarget;
     EntitySenses senses;
     std::vector<ItemStack> inventoryHands;

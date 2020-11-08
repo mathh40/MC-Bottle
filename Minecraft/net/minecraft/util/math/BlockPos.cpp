@@ -14,7 +14,7 @@ constexpr int64_t ONE = 1;
 constexpr int64_t TWO = MathHelper::smallestEncompassingPowerOfTwo(30000000);
 constexpr int64_t THREA = MathHelper::log2(TWO);
 
-constexpr auto NUM_X_BITS = ONE + ;
+constexpr auto NUM_X_BITS = ONE + THREA;
 constexpr uint32_t NUM_Z_BITS = NUM_X_BITS;
 constexpr uint32_t NUM_Y_BITS = 64 - NUM_X_BITS - NUM_Z_BITS;
 constexpr uint32_t Y_SHIFT = 0 + NUM_Z_BITS;
@@ -172,7 +172,7 @@ BlockPos BlockPos::crossProduct(Vec3i vec) const
 
 int64_t BlockPos::toLong() const
 {
-	return ((long)getx() & X_MASK) << X_SHIFT | ((long)gety() & Y_MASK) << Y_SHIFT | ((long)getz() & Z_MASK) << 0;
+	return (getx() & X_MASK) << X_SHIFT | (gety() & Y_MASK) << Y_SHIFT | (getz() & Z_MASK) << 0;
 }
 
 BlockPos BlockPos::fromLong(long serialized)

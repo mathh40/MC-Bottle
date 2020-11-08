@@ -1,8 +1,10 @@
 #include "LanguageMap.h"
-#include <fstream>
+#include "../../../../../../compile-time-regular-expressions/single-header/ctre.hpp"
 #include "Util.h"
+#include <StringUtils.h>
+#include <fstream>
 
-std::regex LanguageMap::NUMERIC_VARIABLE_PATTERN(R"(%(\d+\$)?[\d\.]*[df])");
+static constexpr auto NUMERIC_VARIABLE_PATTERN = ctll::fixed_string{ R"(%(\d+\$)?[\d\.]*[df])"};
 std::shared_ptr<LanguageMap> LanguageMap::instance = std::make_shared<LanguageMap>();
 
 
@@ -15,7 +17,11 @@ LanguageMap::LanguageMap()
 		{
 			auto s1 = line.substr(0, line.find_first_of('='));
 			auto s2 = line.substr(line.find_first_of('=') + 1);
-			auto sm = std::regex_replace(s2, NUMERIC_VARIABLE_PATTERN, "%$1s");
+
+
+			auto sm = ctre::search<NUMERIC_VARIABLE_PATTERN>(s2);
+            auto replace = sm.to_string();
+            StringUtils::replaceFirstOccurrence(replace,s2,"%$1s");
 			languageList.emplace(s1, sm);
 		}
 	}

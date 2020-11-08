@@ -1,5 +1,4 @@
 #pragma once
-#include <regex>
 #include <unordered_map>
 #include <mutex>
 #include <spdlog/fmt/fmt.h>
@@ -20,7 +19,6 @@ public:
 
 	int64_t getLastUpdateTimeInMilliseconds() const;
 private:
-	static std::regex NUMERIC_VARIABLE_PATTERN;
 	langmap languageList;
 	int64_t lastUpdateTimeInMilliseconds;
 	std::mutex m;

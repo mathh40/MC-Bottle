@@ -132,7 +132,7 @@ namespace MathHelper
 	constexpr int64_t log2DeBruijn(int64_t value)
 	{
 		value = isPowerOfTwo(value) ? value : smallestEncompassingPowerOfTwo(value);
-		return MULTIPLY_DE_BRUIJN_BIT_POSITION[(int)((long)value * 125613361L >> 27) & 31];
+		return MULTIPLY_DE_BRUIJN_BIT_POSITION[(int)(value * 125613361L >> 27) & 31];
 	}
 
 	constexpr int64_t log2(int64_t value)

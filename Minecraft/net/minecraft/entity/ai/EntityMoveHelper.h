@@ -4,6 +4,7 @@
 class EntityMoveHelper
 {
 public:
+    virtual ~EntityMoveHelper() = default;
 
     explicit EntityMoveHelper(EntityLiving* entitylivingIn);
     bool isUpdating() const;

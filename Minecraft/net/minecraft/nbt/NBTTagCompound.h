@@ -4,7 +4,6 @@
 #include "NBTTagList.h"
 #include <ByteBuffer.h>
 #include <memory>
-#include <regex>
 #include <spdlog/logger.h>
 #include <unordered_map>
 
@@ -65,7 +64,6 @@ protected:
     std::string handleEscape(std::string p_193582_0_) const;
 
 private:
-    static std::regex SIMPLE_VALUE;
     static std::shared_ptr<spdlog::logger> LOGGER;
     std::unordered_map<const std::string, std::unique_ptr<NBTBase>> tagMap;
 

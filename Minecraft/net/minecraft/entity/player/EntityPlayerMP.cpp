@@ -644,7 +644,7 @@ void EntityPlayerMP::addStat(StatBase *stat, int32_t amount) {
 void EntityPlayerMP::takeStat(StatBase *stat) {
     if (stat != nullptr) {
          statsFile.unlockAchievement(this, stat, 0);
-         auto var2 = getWorldScoreboard().getObjectivesFromCriteria(stat->getCriteria()).iterator();
+         auto var2 = getWorldScoreboard().getObjectivesFromCriteria(stat->getCriteria());
 
          for (auto scoreobjective : var2){
             getWorldScoreboard().getOrCreateScore(getName(), scoreobjective).setScorePoints(0);
@@ -658,15 +658,247 @@ void EntityPlayerMP::unlockRecipes(std::vector<IRecipe*> p_192021_1_) {
 
 void EntityPlayerMP::unlockRecipes(std::vector<ResourceLocation> p_193102_1_) {
     std::vector<IRecipe*> list;
-      ResourceLocation[] var3 = p_193102_1_;
-      int var4 = p_193102_1_.length;
-
-      for(int var5 = 0; var5 < var4; ++var5) {
-         ResourceLocation resourcelocation = var3[var5];
-         list.add(CraftingManager::getRecipe(resourcelocation));
+    for(auto resourcelocation : p_193102_1_) {
+         list.emplace_back(CraftingManager::getRecipe(resourcelocation));
       }
 
       unlockRecipes(list);
+}
+
+void EntityPlayerMP::resetRecipes(std::vector<IRecipe *> p_192022_1_) {
+    recipeBook.remove(p_192022_1_, this);
+}
+
+void EntityPlayerMP::mountEntityAndWakeUp() {
+    disconnected = true;
+      removePassengers();
+      if (sleeping) {
+         wakeUpPlayer(true, false, false);
+      }
+}
+
+bool EntityPlayerMP::hasDisconnected() const {
+    return disconnected;
+}
+
+void EntityPlayerMP::setPlayerHealthUpdated() {
+    lastHealth = -1.0E8F;
+}
+
+void EntityPlayerMP::sendStatusMessage(ITextComponent *chatComponent, bool actionBar) {
+    connection.sendPacket(new SPacketChat(chatComponent, actionBar ? ChatType::GAME_INFO : ChatType::CHAT));
+}
+
+void EntityPlayerMP::copyFrom(EntityPlayerMP *that, bool keepEverything) {
+    if (keepEverything) {
+         inventory.copyInventory(&that->inventory);
+         setHealth(that->getHealth());
+         foodStats = that->foodStats;
+         experienceLevel = that->experienceLevel;
+         experienceTotal = that->experienceTotal;
+         experience = that->experience;
+         setScore(that->getScore());
+         lastPortalPos = that->lastPortalPos;
+         lastPortalVec = that->lastPortalVec;
+         teleportDirection = that->teleportDirection;
+      } else if (world->getGameRules().getBoolean("keepInventory") || that->isSpectator()) {
+         inventory.copyInventory(&that->inventory);
+         experienceLevel = that->experienceLevel;
+         experienceTotal = that->experienceTotal;
+         experience = that->experience;
+         setScore(that->getScore());
+      }
+
+      xpSeed = that->xpSeed;
+      enderChest = that->enderChest;
+      getDataManager().set(PLAYER_MODEL_FLAG, that->getDataManager().get(PLAYER_MODEL_FLAG));
+      lastExperience = -1;
+      lastHealth = -1.0F;
+      lastFoodLevel = -1;
+      recipeBook.copyFrom(that->recipeBook);
+      entityRemoveQueue.assign(that->entityRemoveQueue.begin(),that->entityRemoveQueue.end());
+      seenCredits = that->seenCredits;
+      enteredNetherPosition = that->enteredNetherPosition;
+      setLeftShoulderEntity(that->getLeftShoulderEntity());
+      setRightShoulderEntity(that->getRightShoulderEntity());
+}
+
+void EntityPlayerMP::setPositionAndUpdate(double x, double y, double z) {
+    connection.setPlayerLocation(x, y, z, rotationYaw, rotationPitch);
+}
+
+void EntityPlayerMP::onCriticalHit(Entity *entityHit) {
+    getServerWorld().getEntityTracker().sendToTrackingAndSelf(this, new SPacketAnimation(entityHit, 4));
+}
+
+void EntityPlayerMP::onEnchantmentCritical(Entity *entityHit) {
+    getServerWorld().getEntityTracker().sendToTrackingAndSelf(this, new SPacketAnimation(entityHit, 5));
+}
+
+void EntityPlayerMP::sendPlayerAbilities() {
+    if (connection != nullptr) {
+         connection.sendPacket(new SPacketPlayerAbilities(capabilities));
+         updatePotionMetadata();
+      }
+}
+
+WorldServer * EntityPlayerMP::getServerWorld() const {
+    return (WorldServer*)world;
+}
+
+void EntityPlayerMP::setGameType(GameType gameType) {
+    interactionManager.setGameType(gameType);
+      connection.sendPacket(new SPacketChangeGameState(3, gameType.getID()));
+      if (gameType == GameType::SPECTATOR) {
+         spawnShoulderEntities();
+         dismountRidingEntity();
+      } else {
+         setSpectatingEntity(this);
+      }
+
+      sendPlayerAbilities();
+      markPotionsDirty();
+}
+
+bool EntityPlayerMP::isSpectator() {
+    return interactionManager.getGameType() == GameType::SPECTATOR;
+}
+
+bool EntityPlayerMP::isCreative() {
+    return interactionManager.getGameType() == GameType::CREATIVE;
+}
+
+void EntityPlayerMP::sendMessage(ITextComponent *component) {
+    connection.sendPacket(new SPacketChat(component));
+}
+
+bool EntityPlayerMP::canUseCommand(int32_t permLevel, std::string_view commandName) {
+    if ("seed" == commandName && !server->isDedicatedServer()) {
+         return true;
+      } else if (!"tell" == (commandName) && !"help" == (commandName) && !"me" == (commandName) && !"trigger" == (commandName)) {
+         if (server->getPlayerList().canSendCommands(getGameProfile())) {
+            UserListOpsEntry* userlistopsentry = (UserListOpsEntry*)server->getPlayerList().getOppedPlayers().getEntry(getGameProfile());
+            if (userlistopsentry != nullptr) {
+               return userlistopsentry->getPermissionLevel() >= permLevel;
+            } else {
+               return server->getOpPermissionLevel() >= permLevel;
+            }
+         } else {
+            return false;
+         }
+      } else {
+         return true;
+      }
+}
+
+std::string EntityPlayerMP::getPlayerIP() {
+    std::string s = connection.netManager.getRemoteAddress().toString();
+      s = s.substr(s.find_first_of("/") + 1);
+      s = s.substr(0, s.find_first_of(":"));
+      return s;
+}
+
+void EntityPlayerMP::handleClientSettings(CPacketClientSettings packetIn) {
+    language = packetIn.getLang();
+      chatVisibility = packetIn.getChatVisibility();
+      chatColours = packetIn.isColorsEnabled();
+      getDataManager().set(PLAYER_MODEL_FLAG, packetIn.getModelPartFlags());
+      getDataManager().set(MAIN_HAND, (packetIn.getMainHand() == EnumHandSide::LEFT ? 0 : 1));
+}
+
+EntityPlayer::EnumChatVisibility EntityPlayerMP::getChatVisibility() const {
+    return chatVisibility;
+}
+
+void EntityPlayerMP::loadResourcePack(std::string_view url, std::string_view hash) {
+     connection.sendPacket(new SPacketResourcePackSend(url, hash));
+}
+
+BlockPos EntityPlayerMP::getPosition() {
+    return BlockPos(posX, posY + 0.5, posZ);
+}
+
+void EntityPlayerMP::markPlayerActive() {
+    playerLastActiveTime = MinecraftServer::getCurrentTimeMillis();
+}
+
+StatisticsManagerServer EntityPlayerMP::getStatFile() const {
+    return statsFile;
+}
+
+RecipeBookServer EntityPlayerMP::getRecipeBook() const {
+    return recipeBook;
+}
+
+void EntityPlayerMP::removeEntity(Entity *entityIn) {
+    if (Util::instanceof<EntityPlayer>(entityIn)) {
+         connection.sendPacket(new SPacketDestroyEntities({entityIn->getEntityId()}));
+      } else {
+         entityRemoveQueue.emplace_back(entityIn->getEntityId());
+      }
+}
+
+void EntityPlayerMP::addEntity(Entity *entityIn) {
+    entityRemoveQueue.erase(entityIn->getEntityId());
+}
+
+Entity * EntityPlayerMP::getSpectatingEntity() {
+    return spectatingEntity == nullptr ? this : spectatingEntity;
+}
+
+void EntityPlayerMP::setSpectatingEntity(Entity *entityToSpectate) {
+    Entity* entity = getSpectatingEntity();
+      spectatingEntity =entityToSpectate == nullptr ? this : entityToSpectate;
+      if (entity != spectatingEntity) {
+         connection.sendPacket(new SPacketCamera(spectatingEntity));
+         setPositionAndUpdate(spectatingEntity->posX, spectatingEntity->posY, spectatingEntity->posZ);
+      }
+}
+
+void EntityPlayerMP::attackTargetEntityWithCurrentItem(Entity *targetEntity) {
+    if (interactionManager.getGameType() == GameType::SPECTATOR) {
+         setSpectatingEntity(targetEntity);
+      } else {
+         EntityPlayer::attackTargetEntityWithCurrentItem(targetEntity);
+      }
+}
+
+int64_t EntityPlayerMP::getLastActiveTime() const {
+    return playerLastActiveTime;
+}
+
+ITextComponent * EntityPlayerMP::getTabListDisplayName() {
+    return nullptr;
+}
+
+void EntityPlayerMP::swingArm(EnumHand hand) {
+    EntityPlayerMP::swingArm(hand);
+    resetCooldown();
+}
+
+bool EntityPlayerMP::isInvulnerableDimensionChange() const {
+    return invulnerableDimensionChange;
+}
+
+void EntityPlayerMP::clearInvulnerableDimensionChange() {
+    invulnerableDimensionChange = false;
+}
+
+void EntityPlayerMP::setElytraFlying() {
+    setFlag(7, true);
+}
+
+void EntityPlayerMP::clearElytraFlying() {
+    setFlag(7, true);
+    setFlag(7, false);
+}
+
+PlayerAdvancements EntityPlayerMP::getAdvancements() {
+    return advancements;
+}
+
+std::optional<Vec3d> EntityPlayerMP::getEnteredNetherPosition() const {
+    return enteredNetherPosition;
 }
 
 void EntityPlayerMP::onInsideBlock(IBlockState *p_191955_1_) {
@@ -685,6 +917,57 @@ void EntityPlayerMP::frostWalk(const BlockPos &pos) {
         EntityPlayer::frostWalk(pos);
     }
 
+}
+
+void EntityPlayerMP::onItemUseFinish() {
+    if (!activeItemStack.isEmpty() && isHandActive()) {
+         connection.sendPacket(new SPacketEntityStatus(this, std::byte(9)));
+         EntityPlayer::onItemUseFinish();
+      }
+}
+
+void EntityPlayerMP::onNewPotionEffect(PotionEffect id) {
+    EntityPlayer::onNewPotionEffect(id);
+      connection.sendPacket(new SPacketEntityEffect(getEntityId(), id));
+      if (id.getPotion() == MobEffects::LEVITATION) {
+         levitatingSince = ticksExisted;
+         levitationStartPos = Vec3d(posX, posY, posZ);
+      }
+
+      CriteriaTriggers::EFFECTS_CHANGED.trigger(this);
+}
+
+void EntityPlayerMP::onChangedPotionEffect(PotionEffect id, bool p_70695_2_) {
+    EntityPlayer::onChangedPotionEffect(id, p_70695_2_);
+      connection.sendPacket(new SPacketEntityEffect(getEntityId(), id));
+      CriteriaTriggers::EFFECTS_CHANGED.trigger(this);
+}
+
+void EntityPlayerMP::onFinishedPotionEffect(PotionEffect effect) {
+    EntityPlayer::onFinishedPotionEffect(effect);
+      connection.sendPacket(new SPacketRemoveEntityEffect(getEntityId(), effect.getPotion()));
+      if (effect.getPotion() == MobEffects::LEVITATION) {
+         levitationStartPos = std::nullopt;
+      }
+
+      CriteriaTriggers.EFFECTS_CHANGED.trigger(this);
+}
+
+void EntityPlayerMP::updatePotionMetadata() {
+    if (isSpectator()) {
+         resetPotionEffectMetadata();
+         setInvisible(true);
+      } else {
+         EntityPlayer::updatePotionMetadata();
+      }
+
+      getServerWorld().getEntityTracker()->updateVisibility(this);
+}
+
+void EntityPlayerMP::decrementTimeUntilPortal() {
+    if (timeUntilPortal > 0 && !invulnerableDimensionChange) {
+         --timeUntilPortal;
+      }
 }
 
 void EntityPlayerMP::updateScorePoints(IScoreCriteria* criteria, int32_t points) const {

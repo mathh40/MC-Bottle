@@ -15,4 +15,8 @@ namespace StringUtils
 	std::string replace_all(std::string str, std::string_view from, std::string& to);
 	bool isBlank(std::string_view str);
     bool isNotBlank(std::string_view str);
+    std::string replaceFirstOccurrence(
+        std::string& s,
+        std::string_view toReplace,
+        std::string_view replaceWith);
 }

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <unordered_map>
-#include <regex>
 #include <optional>
 #include <ostream>
 
@@ -44,7 +43,6 @@ public:
 private:
 	static std::unordered_map<std::string,TextFormatting*> NAME_MAPPING;
 	static std::vector<TextFormatting*> format;
-	static std::regex FORMATTING_CODE_PATTERN;
 
 	TextFormatting(std::string formattingName, char formattingCodeIn, int32_t colorIndex);
 	TextFormatting(std::string formattingName, char formattingCodeIn, bool fancyStylingIn);

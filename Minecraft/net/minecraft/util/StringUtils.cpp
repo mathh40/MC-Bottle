@@ -1,11 +1,11 @@
 #include "StringUtils.h"
 
+#include "../../../../compile-time-regular-expressions/single-header/ctre.hpp"
 #include "ByteBuffer.h"
 
-#include <regex>
 #include <algorithm>
 
-std::regex PATTERN_CONTROL_COD("(?i)\\u00A7[0-9A-FK-OR]");
+static constexpr auto PATTERN_CONTROL_COD = ctll::fixed_string{ R"(§[0-9a-fk-or])"};
 
 std::string StringUtils::ticksToElapsedTime(int ticks)
 {
@@ -17,8 +17,12 @@ std::string StringUtils::ticksToElapsedTime(int ticks)
 
 std::string StringUtils::stripControlCodes(const std::string& text)
 {
-	std::string result;
-	std::regex_replace(std::back_inserter(result), text.begin(), text.end(), PATTERN_CONTROL_COD, "");
+
+    auto temp = ctre::search<PATTERN_CONTROL_COD>(text);
+    std::string result = "";
+    std::string replace = temp.str();
+    StringUtils::replaceFirstOccurrence(result,replace,"");
+
 	return result;
 }
 
@@ -132,6 +136,12 @@ std::string StringUtils::replace_all(std::string str, std::string_view from, std
 
 bool StringUtils::isNotBlank(std::string_view str) {
     return !isBlank(str);
+}
+std::string StringUtils::replaceFirstOccurrence(std::string &s, std::string_view toReplace,
+                                                std::string_view replaceWith) {
+    std::size_t pos = s.find(toReplace);
+    if (pos == std::string::npos) return s;
+    return s.replace(pos, toReplace.length(), replaceWith);
 }
 
 bool isBlank(std::string_view str)

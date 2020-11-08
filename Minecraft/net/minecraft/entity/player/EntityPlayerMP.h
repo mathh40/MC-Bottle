@@ -52,8 +52,44 @@ public:
     void takeStat(StatBase* stat) override;
     void unlockRecipes(std::vector<IRecipe*> p_192021_1_) override;
     void unlockRecipes(std::vector<ResourceLocation> p_193102_1_) override;
-
-
+    void resetRecipes(std::vector<IRecipe*> p_192022_1_) override;
+    void mountEntityAndWakeUp();
+    bool hasDisconnected() const;
+    void setPlayerHealthUpdated();
+    void sendStatusMessage(ITextComponent* chatComponent, bool actionBar) override;
+    void copyFrom(EntityPlayerMP* that, bool keepEverything);
+    void setPositionAndUpdate(double x, double y, double z) override;
+    void onCriticalHit(Entity* entityHit) override;
+    void onEnchantmentCritical(Entity* entityHit) override;
+    void sendPlayerAbilities() override;
+    WorldServer* getServerWorld() const;
+    void setGameType(GameType gameType) override;
+    bool isSpectator() override;
+    bool isCreative() override;
+    void sendMessage(ITextComponent* component) override;
+    bool canUseCommand(int32_t permLevel, std::string_view commandName) override;
+    std::string getPlayerIP();
+    void handleClientSettings(CPacketClientSettings packetIn);
+    EntityPlayer::EnumChatVisibility getChatVisibility() const;
+    void loadResourcePack(std::string_view url, std::string_view hash);
+    BlockPos getPosition() override;
+    void markPlayerActive();
+    StatisticsManagerServer getStatFile() const;
+    RecipeBookServer getRecipeBook() const;
+    void removeEntity(Entity* entityIn);
+    void addEntity(Entity* entityIn);
+    Entity* getSpectatingEntity();
+    void setSpectatingEntity(Entity* entityToSpectate);
+    void attackTargetEntityWithCurrentItem(Entity* targetEntity) override;
+    int64_t getLastActiveTime() const;
+    ITextComponent* getTabListDisplayName();
+    void swingArm(EnumHand hand) override;
+    bool isInvulnerableDimensionChange() const;
+    void clearInvulnerableDimensionChange();
+    void setElytraFlying();
+    void clearElytraFlying();
+    PlayerAdvancements getAdvancements();
+    std::optional<Vec3d> getEnteredNetherPosition() const;
 
     NetHandlerPlayServer connection;
     MinecraftServer* server;
@@ -68,6 +104,14 @@ protected:
     std::unique_ptr<CooldownTracker> createCooldownTracker();
     void updateFallState(double y, bool onGroundIn, IBlockState *state, const BlockPos &pos) override;
     void frostWalk(const BlockPos &pos) override;
+    void onItemUseFinish() override;
+    void onNewPotionEffect(PotionEffect id) override;
+    void onChangedPotionEffect(PotionEffect id, bool p_70695_2_) override;
+    void onFinishedPotionEffect(PotionEffect effect) override;
+    void updatePotionMetadata() override;
+    void decrementTimeUntilPortal() override;
+
+
 
 private:
     void updateScorePoints(IScoreCriteria* criteria, int32_t points) const;

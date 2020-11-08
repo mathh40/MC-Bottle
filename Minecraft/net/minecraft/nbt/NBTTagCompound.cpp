@@ -1,5 +1,5 @@
 #include "NBTTagCompound.h"
-#include <sstream>
+#include "../../../../compile-time-regular-expressions/single-header/ctre.hpp"
 #include "../util/ReportedException.h"
 #include "NBTSizeTracker.h"
 #include "NBTTagByteArray.h"
@@ -12,9 +12,10 @@
 #include "NBTTagString.h"
 #include "crossguid/guid.hpp"
 #include "spdlog/spdlog.h"
+#include <sstream>
 
 
-std::regex NBTTagCompound::SIMPLE_VALUE = std::regex("[A-Za-z0-9._+-]+");
+static constexpr auto SIMPLE_VALUE = ctll::fixed_string{ R"([A-Za-z0-9._+-]+)"};
 std::shared_ptr<spdlog::logger> NBTTagCompound::LOGGER = spdlog::get("Minecraft")->clone("NBTTagCompound");
 
 void NBTTagCompound::write(std::ostream &output) const
@@ -338,6 +339,7 @@ const std::unordered_map<const std::string, std::shared_ptr<NBTBase>> &NBTTagCom
 
 std::string NBTTagCompound::handleEscape(std::string p_193582_0_) const
 {
+    auto match = ctre::match<SIMPLE_VALUE>(p_193582_0_);
     return SIMPLE_VALUE.matcher(p_193582_0_).matches() ? p_193582_0_ : NBTTagString.quoteAndEscape(p_193582_0_);
 }
 

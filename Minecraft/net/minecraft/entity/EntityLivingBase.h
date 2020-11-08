@@ -56,7 +56,7 @@ public:
     float getMaxHealth();
     int32_t getArrowCountInEntity();
     void setArrowCountInEntity(int32_t count);
-    void swingArm(EnumHand hand);
+    virtual void swingArm(EnumHand hand);
     void handleStatusUpdate(std::byte id) override;
     IAttributeInstance* getEntityAttribute(IAttribute* attribute);
     AbstractAttributeMap* getAttributeMap();
@@ -156,9 +156,9 @@ protected:
     void updatePotionEffects();
     virtual void updatePotionMetadata();
     void resetPotionEffectMetadata();
-    void onNewPotionEffect(PotionEffect id);
-    void onChangedPotionEffect(PotionEffect id, bool p_70695_2_);
-    void onFinishedPotionEffect(PotionEffect effect);
+    virtual void onNewPotionEffect(PotionEffect id);
+    virtual void onChangedPotionEffect(PotionEffect id, bool p_70695_2_);
+    virtual void onFinishedPotionEffect(PotionEffect effect);
     virtual void blockUsingShield(EntityLivingBase* p_190629_1_);
     virtual void playHurtSound(DamageSource::DamageSource source);
     virtual void dropLoot(bool wasRecentlyHit, int32_t lootingModifier, DamageSource::DamageSource source);
@@ -190,7 +190,7 @@ protected:
     void markPotionsDirty();
     void updateActiveHand();
     void updateItemUse(ItemStack stack, int32_t eatingParticleCount);
-    void onItemUseFinish();
+    virtual void onItemUseFinish();
 
 
 

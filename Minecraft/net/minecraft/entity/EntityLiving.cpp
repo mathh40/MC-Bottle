@@ -7,6 +7,9 @@
 #include "../world/WorldServer.h"
 #include "ai/attributes/AbstractAttributeMap.h"
 #include "datafix/DataFixer.h"
+#include "item/EntityItem.h"
+#include "monster/EntityGhast.h"
+
 #include <typeindex>
 
 AI_FLAGS = EntityDataManager.createKey(EntityLiving.class, DataSerializers.BYTE);
@@ -17,12 +20,11 @@ EntityLiving::EntityLiving(World *worldIn):
     inventoryHandsDropChances(2, 0.085F),
     inventoryArmor(4, ItemStack::EMPTY),
     inventoryArmorDropChances(4, 0.085F),
-    deathLootTable("", ""),
-    moveHelper(this),
-    jumpHelper(this),
-    tasks(new EntityAITasks(worldIn != nullptr && worldIn->profiler != nullptr ? worldIn->profiler : nullptr)),
-    targetTasks(new EntityAITasks(worldIn != nullptr && worldIn->profiler != nullptr ? worldIn->profiler : nullptr)),
-    lookHelper(this),
+    moveHelper(std::make_unique<EntityMoveHelper>(this)),
+    jumpHelper(std::make_unique<EntityJumpHelper>(this)),
+    tasks(worldIn != nullptr && worldIn->profiler != nullptr ? worldIn->profiler : nullptr),
+    targetTasks(worldIn != nullptr && worldIn->profiler != nullptr ? worldIn->profiler : nullptr),
+    lookHelper(std::make_unique<EntityLookHelper>(this)),
     senses(this) {
 
     bodyHelper = createBodyHelper();
@@ -41,16 +43,16 @@ void EntityLiving::setPathPriority(PathNodeType nodeType, float priority) {
     mapPathPriority.try_emplace(nodeType, priority);
 }
 
-EntityLookHelper &EntityLiving::getLookHelper() {
-    return lookHelper;
+EntityLookHelper* EntityLiving::getLookHelper() {
+    return lookHelper.get();
 }
 
-EntityMoveHelper &EntityLiving::getMoveHelper() {
-    return moveHelper;
+EntityMoveHelper* EntityLiving::getMoveHelper() {
+    return moveHelper.get();
 }
 
-EntityJumpHelper &EntityLiving::getJumpHelper() {
-    return jumpHelper;
+EntityJumpHelper* EntityLiving::getJumpHelper() {
+    return jumpHelper.get();
 }
 
 PathNavigate *EntityLiving::getNavigator() {
@@ -216,8 +218,8 @@ void EntityLiving::writeEntityToNBT(NBTTagCompound *compound) {
     }
 
     compound->setBoolean("LeftHanded", isLeftHanded());
-    if (deathLootTable != nullptr) {
-        compound->setString("DeathLootTable", deathLootTable.to_string());
+    if (deathLootTable.has_value()) {
+        compound->setString("DeathLootTable", deathLootTable->to_string());
         if (deathLootTableSeed != 0L) {
             compound->setLong("DeathLootTableSeed", deathLootTableSeed);
         }
@@ -276,7 +278,7 @@ void EntityLiving::readEntityFromNBT(NBTTagCompound *compound) {
 
       setLeftHanded(compound->getBoolean("LeftHanded"));
       if (compound->hasKey("DeathLootTable", 8)) {
-         deathLootTable = new ResourceLocation(compound->getString("DeathLootTable"));
+         deathLootTable = ResourceLocation(compound->getString("DeathLootTable"));
          deathLootTableSeed = compound->getLong("DeathLootTableSeed");
       }
 
@@ -693,14 +695,14 @@ PathNavigate *EntityLiving::createNavigator(World *worldIn) {
     return new PathNavigateGround(this, worldIn);
 }
 
-EntityBodyHelper EntityLiving::createBodyHelper() {
-    return EntityBodyHelper(this);
+std::unique_ptr<EntityBodyHelper> EntityLiving::createBodyHelper() {
+    return std::make_unique<EntityBodyHelper>(this);
 }
 
 void EntityLiving::entityInit() {
     EntityLivingBase::entityInit();
     dataManager.
-    register
+    registe
     (AI_FLAGS, 0);
 }
 

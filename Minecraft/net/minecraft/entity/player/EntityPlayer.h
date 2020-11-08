@@ -91,7 +91,7 @@ public:
     EnumActionResult interactOn(Entity* entityToInteractOn, EnumHand hand);
     double getYOffset() override;
     void dismountRidingEntity() override;
-    void attackTargetEntityWithCurrentItem(Entity* targetEntity);
+    virtual void attackTargetEntityWithCurrentItem(Entity* targetEntity);
     void disableShield(bool p_190777_1_);
     virtual void onCriticalHit(Entity *entityHit);
     virtual void onEnchantmentCritical(Entity *entityHit);
@@ -117,7 +117,7 @@ public:
     virtual void takeStat(StatBase *stat);
     virtual void unlockRecipes(std::vector<IRecipe*> p_192021_1_);
     virtual void unlockRecipes(std::vector<ResourceLocation> p_193102_1_);
-    void resetRecipes(std::vector<IRecipe*> p_192022_1_);
+    virtual void resetRecipes(std::vector<IRecipe*> p_192022_1_);
     void jump() override;
     void travel(float strafe, float vertical, float forward) override;
     float getAIMoveSpeed();
