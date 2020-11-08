@@ -64,6 +64,7 @@ jobs:
             set(ninja_suffix "linux.zip")
             set(cmake_suffix "Linux-x86_64.tar.gz")
             set(cmake_dir "cmake-${cmake_version}-Linux-x86_64/bin")
+            sudo apt-get install uuid-dev
           elseif ("${{ runner.os }}" STREQUAL "macOS")
             set(ninja_suffix "mac.zip")
             set(cmake_suffix "Darwin-x86_64.tar.gz")
@@ -103,9 +104,7 @@ jobs:
           path: .ccache
           key: ${{ matrix.config.name }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
           restore-keys: |
-            ${{ matrix.config.name }}-ccache-
-      - name: Install libuuid
-        run: sudo apt-get install uuid-dev
+            ${{ matrix.config.name }}-ccache-       
       - name: Configure
         shell: cmake -P {0}
         run: |
