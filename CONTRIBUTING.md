@@ -1,51 +1,25 @@
-Contributing to Transcriptase
+## General rules
 
-We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
+* Use a (to this project) consistent code style
+* Write long, self-explaining function/variable names.
+* If you add code from other people, don't forget to mention that in a function annotation or comment
+* Document all functions with annotations (have a look at other functions)
+* Comment your code (That's also useful for yourself, you will forget about things after some time)
+* If you are working on a bigger feature, that will require multiple commits to be made, consider creating a new feature branch ("feature-yourfeaturename") and make a pull request when you are done to merge it with the master
+* Write re-usable, capsulated, readable, clean code
 
-    Reporting a bug
-    Discussing the current state of the code
-    Submitting a fix
-    Proposing new features
-    Becoming a maintainer
+## Checklist before submitting pull requests / committing new code
 
-We Develop with Github
+* Rules: read?
+* Consistent code style
+* Documentation written (function annotations, comments)
+* Write a summary of what you did into the first commit message line, and more detailed information into the next lines.
+* Avoid pushing merge commits (within the same branch), they pollute the histoy. Use "git rebase" to stack commits. [Here](http://randyfay.com/content/simpler-rebasing-avoiding-unintentional-merge-commits) is a good tutorial.
 
-We use github to host code, to track issues and feature requests, as well as accept pull requests.
-We Use Github Flow, So All Code Changes Happen Through Pull Requests
+## Consistent code style
 
-Pull requests are the best way to propose changes to the codebase (we use Github Flow). We actively welcome your pull requests:
-
-    Fork the repo and create your branch from master.
-    If you've added code that should be tested, add tests.
-    If you've changed APIs, update the documentation.
-    Ensure the test suite passes.
-    Make sure your code lints.
-    Issue that pull request!
-
-Any contributions you make will be under the MIT Software License
-
-In short, when you submit code changes, your submissions are understood to be under the same MIT License that covers the project. Feel free to contact the maintainers if that's a concern.
-Report bugs using Github's issues
-
-We use GitHub issues to track public bugs. Report a bug by opening a new issue; it's that easy!
-Write bug reports with detail, background, and sample code
-
-This is an example of a bug report I wrote, and I think it's not a bad model. Here's another example from Craig Hockenberry, an app developer whom I greatly respect.
-
-Great Bug Reports tend to have:
-
-    A quick summary and/or background
-    Steps to reproduce
-        Be specific!
-        Give sample code if you can. My stackoverflow question includes sample code that anyone with a base R setup can run to reproduce what I was seeing
-    What you expected would happen
-    What actually happens
-    Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
-
-People love thorough bug reports. I'm not even kidding.
-Use a Consistent Coding Style
-
-I'm again borrowing these from Facebook's Guidelines
-
-    2 spaces for indentation rather than tabs
-    You can try running npm run lint for style unification
+* We use tabs for intendation
+* We use whitespace for aligning code in-line
+* Use long, self-explaining variable/function names
+* Don't use abbrevations anywhere in function/variable names etc., except they are well-known (like "HTTP")
+* Use newlines to group your code into logical parts
