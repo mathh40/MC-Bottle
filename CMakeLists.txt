@@ -22,6 +22,10 @@ if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
   endif()
 endif()
 
+if(MSVC)
+	add_compile_definitions(project_options INTERFACE UNICODE _UNICODE)
+endif()
+
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
 add_library(project_warnings INTERFACE)
 
@@ -138,6 +142,8 @@ add_subdirectory(Minecraft/net/minecraft/item)
 add_subdirectory(Minecraft/net/minecraft/inventory)
 add_subdirectory(Minecraft/net/minecraft/init)
 add_subdirectory(Minecraft/net/minecraft/entity)
+add_subdirectory(Minecraft/net/minecraft/enchantment)
+add_subdirectory(Minecraft/net/minecraft/dispenser)
 add_subdirectory(Minecraft/net/minecraft/creativetab)
 add_subdirectory(Minecraft/net/minecraft/command)
 

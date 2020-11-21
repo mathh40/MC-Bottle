@@ -4,6 +4,11 @@
 
 #include "Item.h"
 #include "Util.h"
+#include "../enchantment/EnchantmentDurability.h"
+#include "../enchantment/EnchantmentHelper.h"
+#include "../entity/EntityLivingBase.h"
+#include "../entity/SharedMonsterAttributes.h"
+#include "../entity/player/EntityPlayer.h"
 #include "../stats/StatList.h"
 #include "datafix/DataFixer.h"
 #include "datafix/FixTypes.h"
@@ -24,7 +29,7 @@ ItemStack::ItemStack(const Block *blockIn, int32_t amount)
 {
 }
 
-ItemStack::ItemStack(const Block blockIn, int32_t amount, int32_t meta)
+ItemStack::ItemStack(const Block* blockIn, int32_t amount, int32_t meta)
     :ItemStack(Item::getItemFromBlock(blockIn), amount, meta)
 {
 }
@@ -96,7 +101,7 @@ void ItemStack::registerFixes(DataFixer fixer)
     fixer.registerWalker(FixTypes::ITEM_INSTANCE, EntityTag());
 }
 
-ItemStack ItemStack::splitStack(int32_t amount)
+ItemStack ItemStack::splitStack(int32_t amount) const
 {
     int32_t i = MathHelper::min(amount, stackSize);
     ItemStack itemstack = copy();
@@ -107,7 +112,7 @@ ItemStack ItemStack::splitStack(int32_t amount)
 
 Item * ItemStack::getItem() const
 {
-    return isEmpty ? Item::getItemFromBlock(Blocks::AIR) : item;
+    return bisEmpty ? Item::getItemFromBlock(Blocks::AIR) : item;
 }
 
 EnumActionResult ItemStack::onItemUse(EntityPlayer *playerIn, World *worldIn, BlockPos pos, EnumHand hand,
@@ -122,18 +127,15 @@ EnumActionResult ItemStack::onItemUse(EntityPlayer *playerIn, World *worldIn, Bl
     return enumactionresult;
 }
 
-float ItemStack::getDestroySpeed(IBlockState *blockIn)
-{
+float ItemStack::getDestroySpeed(IBlockState *blockIn) const {
     return getItem()->getDestroySpeed(*this, blockIn);
 }
 
-ActionResult ItemStack::useItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand hand)
-{
+ActionResult ItemStack::useItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand hand) const {
     return getItem()->onItemRightClick(worldIn, playerIn, hand);
 }
 
-ItemStack ItemStack::onItemUseFinish(World *worldIn, EntityLivingBase *entityLiving)
-{
+ItemStack ItemStack::onItemUseFinish(World *worldIn, EntityLivingBase *entityLiving) const {
     return getItem()->onItemUseFinish(*this, worldIn, entityLiving);
 }
 
@@ -151,17 +153,15 @@ NBTTagCompound * ItemStack::writeToNBT(NBTTagCompound *nbt)
     return nbt;
 }
 
-int32_t ItemStack::getMaxStackSize()
-{
+int32_t ItemStack::getMaxStackSize() const {
     return getItem()->getItemStackLimit();
 }
 
-bool ItemStack::isStackable()
-{
+bool ItemStack::isStackable() const {
     return getMaxStackSize() > 1 && (!isItemStackDamageable() || !isItemDamaged());
 }
 
-bool ItemStack::isItemStackDamageable()
+bool ItemStack::isItemStackDamageable() const
 {
     if (isEmpty) 
     {
@@ -177,13 +177,11 @@ bool ItemStack::isItemStackDamageable()
     }
 }
 
-bool ItemStack::getHasSubtypes()
-{
+bool ItemStack::getHasSubtypes() const {
     return getItem()->getHasSubtypes();
 }
 
-bool ItemStack::isItemDamaged()
-{
+bool ItemStack::isItemDamaged() const {
     return isItemStackDamageable() && itemDamage > 0;
 }
 
@@ -206,8 +204,7 @@ void ItemStack::setItemDamage(int32_t meta)
     }
 }
 
-int32_t ItemStack::getMaxDamage()
-{
+int32_t ItemStack::getMaxDamage() const {
     return getItem()->getMaxDamage();
 }
 
@@ -221,12 +218,12 @@ bool ItemStack::attemptDamageItem(int32_t amount, pcg32 &rand, EntityPlayerMP *d
     {
         if (amount > 0) 
         {
-            int32_t i = EnchantmentHelper.getEnchantmentLevel(Enchantments::UNBREAKING, this);
+            int32_t i = EnchantmentHelper::getEnchantmentLevel(Enchantments::UNBREAKING, this);
             int32_t j = 0;
 
             for(int32_t k = 0; i > 0 && k < amount; ++k) 
             {
-                if (EnchantmentDurability.negateDamage(this, i, rand)) 
+                if (EnchantmentDurability::negateDamage(*this, i, rand)) 
                 {
                     ++j;
                 }
@@ -253,7 +250,7 @@ void ItemStack::damageItem(int32_t amount, EntityLivingBase *entityIn)
 {
     if ((!(Util::instanceof<EntityPlayer>(entityIn)) || !((EntityPlayer*)entityIn)->capabilities.isCreativeMode) && isItemStackDamageable() && attemptDamageItem(amount, entityIn->getRNG(), Util::instanceof<EntityPlayerMP>(entityIn) ? (EntityPlayerMP*)entityIn : nullptr)) 
     {
-        entityIn->renderBrokenItemStack(this);
+        entityIn->renderBrokenItemStack(*this);
         shrink(1);
         if (Util::instanceof<EntityPlayer>(entityIn)) 
         {
@@ -283,17 +280,15 @@ void ItemStack::onBlockDestroyed(World *worldIn, IBlockState *blockIn, BlockPos 
     }
 }
 
-bool ItemStack::canHarvestBlock(IBlockState *blockIn)
-{
+bool ItemStack::canHarvestBlock(IBlockState *blockIn) const {
     return getItem()->canHarvestBlock(blockIn);
 }
 
-bool ItemStack::interactWithEntity(EntityPlayer *playerIn, EntityLivingBase *entityIn, EnumHand hand)
-{
+bool ItemStack::interactWithEntity(EntityPlayer *playerIn, EntityLivingBase *entityIn, EnumHand hand) const {
     return getItem()->itemInteractionForEntity(*this, playerIn, entityIn, hand);
 }
 
-ItemStack ItemStack::copy()
+ItemStack ItemStack::copy() const
 {
     ItemStack itemstack = ItemStack(item, stackSize, itemDamage);
     itemstack.setAnimationsToGo(getAnimationsToGo());
@@ -369,8 +364,7 @@ bool ItemStack::isItemEqual(ItemStack other) const
     return !other.isEmpty() && item == other.item && itemDamage == other.itemDamage;
 }
 
-bool ItemStack::isItemEqualIgnoreDurability(ItemStack stack)
-{
+bool ItemStack::isItemEqualIgnoreDurability(ItemStack stack) const {
     if (!isItemStackDamageable()) 
     {
         return isItemEqual(stack);
@@ -381,13 +375,11 @@ bool ItemStack::isItemEqualIgnoreDurability(ItemStack stack)
     }
 }
 
-std::string ItemStack::getTranslationKey()
-{
+std::string ItemStack::getTranslationKey() const {
     return getItem()->getTranslationKey(*this);
 }
 
-std::string ItemStack::toString()
-{
+std::string ItemStack::toString() const {
     return stackSize + "x" + getItem()->getTranslationKey() + "@" + std::to_string(itemDamage);
 }
 
@@ -410,13 +402,11 @@ void ItemStack::onCrafting(World *worldIn, EntityPlayer *playerIn, int32_t amoun
     getItem()->onCreated(*this, worldIn, playerIn);
 }
 
-int32_t ItemStack::getMaxItemUseDuration()
-{
+int32_t ItemStack::getMaxItemUseDuration() const {
     return getItem()->getMaxItemUseDuration(*this);
 }
 
-void ItemStack::onPlayerStoppedUsing(World *worldIn, EntityLivingBase *entityLiving, int32_t timeLeft)
-{
+void ItemStack::onPlayerStoppedUsing(World *worldIn, EntityLivingBase *entityLiving, int32_t timeLeft) const {
     getItem()->onPlayerStoppedUsing(*this, worldIn, entityLiving, timeLeft);
 }
 
@@ -467,8 +457,7 @@ void ItemStack::setTagCompound(NBTTagCompound *nbt)
     stackTagCompound = nbt;
 }
 
-std::string ItemStack::getDisplayName()
-{
+std::string ItemStack::getDisplayName() const {
     NBTTagCompound* nbttagcompound = getSubCompound("display");
     if (nbttagcompound != nullptr) 
     {
@@ -748,18 +737,15 @@ std::vector<std::string> ItemStack::getTooltip(EntityPlayer* playerIn, ITooltipF
     return list;
 }
 
-bool ItemStack::hasEffect()
-{
+bool ItemStack::hasEffect() const {
     return getItem()->hasEffect(*this);
 }
 
-EnumRarity ItemStack::getRarity()
-{
+EnumRarity ItemStack::getRarity() const {
     return getItem()->getRarity(*this);
 }
 
-bool ItemStack::isItemEnchantable()
-{
+bool ItemStack::isItemEnchantable() const {
     if (!getItem()->isEnchantable(*this)) 
     {
         return false;
@@ -770,7 +756,7 @@ bool ItemStack::isItemEnchantable()
     }
 }
 
-void ItemStack::addEnchantment(Enchantment ench, int32_t level)
+void ItemStack::addEnchantment(const Enchantment& ench, int32_t level)
 {
     if (stackTagCompound == nullptr) 
     {
@@ -811,13 +797,11 @@ void ItemStack::setTagInfo(std::string_view key, NBTBase *value)
     stackTagCompound->setTag(key, value);
 }
 
-bool ItemStack::canEditBlocks()
-{
+bool ItemStack::canEditBlocks() const {
     return getItem()->canItemEditBlocks();
 }
 
-bool ItemStack::isOnItemFrame()
-{
+bool ItemStack::isOnItemFrame() const {
     return itemFrame != nullptr;
 }
 
@@ -826,8 +810,7 @@ void ItemStack::setItemFrame(EntityItemFrame* frame)
     itemFrame = frame;
 }
 
-EntityItemFrame* ItemStack::getItemFrame()
-{
+EntityItemFrame* ItemStack::getItemFrame() const {
     return isEmpty ? nullptr : itemFrame;
 }
 
@@ -846,8 +829,7 @@ void ItemStack::setRepairCost(int32_t cost)
     stackTagCompound->setInteger("RepairCost", cost);
 }
 
-std::unordered_multimap<std::string,AttributeModifier> ItemStack::getAttributeModifiers(EntityEquipmentSlot equipmentSlot)
-{
+std::unordered_multimap<std::string,AttributeModifier> ItemStack::getAttributeModifiers(EntityEquipmentSlot equipmentSlot) const {
     std::unordered_multimap<std::string,AttributeModifier> multimap;
     if (hasTagCompound() && stackTagCompound->hasKey("AttributeModifiers", 9)) 
     {
@@ -868,7 +850,7 @@ std::unordered_multimap<std::string,AttributeModifier> ItemStack::getAttributeMo
         multimap = getItem()->getItemAttributeModifiers(equipmentSlot);
     }
 
-    return (Multimap)multimap;
+    return multimap;
 }
 
 void ItemStack::addAttributeModifier(std::string_view attributeName, AttributeModifier modifier, EntityEquipmentSlot* equipmentSlot)
@@ -1002,8 +984,7 @@ void ItemStack::shrink(int32_t quantity)
     grow(-quantity);
 }
 
-EnumAction ItemStack::getItemUseAction()
-{
+EnumAction ItemStack::getItemUseAction() const {
     return getItem()->getItemUseAction(*this);
 }
 
@@ -1012,8 +993,7 @@ void ItemStack::updateEmptyState()
     bisEmpty = isEmpty();
 }
 
-bool ItemStack::isItemStackEqual(ItemStack other)
-{
+bool ItemStack::isItemStackEqual(ItemStack other) const {
     if (stackSize != other.stackSize) 
     {
         return false;

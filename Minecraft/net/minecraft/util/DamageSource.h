@@ -4,6 +4,7 @@
 #include <string>
 #include <optional>
 
+class ITextComponent;
 class EntityArrow;
 class EntityPlayer;
 class Entity;

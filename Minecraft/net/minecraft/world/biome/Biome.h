@@ -28,18 +28,9 @@ public:
 	int32_t minGroupCount;
 	int32_t maxGroupCount;
 
-	SpawnListEntry(Entity* entityclassIn, int32_t weight, int32_t groupCountMin, int32_t groupCountMax)
-		:WeightedItem(weight)
-	{
-		entityClass = entityclassIn;
-		minGroupCount = groupCountMin;
-		maxGroupCount = groupCountMax;
-	}
+	SpawnListEntry(Entity* entityclassIn, int32_t weight, int32_t groupCountMin, int32_t groupCountMax);
 
-	std::string toString() const
-	{
-		return entityClass->getSimpleName() + "*(" + minGroupCount + "-" + maxGroupCount + "):" + itemWeight;
-	}
+	std::string toString() const;
 };
 
 

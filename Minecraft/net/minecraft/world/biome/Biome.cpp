@@ -464,3 +464,12 @@ void Biome::registerBiomes()
 	registerBiome(166, "mutated_mesa_rock", new BiomeMesa(false, true, (new Biome.BiomeProperties("Mesa Plateau F M")).setBaseBiome("mesa_rock").setBaseHeight(0.45F).setHeightVariation(0.3F).setTemperature(2.0F).setRainfall(0.0F).setRainDisabled()));
 	registerBiome(167, "mutated_mesa_clear_rock", new BiomeMesa(false, false, (new Biome.BiomeProperties("Mesa Plateau M")).setBaseBiome("mesa_clear_rock").setBaseHeight(0.45F).setHeightVariation(0.3F).setTemperature(2.0F).setRainfall(0.0F).setRainDisabled()));
 }
+SpawnListEntry::SpawnListEntry(Entity *entityclassIn, int32_t weight, int32_t groupCountMin, int32_t groupCountMax) :WeightedItem(weight)
+{
+    entityClass = entityclassIn;
+    minGroupCount = groupCountMin;
+    maxGroupCount = groupCountMax;
+}
+std::string SpawnListEntry::toString() const {
+    return entityClass->getSimpleName() + "*(" + minGroupCount + "-" + maxGroupCount + "):" + itemWeight;
+}

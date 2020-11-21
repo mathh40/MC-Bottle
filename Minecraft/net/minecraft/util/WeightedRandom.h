@@ -1,4 +1,6 @@
 #pragma once
+#include "pcg_random.hpp"
+
 #include <span>
 namespace WeightedRandom
 {

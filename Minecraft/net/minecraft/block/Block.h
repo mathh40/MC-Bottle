@@ -2,19 +2,20 @@
 
 #include "../creativetab/CreativeTabs.h"
 #include "../item/ItemStack.h"
+#include "../util/BlockRenderLayer.h"
 #include "../util/registry/RegistryNamespacedDefaultedByKey.h"
 #include "../world/Explosion.h"
 #include "../world/IBlockAccess.h"
 #include "../world/chunk/BlockStateContainer.h"
 #include "SoundType.h"
-#include "../util/BlockRenderLayer.h"
+#include <EnumHand.h>
 
 enum class EnumOffsetType {
     NONE,
     XZ,
     XYZ
 };
-
+class Item;
 class IBlockAccess;
 class ITooltipFlag;
 class Mirror;
@@ -100,7 +101,7 @@ public:
     virtual bool onBlockActivated(World *worldIn, const BlockPos &pos, IBlockState *state, EntityPlayer *playerIn,
                                   EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ);
     void onEntityWalk(World *worldIn, const BlockPos &pos, Entity *entityIn);
-    virtual IBlockState *getStateForPlacement(World *worldIn, const BlockPos &pos, EnumFacing facing, float hitX,
+    virtual IBlockState* getStateForPlacement(World *worldIn, const BlockPos &pos, EnumFacing facing, float hitX,
                                               float hitY, float hitZ, int meta, EntityLivingBase *placer);
     void onBlockClicked(World *worldIn, const BlockPos &pos, EntityPlayer *playerIn);
     Vec3d modifyAcceleration(World *worldIn, const BlockPos &pos, Entity *entityIn, Vec3d motion);
@@ -147,7 +148,7 @@ public:
     friend bool operator==(const Block &lhs, const Block &rhs);
 
 protected:
-    ~Block() = default;
+    virtual ~Block() = default;
     bool fullBlock;
     uint16_t lightOpacity;
     bool translucent;

@@ -1,7 +1,6 @@
 #pragma once
 #include "Vec3i.h"
 #include <vector>
-#include <mutex>
 
 class Rotation;
 class Entity;
