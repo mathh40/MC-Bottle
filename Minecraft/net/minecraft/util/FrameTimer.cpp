@@ -24,13 +24,11 @@ int FrameTimer::getLagometerValue(long time, int multiplier)
 	return (int)(d0 * (double)multiplier);
 }
 
-int FrameTimer::getLastIndex()
-{
+int FrameTimer::getLastIndex() const {
 	return lastIndex;
 }
 
-int FrameTimer::getIndex()
-{
+int FrameTimer::getIndex() const {
 	return index;
 }
 
@@ -39,7 +37,6 @@ int FrameTimer::parseIndex(int rawIndex)
 	return rawIndex % 240;
 }
 
-std::array<long, 240> FrameTimer::getFrames()
-{
+std::array<long, 240> FrameTimer::getFrames() const {
 	return frames;
 }

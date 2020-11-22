@@ -37,3 +37,6 @@ void setName(std::thread &thread, const std::string& name)
 	pthread_setname_np(thread.native_handle(), name.c_str());
 #endif
 }
+
+std::string getName(std::thread &thread) {
+}

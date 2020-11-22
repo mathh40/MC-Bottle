@@ -5,7 +5,6 @@
 #include "EnumActionResult.h"
 #include "EnumRarity.h"
 #include "ItemCompass.h"
-#include "text/ITextComponent.h"
 #include <cstdint>
 
 class EntityPlayerMP;

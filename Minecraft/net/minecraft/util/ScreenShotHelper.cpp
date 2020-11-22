@@ -1,4 +1,6 @@
 #include "ScreenShotHelper.h"
+#include "text/TextComponentString.h"
+#include "text/TextComponentTranslation.h"
 #include <spdlog\spdlog.h>
 #include <lodepng.h>
 
@@ -20,7 +22,7 @@ namespace ScreenShotHelper
 		}
 	}
 
-	ITextComponent saveScreenshot(std::filesystem::path gameDirector, std::optional<std::string> screenshotName, int width, int height, Framebuffer buffer)
+	ITextComponent* saveScreenshot(std::filesystem::path gameDirector, std::optional<std::string> screenshotName, int width, int height, Framebuffer buffer)
 	{
 
 		auto LOGGER = spdlog::get("Minecraft")->clone("ScreenShot");;
@@ -39,9 +41,9 @@ namespace ScreenShotHelper
 
 		lodepng::encode(file2.string, bufferedimage, width, height);
 
-		ITextComponent itextcomponent = new TextComponentString(file2.getName());
-		itextcomponent.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file2));
-		itextcomponent.getStyle().setUnderlined(true);
+		ITextComponent* itextcomponent = new TextComponentString(file2.getName());
+		itextcomponent->getStyle().setClickEvent(new ClickEvent(ClickEvent::Action::OPEN_FILE, file2));
+		itextcomponent->getStyle().setUnderlined(true);
 
 		return new TextComponentTranslation("screenshot.success", new Object[]{ itextcomponent });
 	}

@@ -145,6 +145,7 @@ add_subdirectory(Minecraft/net/minecraft/entity)
 add_subdirectory(Minecraft/net/minecraft/enchantment)
 add_subdirectory(Minecraft/net/minecraft/dispenser)
 add_subdirectory(Minecraft/net/minecraft/creativetab)
+add_subdirectory(Minecraft/net/minecraft/crash)
 add_subdirectory(Minecraft/net/minecraft/command)
 
 add_executable(Minecraft Minecraft/main.cpp)
