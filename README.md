@@ -3,6 +3,7 @@
 [![DepShield Badge](https://depshield.sonatype.org/badges/DJPlaya/MC-Bottle/depshield.svg)](https://depshield.github.io)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FDJPlaya%2FMC-Bottle.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FDJPlaya%2FMC-Bottle?ref=badge_shield)
 ![Discord](https://img.shields.io/discord/736211123908378704)
+
 Project Status: Paused, seeking Developers
 
 ### Bottle is an MC Server that wont Bottleneck itself like others did before
