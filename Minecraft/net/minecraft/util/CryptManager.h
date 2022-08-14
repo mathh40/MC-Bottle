@@ -1,11 +1,13 @@
 #pragma once
-#include <spdlog/async_logger.h>
+#include <vector>
+#include <memory>
+#include "..//spdlog/include/spdlog/spdlog.h"
 
+using SecretKey = std::array<std::byte, (128 / 8)>;
 class CryptManager
 {
 public:
-	CryptManager();
-	std::array<unsigned char, (128 / 8)> createNewSharedKey();
+     SecretKey createNewSharedKey();
 	EVP_PKEY * generateKeyPair();
 
 	std::array<unsigned char, SHA_DIGEST_LENGTH> getServerIdHash(std::string serverId, EVP_PKEY* publicKey, std::array<unsigned char, (128 / 8)> secretKey);
@@ -15,16 +17,14 @@ public:
 	std::vector<unsigned char> digestOperation(std::string algorithm, T data);
 
 	EVP_PKEY* decodePublicKey(std::vector<unsigned char> encodedKey);
-	std::array<unsigned char, (128 / 8)> decryptSharedKey(EVP_PKEY *key, std::vector<unsigned char> secretKeyEncrypted);
+    SecretKey decryptSharedKey(EVP_PKEY *key, std::vector<unsigned char> secretKeyEncrypted);
 	std::vector<unsigned char> encryptDataRSA(EVP_PKEY * key, std::vector<unsigned char> data);
 	std::vector<unsigned char> encryptDataAES(std::array<unsigned char, (128 / 8)> key, std::vector<unsigned char> data);
 	std::vector<unsigned char> decryptDataRSA(EVP_PKEY * key, std::vector<unsigned char> data);
 	std::vector<unsigned char> decryptDataAES(std::array<unsigned char, (128 / 8)> key, std::vector<unsigned char> data);
 
 private:
-	std::shared_ptr<spdlog::async_logger> LOGGER;
-
-
+	static std::shared_ptr<spdlog::logger> LOGGER;
 };
 
 template<typename T, class ...Args>

@@ -6,15 +6,15 @@ namespace DamageSource
 	class EntityDamageSource : public DamageSource
 	{
 	public:
-		EntityDamageSource(std::string damageTypeIn, std::optional<Entity> damageSourceEntityIn);
+		EntityDamageSource(std::string_view damageTypeIn, Entity* damageSourceEntityIn);
 		EntityDamageSource setIsThornsDamage();
 		bool getIsThornsDamage();
 		std::optional <Entity> getTrueSource();
-		ITextComponent getDeathMessage(EntityLivingBase entityLivingBaseIn);
+        std::shared_ptr<ITextComponent> getDeathMessage(EntityLivingBase *entityLivingBaseIn);
 		bool isDifficultyScaled();
 		Vec3d getDamageLocation();
 	protected:
-		std::optional<Entity> damageSourceEntity;
+        Entity *damageSourceEntity;
 	private:
 		bool isThornsDamage;
 	};

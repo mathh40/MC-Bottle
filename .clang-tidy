@@ -1,5 +1,5 @@
 ---
-Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm-*'
+Checks: '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm-*,-llvmlibc-restrict-system-libc-headers, -llvmlibc-implementation-in-namespace, -clang-diagnostic-unknown-argument, -cppcoreguidelines-pro-type-reinterpret-cast, llvmlibc-callee-namespace'
 WarningsAsErrors: '*'
 HeaderFilterRegex: ''
-FormatStyle:     none
+FormatStyle: 'file'

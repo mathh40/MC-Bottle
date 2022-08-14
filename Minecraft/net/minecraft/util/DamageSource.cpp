@@ -116,7 +116,7 @@ namespace DamageSource
 		fireDamage = true;
 		return *this;
 	}
-	ITextComponent* DamageSource::getDeathMessage(EntityLivingBase* entityLivingBaseIn)
+    std::shared_ptr<ITextComponent> DamageSource::getDeathMessage(EntityLivingBase *entityLivingBaseIn)
 	{
 		EntityLivingBase* entitylivingbase = entityLivingBaseIn->getAttackingEntity();
 		std::string s = "death.attack." + damageType;

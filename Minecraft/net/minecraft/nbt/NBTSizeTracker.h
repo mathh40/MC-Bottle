@@ -4,12 +4,12 @@
 class NBTSizeTracker
 {
 public:
-	static std::unique_ptr<NBTSizeTracker> Infinite;
+	static const std::unique_ptr<NBTSizeTracker> Infinite;
 
-	NBTSizeTracker(int64_t max);
+	NBTSizeTracker(uint64_t max);
 
-	void read(int64_t bits);
+	void read(uint64_t bits);
 private:
-	int64_t max;
-	int64_t readi;
+	uint64_t max = 0;
+	uint64_t readi = 0;
 };

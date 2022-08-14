@@ -1,7 +1,7 @@
 #include "CombatEntry.h"
 #include "DamageSource.h"
 #include "Util.h"
-#include "EntityLivingBase.h"
+#include "../entity/EntityLivingBase.h"
 
 CombatEntry::CombatEntry(const DamageSource::DamageSource & damageSrcIn, uint64_t timeIn, float healthAmount, float damageAmount, const std::string &fallSuffixIn, float fallDistanceIn)
 	:damageSrc(damageSrcIn), time(timeIn), damage(damageAmount), health(healthAmount), fallSuffix(fallSuffixIn), fallDistance(fallDistanceIn)

@@ -1,8 +1,11 @@
 #include "EntityDamageSource.h"
-#include "instanceof.h"
 #include "math/Vec3d.h"
+#include <Util.h>
+#include <text/TextComponentTranslation.h>
+#include <text/translation/I18n.h>
+#include "../item/ItemStack.h"
 
-DamageSource::EntityDamageSource::EntityDamageSource(std::string damageTypeIn, std::optional<Entity> damageSourceEntityIn)
+DamageSource::EntityDamageSource::EntityDamageSource(std::string_view damageTypeIn, Entity *damageSourceEntityIn)
 	:DamageSource(damageTypeIn), damageSourceEntity(damageSourceEntityIn)
 {
 }
@@ -23,12 +26,12 @@ std::optional<Entity> DamageSource::EntityDamageSource::getTrueSource()
 	return std::optional<Entity>();
 }
 
-ITextComponent DamageSource::EntityDamageSource::getDeathMessage(EntityLivingBase entityLivingBaseIn)
+std::shared_ptr<ITextComponent> DamageSource::EntityDamageSource::getDeathMessage(EntityLivingBase* entityLivingBaseIn)
 {
-	ItemStack itemstack = instanceof<EntityLivingBase>(damageSourceEntity) ? ((EntityLivingBase)damageSourceEntity).getHeldItemMainhand() : ItemStack.EMPTY;
+	auto itemstack = Util::instanceof<EntityLivingBase*>(damageSourceEntity) ? reinterpret_cast<EntityLivingBase*>(damageSourceEntity)->getHeldItemMainhand() : ItemStack::EMPTY;
 	auto s = "death.attack." + damageType;
 	auto s1 = s + ".item";
-	return !itemstack.isEmpty() && itemstack.hasDisplayName() && I18n.canTranslate(s1) ? new TextComponentTranslation(s1, new Object[]{ entityLivingBaseIn.getDisplayName(), damageSourceEntity.getDisplayName(), itemstack.getTextComponent() }) : new TextComponentTranslation(s, new Object[]{ entityLivingBaseIn.getDisplayName(), damageSourceEntity.getDisplayName() });
+	return !itemstack.isEmpty() && itemstack.hasDisplayName() && I18n::canTranslate(s1) ? std::make_shared<TextComponentTranslation>(s1, entityLivingBaseIn->getDisplayName(), damageSourceEntity->getDisplayName(), itemstack.getTextComponent()) : new TextComponentTranslation(s, new Object[]{ entityLivingBaseIn.getDisplayName(), damageSourceEntity.getDisplayName() });
 }
 
 bool DamageSource::EntityDamageSource::isDifficultyScaled()

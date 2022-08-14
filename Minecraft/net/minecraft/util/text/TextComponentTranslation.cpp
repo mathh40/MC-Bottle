@@ -4,9 +4,6 @@
 
 static constexpr auto STRING_VARIABLE_PATTERN = ctll::fixed_string{"(%(?:(\d+)\$)?([A-Za-z%]|$))"};
 
-TextComponentTranslation::TextComponentTranslation(std::string_view translationKey,
-                                                   std::initializer_list<std::any> args) {}
-
 void TextComponentTranslation::initializeFromFormat(std::string_view format) {
     bool flag = false;
     auto matcher = ctre::match<STRING_VARIABLE_PATTERN>(format);

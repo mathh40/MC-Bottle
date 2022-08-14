@@ -42,7 +42,7 @@ namespace DamageSource
 		DamageSource setDamageAllowedInCreativeMode();
 		DamageSource setDamageIsAbsolute();
 		DamageSource setFireDamage();
-		ITextComponent* getDeathMessage(EntityLivingBase entityLivingBaseIn);
+        std::shared_ptr<ITextComponent> getDeathMessage(EntityLivingBase* entityLivingBaseIn);
 		bool isFireDamage() const;
 		std::string getDamageType() const;
 		DamageSource setDifficultyScaled();

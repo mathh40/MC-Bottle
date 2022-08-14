@@ -11,7 +11,7 @@ public:
 	CombatTracker(EntityLivingBase* fighterIn);
 	void calculateFallSuffix();
 	void trackDamage(const DamageSource::DamageSource &damageSrc, const float healthIn, const float damageAmount);
-	ITextComponent* getDeathMessage();
+	std::shared_ptr<ITextComponent> getDeathMessage();
 	EntityLivingBase* getBestAttacker();
 	
 	uint32_t getCombatDuration() const;
@@ -19,7 +19,7 @@ public:
 	EntityLivingBase* getFighter() const;
 
 private:
-	std::vector< std::shared_ptr<CombatEntry>> combatEntries;
+    std::vector<std::unique_ptr<CombatEntry>> combatEntries;
 	EntityLivingBase* fighter;
 	uint32_t lastDamageTime;
 	uint32_t combatStartTime;
@@ -28,7 +28,7 @@ private:
 	bool takingDamage;
 	std::string fallSuffix;
 
-	CombatEntry getBestCombatEntry();
-    static std::string getFallSuffix(CombatEntry entry);
+	CombatEntry* getBestCombatEntry();
+    static std::string getFallSuffix(CombatEntry* entry);
 	void resetFallSuffix();
 };

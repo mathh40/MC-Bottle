@@ -30,6 +30,7 @@ function(set_project_warnings project_name)
       /w14928 # illegal copy-initialization; more than one user-defined conversion has been implicitly applied
       /permissive- # standards conformance mode for MSVC compiler.
 	  /Zc:preprocessor
+	  /std:c17
   )
 
   set(CLANG_WARNINGS
@@ -48,6 +49,7 @@ function(set_project_warnings project_name)
       -Wnull-dereference # warn if a null dereference is detected
       -Wdouble-promotion # warn if float is implicit promoted to double
       -Wformat=2 # warn on security issues around functions that format output (ie printf)
+	  -fexceptions
   )
 
   if(WARNINGS_AS_ERRORS)

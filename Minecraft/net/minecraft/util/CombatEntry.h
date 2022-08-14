@@ -10,7 +10,6 @@ namespace DamageSource {
 class CombatEntry
 {
 public:
-
 	CombatEntry(const DamageSource::DamageSource &damageSrcIn, uint64_t timeIn, float healthAmount,
                float damageAmount, const std::string &fallSuffixIn, float fallDistanceIn);
 	DamageSource::DamageSource getDamageSrc();

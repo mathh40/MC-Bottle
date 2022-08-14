@@ -1,16 +1,10 @@
 #include "CryptManager.h"
-#include <spdlog/spdlog.h>
-#include "../../../args/args.hxx"
 
-CryptManager::CryptManager()
-{
-	LOGGER = spdlog::get("Minecraft")->clone("CryptManager");
-}
+std::shared_ptr<spdlog::logger>  CryptManager::LOGGER = spdlog::get("Minecraft")->clone("CryptManager");
 
-std::array<unsigned char, (128 / 8)> CryptManager::createNewSharedKey()
-{
-	std::array<unsigned char, (128 / 8)> aesKey;
-	std::array<unsigned char, (128 / 8)> aesIV;
+SecretKey CryptManager::createNewSharedKey() {
+    SecretKey aesKey;
+    SecretKey aesIV;
 
 	if (RAND_bytes(aesKey, aesKey.data()) == 0) {
 		throw std::runtime_error("NoSuchAlgorithmException");
@@ -68,8 +62,7 @@ EVP_PKEY* CryptManager::decodePublicKey(std::vector<unsigned char> encodedKey)
 	return key;
 }
 
-std::array<unsigned char, (128 / 8)> CryptManager::decryptSharedKey(EVP_PKEY * key, std::vector<unsigned char> secretKeyEncrypted)
-{
+SecretKey CryptManager::decryptSharedKey(EVP_PKEY *key, std::vector<unsigned char> secretKeyEncrypted) {
 	return decryptDataRSA(key, secretKeyEncrypted);
 }
 

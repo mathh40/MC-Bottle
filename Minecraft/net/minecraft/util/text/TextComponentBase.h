@@ -3,7 +3,7 @@
 #include "ITextComponent.h"
 
 
-class TextComponentBase :virtual  ITextComponent
+class TextComponentBase :public  ITextComponent
 {
 public:
 	virtual ~TextComponentBase() = default;
