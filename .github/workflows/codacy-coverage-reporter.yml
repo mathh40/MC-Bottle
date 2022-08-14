@@ -15,3 +15,9 @@ jobs:
           # or
           # api-token: ${{ secrets.CODACY_API_TOKEN }}
           coverage-reports: cobertura.xml
+      - name: Update coverage
+        id: coverage_update
+        shell: 'curl -Os https://uploader.codecov.io/latest/linux/codecov'
+      - name: Run coverage
+        id: coverage
+        shell: 'sh ./codecov -t ${CODECOV_TOKEN}'
