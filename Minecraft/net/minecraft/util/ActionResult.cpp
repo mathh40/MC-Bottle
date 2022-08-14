@@ -1,7 +1,5 @@
 #include "ActionResult.h"
 
-
-
 ActionResult::ActionResult(EnumActionResult typeIn, std::any resultIn)
 	:type(typeIn), result(resultIn)
 {
