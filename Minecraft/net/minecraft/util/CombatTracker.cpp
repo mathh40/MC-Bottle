@@ -3,6 +3,7 @@
 #include "DamageSource.h"
 #include "../block/Block.h"
 #include "text/TextComponentTranslation.h"
+#include "../entity/EntityLivingBase.h"
 
 CombatTracker::CombatTracker(EntityLivingBase* fighterIn)
 	:fighter(fighterIn)
@@ -13,7 +14,10 @@ void CombatTracker::calculateFallSuffix()
 {
 	resetFallSuffix();
 	if (fighter->isOnLadder()) {
-		Block block = fighter->world.getBlockState(BlockPos(fighter->posX, fighter->getEntityBoundingBox().minY, fighter->posZ)).getBlock();
+        auto block =
+            fighter->world
+                ->getBlockState(BlockPos(fighter->posX, fighter->getEntityBoundingBox().getminY(), fighter->posZ))
+                ->getBlock();
 		if (block == Blocks::LADDER) {
 			fallSuffix = "ladder";
 		}

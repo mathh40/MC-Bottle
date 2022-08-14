@@ -1,10 +1,7 @@
 #include "EntitySelectors.h"
-
-
 #include "../entity/Entity.h"
 #include "../scoreboard/Team.h"
-#include "../world/Explosion.h"
-#include <spdlog/fmt/bundled/format.h>
+
 
 bool EntitySelectors::IS_ALIVE(const Entity * lhs)
 {

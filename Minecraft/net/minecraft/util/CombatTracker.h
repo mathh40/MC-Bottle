@@ -14,16 +14,16 @@ public:
 	ITextComponent* getDeathMessage();
 	EntityLivingBase* getBestAttacker();
 	
-	int32_t getCombatDuration() const;
+	uint32_t getCombatDuration() const;
 	void reset();
 	EntityLivingBase* getFighter() const;
 
 private:
 	std::vector< std::shared_ptr<CombatEntry>> combatEntries;
 	EntityLivingBase* fighter;
-	int32_t lastDamageTime;
-	int32_t combatStartTime;
-	int32_t combatEndTime;
+	uint32_t lastDamageTime;
+	uint32_t combatStartTime;
+	uint32_t combatEndTime;
 	bool inCombat;
 	bool takingDamage;
 	std::string fallSuffix;

@@ -1,7 +1,4 @@
 #include "EntityAIVillagerMate.h"
-
-
-#include "../../../../../spdlog/include/spdlog/fmt/bundled/format.h"
 #include "math/BlockPos.h"
 
 EntityAIVillagerMate::EntityAIVillagerMate(EntityVillager *villagerIn)

@@ -4,10 +4,10 @@
 #include "../util/math/MathHelper.h"
 #include "../util/SoundCategory.h"
 #include "../util/Util.h"
-#include "../../../../spdlog/spdlog/fmt/bundled/format.h"
 #include "../util/ITickable.h"
 #include "../util/EntitySelectors.h"
-#include "math/AxisAlignedBB.h"
+#include "../Util/math/AxisAlignedBB.h"
+#include "../block/state/IBlockState.h"
 
 World& World::init()
 {
@@ -2916,7 +2916,7 @@ int32_t World::getActualHeight()
 pcg32& World::setRandomSeed(int32_t seedX, int32_t seedY, int32_t seedZ)
 {
 	uint64_t j2 = static_cast<uint64_t>(seedX) * 341873128712 + static_cast<uint64_t>(seedY) * 132897987541 + getWorldInfo().getSeed() + static_cast<uint64_t>(seedZ);
-	rand.seed(j2);
+	rand.setSeed(j2);
 	return rand;
 }
 

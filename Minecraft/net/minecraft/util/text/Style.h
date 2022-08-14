@@ -12,6 +12,7 @@
 class Style
 {
 public:
+    Style &operator=(const Style &style) = default;
 	virtual ~Style() = default;
 	virtual std::optional<TextFormatting> getColor() const;
 	virtual const std::optional<bool> getBold() const;
@@ -41,7 +42,7 @@ public:
 	friend bool operator==(const Style& a, const Style& b);
 
 private:
-	std::optional <Style> parentStyle;
+    std::optional<Style> parentStyle;
 	std::optional<TextFormatting> color;
 	std::optional<bool> bold;
 	std::optional<bool> italic;

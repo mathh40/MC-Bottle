@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../../../spdlog/include/spdlog/fmt/bundled/format.h"
-
 #include <string_view>
 #include <vector>
 class IBlockState;

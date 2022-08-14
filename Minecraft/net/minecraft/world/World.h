@@ -25,7 +25,7 @@
 #include "storage/MapStorage.h"
 #include "../village/VillageCollection.h"
 #include "gen/ChunkGeneratorEnd.h"
-
+#include "..\util\random\RandomJava.h"
 
 class NextTickListEntry;
 class Packet;
@@ -45,7 +45,7 @@ public:
 	std::vector<TileEntity*> tickableTileEntities;
 	std::vector<EntityPlayer*> playerEntities;
 	std::vector<Entity*> weatherEffects;
-	pcg32 rand;
+	RandomJava rand;
 	WorldProvider* provider;
 	Profiler profiler;
 	bool isRemote;
@@ -171,9 +171,9 @@ public:
 	std::vector<Entity*> getEntitiesWithinAABBExcludingEntity(Entity* entityIn, AxisAlignedBB& bb);
 	std::vector<Entity*> getEntitiesInAABBexcluding(Entity* entityIn, AxisAlignedBB& boundingBox, std::function<bool(Entity*)> predicate);
 	template<class Class,typename Predicate>
-	std::vector<Entity*> getEntities(Predicate filter);
+	std::vector<Class*> getEntities(Predicate filter);
 	template<class Class, typename Predicate>
-	std::vector<Entity*> getPlayers(Predicate filter);
+	std::vector<Class*> getPlayers(Predicate filter);
 	template<class Class>
 	std::vector<Class*> getEntitiesWithinAABB(const AxisAlignedBB& bb);
 	template<class Class, typename Predicate>
@@ -321,7 +321,7 @@ private:
 };
 
 template <class Class, class Predicate>
-std::vector<Entity*> World::getEntities(Predicate filter)
+std::vector<Class*> World::getEntities(Predicate filter)
 {
 	std::vector<Entity*> list;
 	for (auto entity4 : loadedEntityList)
@@ -336,7 +336,7 @@ std::vector<Entity*> World::getEntities(Predicate filter)
 }
 
 template <class Class, typename Predicate>
-std::vector<Entity*> World::getPlayers(Predicate filter)
+std::vector<Class*> World::getPlayers(Predicate filter)
 {
 	std::vector<Entity*> list;
 

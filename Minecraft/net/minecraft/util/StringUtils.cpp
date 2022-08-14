@@ -144,6 +144,40 @@ std::string StringUtils::replaceFirstOccurrence(std::string &s, std::string_view
     return s.replace(pos, toReplace.length(), replaceWith);
 }
 
+void StringUtils::ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch)
+    {
+        return !std::isspace(ch);
+    }));
+}
+
+void StringUtils::rtrim(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch)
+    {
+        return !std::isspace(ch);
+    }).base(), s.end());
+}
+
+void StringUtils::trim(std::string &s) {
+    ltrim(s);
+    rtrim(s);
+}
+
+std::string StringUtils::ltrim_copy(std::string s) {
+    ltrim(s);
+    return s;
+}
+
+std::string StringUtils::rtrim_copy(std::string s) {
+    rtrim(s);
+    return s;
+}
+
+std::string StringUtils::trim_copy(std::string s) {
+    trim(s);
+    return s;
+}
+
 bool isBlank(std::string_view str)
 {
     bool blank = false;

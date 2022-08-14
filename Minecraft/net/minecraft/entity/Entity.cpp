@@ -1,9 +1,5 @@
 #include "Entity.h"
-
 #include <typeindex>
-
-
-
 #include "DamageSource.h"
 #include "EntityList.h"
 #include "EntityLivingBase.h"
@@ -11,7 +7,6 @@
 #include "ReportedException.h"
 #include "Rotation.h"
 #include "../../../../spdlog/include/spdlog/spdlog-inl.h"
-#include "../../../../spdlog/include/spdlog/fmt/bundled/format.h"
 #include "../item/ItemStack.h"
 #include "../nbt/NBTTagDouble.h"
 #include "../nbt/NBTTagFloat.h"

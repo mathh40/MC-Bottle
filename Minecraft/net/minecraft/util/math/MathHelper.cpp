@@ -1,10 +1,10 @@
 #include "MathHelper.h"
 
-#include "pcg_random.hpp"
-
 #include <array>
 #include <random>
 #include "Vec3i.h"
+
+#include <charconv>
 
 namespace MathHelper
 {
@@ -133,23 +133,6 @@ namespace MathHelper
 		return p_76137_0_ < 0 ? -((-p_76137_0_ - 1) / p_76137_1_) - 1 : p_76137_0_ / p_76137_1_;
 	}
 
-	int64_t nextLong(pcg32& random, int64_t minimum, int64_t maximum)
-	{
-
-	}
-
-	float nextFloat(pcg32& random, float minimum, float maximum)
-	{
-		static std::uniform_real_distribution<float> uniform_dist(0.0f, 1.0f);
-		return minimum >= maximum ? minimum : uniform_dist(random) * (maximum - minimum) + minimum;
-	}
-
-	double nextDouble(pcg32& random, double minimum, double maximum)
-	{
-		static std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
-		return minimum >= maximum ? minimum : uniform_dist(random) * (maximum - minimum) + minimum;
-	}
-
     double average(const std::vector<long>& values)
 	{
 		long i = 0L;
@@ -224,14 +207,12 @@ namespace MathHelper
 		return angle;
 	}
 
-	int32_t getInt(std::string value, int32_t defaultValue)
+	int32_t getInt(std::string_view value, int32_t defaultValue)
 	{
-		int32_t num = 0;
-		try
-		{
-			num = std::stoi(value);
-		}
-		catch (std::invalid_argument e)
+		auto num = 0;
+		auto [ptr, ec] = std::from_chars(value.data(),value.data() + value.size(), num);
+
+		if (ec == std::errc())
 		{
 			num = defaultValue;
 		}
@@ -240,19 +221,17 @@ namespace MathHelper
 		
 	}
 
-	int32_t getInt(std::string value, int32_t defaultValue, int32_t max)
+	int32_t getInt(std::string_view value, int32_t defaultValue, int32_t max)
 	{
 		return std::max(max, getInt(value, defaultValue));
 	}
 
-	double getDouble(std::string value, double defaultValue)
+	double getDouble(std::string_view value, double defaultValue)
 	{
-		double num = 0.0;
-		try
-		{
-			num = std::stod(value);
-		}
-		catch (std::invalid_argument e)
+		auto num = 0.0;
+		auto [ptr, ec] = std::from_chars(value.data(),value.data() + value.size(), num);
+
+		if (ec == std::errc())
 		{
 			num = defaultValue;
 		}
@@ -261,7 +240,7 @@ namespace MathHelper
 
 	}
 
-	double getDouble(std::string value, double defaultValue, double max)
+	double getDouble(std::string_view value, double defaultValue, double max)
 	{
 		return std::max(max, getDouble(value, defaultValue));
 	}

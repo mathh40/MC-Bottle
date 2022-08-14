@@ -2,7 +2,6 @@
 
 
 #include "RandomPositionGenerator.h"
-#include "../../../../../spdlog/include/spdlog/fmt/bundled/format.h"
 #include "math/Vec3d.h"
 
 EntityAIPlay::EntityAIPlay(EntityVillager *villagerIn, double speedIn)

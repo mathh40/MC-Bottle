@@ -1,5 +1,4 @@
 #include "DamageSource.h"
-#include <spdlog/fmt/bundled/format.h>
 #include "EntityDamageSource.h"
 #include "EntityDamageSourceIndirect.h"
 #include "../entity/Entity.h"

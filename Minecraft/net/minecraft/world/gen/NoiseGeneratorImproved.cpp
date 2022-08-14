@@ -10,7 +10,7 @@ std::array<double, 16> NoiseGeneratorImproved::GRAD_2Z = { 0.0, 0.0, 0.0, 0.0, 1
 
 NoiseGeneratorImproved::NoiseGeneratorImproved()
 {
-	pcg32 rand;
+    pcg32 rand;
 	init(rand);
 }
 

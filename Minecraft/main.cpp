@@ -1,6 +1,5 @@
 #include "args.hxx"
 #include <iostream>
-#include "../authlib/com/mojang/authlib/properties/Property.h"
 #include <filesystem>
 #include "net/minecraft/util/Session.h"
 #include "ThreadName.h"

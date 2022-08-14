@@ -1,6 +1,5 @@
 #include "EntityAIRestrictOpenDoor.h"
 #include "Util.h"
-#include "../../../../../spdlog/include/spdlog/fmt/bundled/format.h"
 #include "../../pathfinding/PathNavigateGround.h"
 #include "../../village/Village.h"
 

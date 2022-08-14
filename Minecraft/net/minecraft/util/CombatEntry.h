@@ -11,7 +11,8 @@ class CombatEntry
 {
 public:
 
-	CombatEntry(const DamageSource::DamageSource &damageSrcIn, const int timeIn, const float healthAmount, const float damageAmount, const std::string &fallSuffixIn, const float fallDistanceIn);
+	CombatEntry(const DamageSource::DamageSource &damageSrcIn, uint64_t timeIn, float healthAmount,
+               float damageAmount, const std::string &fallSuffixIn, float fallDistanceIn);
 	DamageSource::DamageSource getDamageSrc();
 	float getDamage();
 	bool isLivingDamageSrc();
@@ -20,7 +21,7 @@ public:
 	float getDamageAmount();
 private:
 	DamageSource::DamageSource damageSrc;
-	int time;
+	uint64_t time;
 	float damage;
 	float health;
 	std::string fallSuffix;

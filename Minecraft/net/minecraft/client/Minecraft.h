@@ -1,11 +1,8 @@
 #pragma once
-#include "spdlog/spdlog.h"
 #include <filesystem>
-#include "../../../../authlib/com/mojang/authlib/properties/PropertyMap.h"
 #include <optional>
 #include "../util/Session.h"
 #include <queue>
-#include <spdlog/async_logger.h>
 #include "../util/FrameTimer.h"
 #include "../util/MouseHelper.h"
 #include "ResourceLocation.h"

@@ -1,7 +1,7 @@
 /*
  * PCG Random Number Generation for C++
  *
- * Copyright 2014-2019 Melissa O'Neill <oneill@pcg-random.org>,
+ * Copyright 2014-2022 Melissa O'Neill <oneill@pcg-random.org>,
  *                     and the PCG Project contributors.
  *
  * SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -46,7 +46,7 @@
  *            - equality and inequality for RNGs
  *      - and a number of convenience typedefs to mask all the complexity
  *
- * The code employes a fairly heavy level of abstraction, and has to deal
+ * The code employees a fairly heavy level of abstraction, and has to deal
  * with various C++ minutia.  If you're looking to learn about how the PCG
  * scheme works, you're probably best of starting with one of the other
  * codebases (see www.pcg-random.org).  But if you're curious about the
@@ -101,7 +101,7 @@
 #endif
 
 /*
- * The pcg_extras namespace contains some support code that is likley to
+ * The pcg_extras namespace contains some support code that is likely to
  * be useful for a variety of RNGs, including:
  *      - 128-bit int support for platforms where it isn't available natively
  *      - bit twiddling operations
@@ -123,7 +123,7 @@ using namespace pcg_extras;
  *
  *      default_multiplier<uint32_t>::multiplier()
  *
- * gives you the default multipler for 32-bit integers.  We use the name
+ * gives you the default multiplier for 32-bit integers.  We use the name
  * of the constant and not a generic word like value to allow these classes
  * to be used as mixins.
  */
@@ -192,7 +192,7 @@ struct cheap_multiplier<pcg128_t> {
  *                       object, thus every RNG has its own unique sequence
  *
  * This variation is provided though mixin classes which define a function
- * value called increment() that returns the nesessary additive constant.
+ * value called increment() that returns the necessary additive constant.
  */
 
 
@@ -366,7 +366,7 @@ protected:
  * (reducing register pressure).
  *
  * Given the high level of parameterization, the code has to use some
- * template-metaprogramming tricks to handle some of the suble variations
+ * template-metaprogramming tricks to handle some of the subtle variations
  * involved.
  */
 
@@ -517,10 +517,10 @@ public:
                && !std::is_convertible<SeedSeq, itype>::value
                && !std::is_convertible<SeedSeq, engine>::value,
         can_specify_stream_tag>::type = {})
-        : engine(generate_one<itype,1,2>(seedSeq),
-                 generate_one<itype,0,2>(seedSeq))
     {
-        // Nothing else to do.
+        itype seeddata[2];
+        generate_to<2>(std::forward<SeedSeq>(seedSeq), seeddata);
+        seed(seeddata[1], seeddata[0]);
     }
 
 
@@ -1476,6 +1476,8 @@ operator<<(std::basic_ostream<CharT,Traits>& out,
            const extended<table_pow2, advance_pow2,
                           baseclass, extvalclass, kdd>& rng)
 {
+    using pcg_extras::operator<<;
+
     auto orig_flags = out.flags(std::ios_base::dec | std::ios_base::left);
     auto space = out.widen(' ');
     auto orig_fill = out.fill();
@@ -1506,6 +1508,8 @@ operator>>(std::basic_istream<CharT,Traits>& in,
 
     if (in.fail())
         return in;
+
+    using pcg_extras::operator>>;
 
     auto orig_flags = in.flags(std::ios_base::dec | std::ios_base::skipws);
 
@@ -1893,9 +1897,9 @@ typedef pcg_engines::ext_oneseq_xsh_rs_64_32<1,32,true>     pcg32_k2_fast;
 // These eight extended RNGs have about as much state as arc4random
 //
 //  - the k variants are k-dimensionally equidistributed
-//  - the c variants offer better crypographic security
+//  - the c variants offer are intended to be harder to predict
 //
-// (just how good the cryptographic security is is an open question)
+// (neither is intended for use in cryptographic applications)
 
 typedef pcg_engines::ext_setseq_xsh_rr_64_32<6,16,true>     pcg32_k64;
 typedef pcg_engines::ext_mcg_xsh_rs_64_32<6,32,true>        pcg32_k64_oneseq;
@@ -1916,9 +1920,9 @@ typedef pcg_engines::ext_mcg_xsl_rr_128_64<5,128,false>     pcg64_c32_fast;
 // These eight extended RNGs have more state than the Mersenne twister
 //
 //  - the k variants are k-dimensionally equidistributed
-//  - the c variants offer better crypographic security
+//  - the c variants offer are intended to be harder to predict
 //
-// (just how good the cryptographic security is is an open question)
+// (neither is intended for use in cryptographic applications)
 
 typedef pcg_engines::ext_setseq_xsh_rr_64_32<10,16,true>    pcg32_k1024;
 typedef pcg_engines::ext_oneseq_xsh_rs_64_32<10,32,true>    pcg32_k1024_fast;

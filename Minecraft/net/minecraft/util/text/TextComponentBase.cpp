@@ -4,26 +4,26 @@
 #include "TextFormatting.h"
 #include <sstream>
 
-ITextComponent* TextComponentBase::appendSibling(std::unique_ptr<ITextComponent> component)
-{
+ITextComponent *TextComponentBase::appendSibling(std::shared_ptr<ITextComponent> &component) {
 	component->getStyle().setParentStyle(getStyle());
 	siblings.push_back(component);
 	return this;
 }
 
-TextComponentBase::TextComponentList& TextComponentBase::getSiblings() const
+TextComponentBase::TextComponentList& TextComponentBase::getSiblings()
 {
 	return siblings;
 }
 
-ITextComponent* TextComponentBase::appendText(std::string text)
+ITextComponent* TextComponentBase::appendText(std::string_view text)
 {
-	return appendSibling(std::make_unique<TextComponentString>(text));
+    auto appText = std::make_shared<TextComponentString>(text);
+    return appendSibling(appText);
 }
 
-ITextComponent* TextComponentBase::setStyle(Style style)
+ITextComponent* TextComponentBase::setStyle(const Style& style)
 {
-	style = style;
+    textstyle = style;
 
 	for(auto itextcomponent : siblings)
 	{
@@ -33,9 +33,7 @@ ITextComponent* TextComponentBase::setStyle(Style style)
 }
 
 Style& TextComponentBase::getStyle()
-{
-	return style;
-}
+{ return textstyle; }
 
 std::string TextComponentBase::getUnformattedText() const
 {
@@ -43,7 +41,7 @@ std::string TextComponentBase::getUnformattedText() const
 
 	for(auto itextcomponent : siblings)
 	{
-		stringbuilder << (itextcomponent.getUnformattedComponentText());
+		stringbuilder << (itextcomponent->getUnformattedComponentText());
 	}
 
 	return stringbuilder.str();
@@ -54,9 +52,9 @@ std::string TextComponentBase::getFormattedText() const
 	std::stringstream stringbuilder;
 
 	for (auto itextcomponent : siblings) {
-		auto s = itextcomponent.getUnformattedComponentText();
-		if (!s.isEmpty()) {
-			stringbuilder << (itextcomponent.getStyle().getFormattingCode());
+		auto s = itextcomponent->getUnformattedComponentText();
+		if (!s.empty()) {
+			stringbuilder << (itextcomponent->getStyle().getFormattingCode());
 			stringbuilder << (s);
 			stringbuilder << (TextFormatting::RESET);
 		}
@@ -67,5 +65,14 @@ std::string TextComponentBase::getFormattedText() const
 
 std::string TextComponentBase::toString() const
 {
-	return "BaseComponent{style=" + style + ", siblings=" + siblings + '}';
+    std::stringstream stringbuilder("BaseComponent{style=" + textstyle.to_string() + ", siblings=");
+    for (auto sib : siblings) {
+        if (!sib) {
+
+            stringbuilder << sib->getUnformattedText();
+            stringbuilder << ',';
+        }
+	}
+    stringbuilder << '}';
+    return stringbuilder.str();
 }

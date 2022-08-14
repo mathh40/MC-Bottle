@@ -1,6 +1,5 @@
 #include "PhaseLanding.h"
 #include "../../EntityDragon.h"
-#include "../../../../../../../spdlog/include/spdlog/fmt/bundled/format.h"
 #include "gen/feature/WorldGenEndPodium.h"
 
 PhaseLanding::PhaseLanding(EntityDragon *dragonIn)

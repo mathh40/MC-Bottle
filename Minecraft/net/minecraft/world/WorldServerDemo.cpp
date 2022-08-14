@@ -1,6 +1,6 @@
 #include "WorldServerDemo.h"
 
-int64_t WorldServerDemo::DEMO_WORLD_SEED = Util::getStringHash("North Carolina");
+uint64_t WorldServerDemo::DEMO_WORLD_SEED = Util::getStringHash("North Carolina");
 
 WorldServerDemo::WorldServerDemo(MinecraftServer* server, ISaveHandler saveHandlerIn, WorldInfo worldInfoIn, int32_t dimensionId, Profiler profilerIn)
 :WorldServer(server, saveHandlerIn, worldInfoIn, dimensionId, profilerIn)

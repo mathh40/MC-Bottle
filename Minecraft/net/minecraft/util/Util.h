@@ -47,9 +47,9 @@ namespace Util
 		return ieee;
 	}
 
-	bool startwith(std::string_view prefix,std::string_view toCheck);
+	constexpr bool startwith(std::string_view prefix,std::string_view toCheck);
 
-	int64_t getStringHash(std::string_view);
+	uint64_t getStringHash(std::string_view);
 
 	template <typename U = uint64_t>
 	class RandomizerWithSentinelShift 
@@ -75,7 +75,7 @@ namespace Util
 
 	std::string_view toLowerCase(std::string_view str, const std::locale& loc);
 
-	std::vector<std::string> split(std::string_view s, std::string_view delimiter);
+	std::vector<std::string> split(std::string_view s, std::string_view delimiter,size_t limit = 0);
 	bool endsWith(std::string_view s, std::string_view suffix);
 
 	template<typename T, typename G>

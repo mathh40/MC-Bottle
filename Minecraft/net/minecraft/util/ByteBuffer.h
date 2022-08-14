@@ -128,6 +128,9 @@ public:
     {
         return wpos;
     }
+    std::size_t size() const { return buf.size();
+    }
+
 
     // Utility Functions
 #ifdef BB_UTILITY

@@ -74,7 +74,7 @@
  * direct CPU support.
  *
  */
-#if __SIZEOF_INT128__
+#if __SIZEOF_INT128__ && !PCG_FORCE_EMULATED_128BIT_MATH
     namespace pcg_extras {
         typedef __uint128_t pcg128_t;
     }
@@ -175,8 +175,10 @@ operator>>(std::basic_istream<CharT,Traits>& in, pcg128_t& value)
     bool overflow = false;
     for(;;) {
         CharT wide_ch = in.get();
-        if (!in.good())
+        if (!in.good()) {
+            in.clear(std::ios::eofbit);
             break;
+        }
         auto ch = in.narrow(wide_ch, '\0');
         if (ch < '0' || ch > '9') {
             in.unget();

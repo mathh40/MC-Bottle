@@ -1,7 +1,6 @@
 #include "EntityAreaEffectCloud.h"
 
 #include "WorldServer.h"
-#include "../../../../spdlog/include/spdlog/fmt/bundled/format.h"
 #include "../potion/PotionUtils.h"
 
 RADIUS = EntityDataManager.createKey(EntityAreaEffectCloud.class, DataSerializers::FLOAT);

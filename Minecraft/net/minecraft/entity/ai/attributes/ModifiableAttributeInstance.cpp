@@ -5,7 +5,6 @@
 #include "AbstractAttributeMap.h"
 #include "AttributeModifier.h"
 #include "IAttribute.h"
-#include "../../../../../../spdlog/include/spdlog/fmt/bundled/format.h"
 
 ModifiableAttributeInstance::ModifiableAttributeInstance(AbstractAttributeMap *attributeMapIn,
                                                          IAttribute *genericAttributeIn)

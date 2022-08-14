@@ -22,15 +22,15 @@ Util::EnumOS Util::getOSType()
 #endif
 }
 
-bool Util::startwith(std::string_view prefix, std::string_view toCheck)
+constexpr bool Util::startwith(std::string_view prefix, std::string_view toCheck)
 {
 	return std::mismatch(prefix.begin(), prefix.end(), toCheck.begin()).first == prefix.end();
 }
 
-int64_t Util::getStringHash(std::string_view str)
+uint64_t Util::getStringHash(std::string_view str) 
 {
 	auto size = str.size();
-	int64_t hash = 0;
+	uint64_t hash = 0;
 	auto index = 0;
 	for(auto substract = 1; substract < size + 1;++substract)
 	{
@@ -54,11 +54,12 @@ std::string_view Util::toLowerCase(std::string_view str, const std::locale& loc)
 	return str;
 }
 
-std::vector<std::string> Util::split(const std::string_view str, std::string_view delimiter)
+std::vector<std::string> Util::split(const std::string_view str, std::string_view delimiter,size_t limit)
 {
 	std::vector<std::string> tokens;
 	size_t prev = 0;
 	size_t pos = 0;
+	size_t i = 0;
 	do
 	{
 		pos = str.find(delimiter, prev);
@@ -72,8 +73,9 @@ std::vector<std::string> Util::split(const std::string_view str, std::string_vie
 			tokens.emplace_back(token);
 		}
 		prev = pos + 1;
+		++i;
 	}
-	while (pos < str.length() && prev < str.length());
+	while (pos < str.length() && prev < str.length() && limit > 0 ? i = limit : true);
 	return tokens;
 }
 
@@ -101,7 +103,7 @@ Object runTask(FutureTask task, Logger logger)
 int64_t Util::getcurrent_time()
 {
 	auto now = std::chrono::system_clock::now();
-	auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+	auto now_ms = std::chrono::time_point_cast<std::chrono::nanoseconds>(now);
 	auto epoch = now_ms.time_since_epoch();
 	return epoch.count();
 }

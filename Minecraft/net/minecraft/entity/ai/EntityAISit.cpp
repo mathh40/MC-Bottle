@@ -1,7 +1,5 @@
 #include "EntityAISit.h"
 
-#include "../../../../../spdlog/include/spdlog/fmt/bundled/format.h"
-
 class EntityLivingBase;
 
 EntityAISit::EntityAISit(EntityTameable *entityIn)
