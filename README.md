@@ -1,7 +1,10 @@
 # MC-Bottle 
 ![logo](https://github.com/DJPlaya/MC-Bottle/blob/master/%23Media/Logo_Small.png "Logo")
+
 [![DepShield Badge](https://depshield.sonatype.org/badges/DJPlaya/MC-Bottle/depshield.svg)](https://depshield.github.io)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FDJPlaya%2FMC-Bottle.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FDJPlaya%2FMC-Bottle?ref=badge_shield)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f3b88ef0878f479aa247bb4d2da6cffb)](https://www.codacy.com/gh/mathh40/MC-Bottle/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathh40/MC-Bottle&amp;utm_campaign=Badge_Grade)
+
 ![Discord](https://img.shields.io/discord/736211123908378704)
 
 Project Status: Paused, seeking Developers
