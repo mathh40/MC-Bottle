@@ -8,6 +8,11 @@ name: CodeQL
       - master
   schedule:
     - cron: 38 9 * * 0
+env:
+  CMAKE_VERSION: 3.24.0
+  NINJA_VERSION: 1.11.0
+  BUILD_TYPE: Release
+  CCACHE_VERSION: 4.6.1
 jobs:
   analyze:
     name: Analyze
