@@ -1,6 +1,8 @@
 name: codacy-coverage-reporter
 
-on: ["push"]
+'on':
+  - push
+  - pull_request
 
 jobs:
   codacy-coverage-reporter:
@@ -17,7 +19,7 @@ jobs:
           coverage-reports: cobertura.xml
       - name: Update coverage
         id: coverage_update
-        shell: 'curl -Os https://uploader.codecov.io/latest/linux/codecov'
+        run: 'curl -Os https://uploader.codecov.io/latest/linux/codecov'
       - name: Run coverage
         id: coverage
-        shell: 'sh ./codecov -t ${CODECOV_TOKEN}'
+        run: 'sh ./codecov -t ${CODECOV_TOKEN}'

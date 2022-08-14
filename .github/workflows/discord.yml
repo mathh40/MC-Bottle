@@ -15,4 +15,4 @@ jobs:
       - uses: binotaliu/action-discord-notifier@v1
         with:
           message-title: New Commits Pushed
-          webhook: https://discordapp.com/api/webhooks/744552264974336062/-89wsesPJFOO7BdBryLinFWHkcU-RMV3SI-WIABHssaRHsbi1vVWw__Gnc19cPL1Jqmk
+          webhook: ${{ secrets.DISCORD }}
