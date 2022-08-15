@@ -6,8 +6,6 @@
 
 ![Discord](https://img.shields.io/discord/736211123908378704)
 
-Project Status: Paused, seeking Developers
-
 ### Bottle is an MC Server that wont Bottleneck itself like others did before
 Bottle is a new Type of Minecraft Server with the Goal to stand out from the Performance Limitations of previous Servers but still be expandable and flexible.
 
