@@ -1,17 +1,29 @@
 ﻿---
 BasedOnStyle: LLVM
+AlignAfterOpenBracket: Align
+AlignConsecutiveMacros: 'true'
 AlignConsecutiveAssignments: 'false'
 AlignConsecutiveDeclarations: 'false'
 AlignOperands: 'true'
 AlignTrailingComments: 'false'
+AllowShortBlocksOnASingleLine: 'true'
+AllowShortCaseLabelsOnASingleLine: 'true'
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: 'false'
+AlwaysBreakBeforeMultilineStrings: 'true'
 AlwaysBreakTemplateDeclarations: 'Yes'
-BreakBeforeBraces: Custom
+BreakBeforeBraces: GNU
 BreakConstructorInitializers: AfterColon
 ColumnLimit: '120'
 IncludeIsMainRegex: '([-_](test|unittest))?$'
 IndentWidth: '4'
+Language: Cpp
 MaxEmptyLinesToKeep: '2'
 NamespaceIndentation: All
+SortIncludes: 'true'
+SortUsingDeclarations: 'true'
+Standard: Auto
 TabWidth: '4'
 
 ...
