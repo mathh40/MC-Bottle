@@ -1,24 +1,32 @@
 #include "CryptManager.h"
+#include "../cryptopp/aes.h"
+#include "../cryptopp/osrng.h"
 
 std::shared_ptr<spdlog::logger>  CryptManager::LOGGER = spdlog::get("Minecraft")->clone("CryptManager");
 
-SecretKey CryptManager::createNewSharedKey() {
-    SecretKey aesKey;
-    SecretKey aesIV;
+CryptoPP::SecByteBlock CryptManager::createNewSharedKey() {
+	CryptoPP::AutoSeededRandomPool prng;
+	CryptoPP::SecByteBlock key(CryptoPP::AES::DEFAULT_KEYLENGTH);
+    CryptoPP::SecByteBlock iv(CryptoPP::AES::BLOCKSIZE);
 
-	if (RAND_bytes(aesKey, aesKey.data()) == 0) {
-		throw std::runtime_error("NoSuchAlgorithmException");
-	}
+	prng.GenerateBlock(key, key.size());
+    prng.GenerateBlock(iv, iv.size());
 
-	if (RAND_bytes(aesIV, aesKey.data()) == 0) {
-		throw std::runtime_error("NoSuchAlgorithmException");
-	}
-
-	return aesKey;
+	return key;
 }
 
 X509_PUBKEY  * CryptManager::generateKeyPair()
 {
+
+	CryptoPP::OID oid  = CryptoPP::ASN1::secp256r1();
+	CryptoPP::AutoSeededRandomPool prng;
+
+	CryptoPP::ECDH<CryptoPP::ECP>::Domain ecdh(oid);
+
+	CryptoPP::SecByteBlock privKey(ecdh.PrivateKeyLength()), pubKey(ecdh.PublicKeyLength());
+	ecdh.GenerateKeyPair(prng, privKey, pubKey);
+
+
 	X509_PUBKEY  *localKeypair;
 
 	EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, NULL);

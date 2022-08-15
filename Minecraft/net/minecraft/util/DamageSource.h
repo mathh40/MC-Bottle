@@ -18,16 +18,16 @@ namespace DamageSource
 	public:
 		explicit DamageSource(std::string_view damageTypeIn);
 		std::string damageType;
-		DamageSource causeMobDamage(EntityLivingBase* mob);
-		DamageSource causeIndirectDamage(Entity* source, EntityLivingBase* indirectEntityIn);
-		DamageSource causePlayerDamage(EntityPlayer* player);
-		DamageSource causeArrowDamage(EntityArrow* arrow, Entity* indirectEntityIn);
-		DamageSource causeFireballDamage(EntityFireball* fireball,Entity* indirectEntityIn);
-		DamageSource causeThrownDamage(Entity* source, Entity* indirectEntityIn);
-		DamageSource causeIndirectMagicDamage(Entity* source, Entity* indirectEntityIn);
-		DamageSource causeThornsDamage(Entity* source);
-		DamageSource causeExplosionDamage(std::optional<Explosion> explosionIn);
-		DamageSource causeExplosionDamage(EntityLivingBase* entityLivingBaseIn);
+		std::unique_ptr<DamageSource> causeMobDamage(EntityLivingBase* mob);
+		std::unique_ptr<DamageSource> causeIndirectDamage(Entity* source, EntityLivingBase* indirectEntityIn);
+		std::unique_ptr<DamageSource> causePlayerDamage(EntityPlayer* player);
+		std::unique_ptr<DamageSource> causeArrowDamage(EntityArrow* arrow, Entity* indirectEntityIn);
+		std::unique_ptr<DamageSource> causeFireballDamage(EntityFireball* fireball,Entity* indirectEntityIn);
+		std::unique_ptr<DamageSource> causeThrownDamage(Entity* source, Entity* indirectEntityIn);
+		std::unique_ptr<DamageSource> causeIndirectMagicDamage(Entity* source, Entity* indirectEntityIn);
+		std::unique_ptr<DamageSource> causeThornsDamage(Entity* source);
+		std::unique_ptr<DamageSource> causeExplosionDamage(std::optional<Explosion> explosionIn);
+		std::unique_ptr<DamageSource> causeExplosionDamage(EntityLivingBase* entityLivingBaseIn);
 		bool isProjectile() const;
 		DamageSource setProjectile();
 		bool isExplosion() const;

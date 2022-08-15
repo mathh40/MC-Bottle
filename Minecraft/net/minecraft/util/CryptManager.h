@@ -2,12 +2,12 @@
 #include <vector>
 #include <memory>
 #include "..//spdlog/include/spdlog/spdlog.h"
+#include "../cryptopp/rijndael.h"
 
-using SecretKey = std::array<std::byte, (128 / 8)>;
 class CryptManager
 {
 public:
-     SecretKey createNewSharedKey();
+    CryptoPP::SecByteBlock createNewSharedKey();
 	EVP_PKEY * generateKeyPair();
 
 	std::array<unsigned char, SHA_DIGEST_LENGTH> getServerIdHash(std::string serverId, EVP_PKEY* publicKey, std::array<unsigned char, (128 / 8)> secretKey);
@@ -17,7 +17,7 @@ public:
 	std::vector<unsigned char> digestOperation(std::string algorithm, T data);
 
 	EVP_PKEY* decodePublicKey(std::vector<unsigned char> encodedKey);
-    SecretKey decryptSharedKey(EVP_PKEY *key, std::vector<unsigned char> secretKeyEncrypted);
+    CryptoPP::SecByteBlock decryptSharedKey(EVP_PKEY *key, std::vector<unsigned char> secretKeyEncrypted);
 	std::vector<unsigned char> encryptDataRSA(EVP_PKEY * key, std::vector<unsigned char> data);
 	std::vector<unsigned char> encryptDataAES(std::array<unsigned char, (128 / 8)> key, std::vector<unsigned char> data);
 	std::vector<unsigned char> decryptDataRSA(EVP_PKEY * key, std::vector<unsigned char> data);

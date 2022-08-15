@@ -12,45 +12,45 @@ namespace DamageSource
 	{
 
 	}
-	DamageSource DamageSource::causeMobDamage(EntityLivingBase* mob)
+	std::unique_ptr<DamageSource> DamageSource::causeMobDamage(EntityLivingBase* mob)
 	{
-		return EntityDamageSource("mob", mob);
+		return std::make_unique<EntityDamageSource>("mob", mob);
 	}
-	DamageSource DamageSource::causeIndirectDamage(Entity* source, EntityLivingBase* indirectEntityIn)
+	std::unique_ptr<DamageSource> DamageSource::causeIndirectDamage(Entity* source, EntityLivingBase* indirectEntityIn)
 	{
-		return EntityDamageSourceIndirect("mob", source, indirectEntityIn);
+		return std::make_unique<EntityDamageSourceIndirect>("mob", source, indirectEntityIn);
 	}
-	DamageSource DamageSource::causePlayerDamage(EntityPlayer* player)
+	std::unique_ptr<DamageSource> DamageSource::causePlayerDamage(EntityPlayer* player)
 	{
-		return EntityDamageSource("player", player);
+		return std::make_unique<EntityDamageSource>("player", player);
 	}
-	DamageSource DamageSource::causeArrowDamage(EntityArrow* arrow, Entity* indirectEntityIn)
+	std::unique_ptr<DamageSource> DamageSource::causeArrowDamage(EntityArrow* arrow, Entity* indirectEntityIn)
 	{
-		return EntityDamageSourceIndirect("arrow", arrow, indirectEntityIn).setProjectile();
+		return std::make_unique<EntityDamageSourceIndirect>("arrow", arrow, indirectEntityIn).setProjectile();
 	}
-	DamageSource DamageSource::causeFireballDamage(EntityFireball* fireball, Entity* indirectEntityIn)
+	std::unique_ptr<DamageSource> DamageSource::causeFireballDamage(EntityFireball* fireball, Entity* indirectEntityIn)
 	{
-		return !indirectEntityIn->has_value() ? EntityDamageSourceIndirect("onFire", fireball, fireball).setFireDamage().setProjectile() : EntityDamageSourceIndirect("fireball", fireball, indirectEntityIn).setFireDamage().setProjectile();
+		return indirectEntityIn == nullptr ? std::make_unique<EntityDamageSourceIndirect>("onFire", fireball, fireball)->setFireDamage().setProjectile() : std::make_unique<EntityDamageSourceIndirect>("fireball", fireball, indirectEntityIn)->setFireDamage().setProjectile();
 	}
-	DamageSource DamageSource::causeThrownDamage(Entity* source, Entity* indirectEntityIn)
+	std::unique_ptr<DamageSource> DamageSource::causeThrownDamage(Entity* source, Entity* indirectEntityIn)
 	{
-		return EntityDamageSourceIndirect("thrown", source, indirectEntityIn).setProjectile();
+		return std::make_unique<EntityDamageSourceIndirect>("thrown", source, indirectEntityIn).setProjectile();
 	}
-	DamageSource DamageSource::causeIndirectMagicDamage(Entity* source, Entity* indirectEntityIn)
+	std::unique_ptr<DamageSource> DamageSource::causeIndirectMagicDamage(Entity* source, Entity* indirectEntityIn)
 	{
-		return EntityDamageSourceIndirect("indirectMagic", source, indirectEntityIn).setDamageBypassesArmor().setMagicDamage();
+		return std::make_unique<EntityDamageSourceIndirect>("indirectMagic", source, indirectEntityIn).setDamageBypassesArmor().setMagicDamage();
 	}
-	DamageSource DamageSource::causeThornsDamage(Entity* source)
+	std::unique_ptr<DamageSource> DamageSource::causeThornsDamage(Entity* source)
 	{
-		return EntityDamageSource("thorns", source).setIsThornsDamage().setMagicDamage();
+		return std::make_unique<EntityDamageSource>("thorns", source).setIsThornsDamage().setMagicDamage();
 	}
-	DamageSource DamageSource::causeExplosionDamage(Explosion* explosionIn)
+	std::unique_ptr<DamageSource> DamageSource::causeExplosionDamage(std::optional<Explosion> explosionIn)
 	{
-		return explosionIn->has_value() && explosionIn->getExplosivePlacedBy() != nullptr ? EntityDamageSource("explosion.player", explosionIn->getExplosivePlacedBy()).setDifficultyScaled().setExplosion() : DamageSource("explosion").setDifficultyScaled().setExplosion();
+		return explosionIn.has_value() && explosionIn->getExplosivePlacedBy() != nullptr ? std::make_unique<EntityDamageSource>("explosion.player", explosionIn->getExplosivePlacedBy())->setDifficultyScaled().setExplosion() : DamageSource("explosion").setDifficultyScaled().setExplosion();
 	}
-	DamageSource DamageSource::causeExplosionDamage(EntityLivingBase* entityLivingBaseIn)
+	DamageSource& DamageSource::causeExplosionDamage(EntityLivingBase* entityLivingBaseIn)
 	{
-		entityLivingBaseIn->has_value() ? EntityDamageSource("explosion.player", entityLivingBaseIn).setDifficultyScaled().setExplosion() : DamageSource("explosion").setDifficultyScaled().setExplosion();
+		entityLivingBaseIn->has_value() ? std::make_unique<EntityDamageSource>("explosion.player", entityLivingBaseIn)->setDifficultyScaled().setExplosion() : DamageSource("explosion").setDifficultyScaled().setExplosion();
 	}
 	bool DamageSource::isProjectile() const
 	{
