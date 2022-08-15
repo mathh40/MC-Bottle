@@ -1,6 +1,5 @@
 #pragma once
 #include "../world/Explosion.h"
-
 #include <string>
 #include <optional>
 

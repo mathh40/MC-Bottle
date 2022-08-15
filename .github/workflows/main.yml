@@ -151,17 +151,21 @@ jobs:
               -D CMAKE_MAKE_PROGRAM=ninja
               -D CMAKE_C_COMPILER_LAUNCHER=ccache
               -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
-              -D DYNAMICBITSET_HEADERS_TARGET_IDE:BOOL=1
-              -D ARGS_BUILD_UNITTESTS:BOOL=0
-              -D CROSSGUID_TESTS:BOOL=0
-              -D SPDLOG_INSTALL:BOOL=1
-              -D BUILD_TESTING:BOOL=0
-              -D ARGS_BUILD_EXAMPLE:BOOL=0
-              -D ENABLE_TESTING:BOOL=0 
-              -D WARNINGS_AS_ERRORS:BOOL=0
-              -D DYNAMICBITSET_FORMAT_TARGET:BOOL=1
-              -D ENABLE_DOXYGEN:BOOL=0
-              -D ENABLE_CLANG_TIDY:BOOL=0
+              -D FMT_CMAKE_DIR:STRING="lib/cmake/fmt"
+              -D SPDLOG_FMT_EXTERNAL_HO:BOOL="0"
+              -D ENABLE_DOXYGEN:BOOL="0"
+              -D JSON_SystemInclude:BOOL="1"
+              -D FMT_INSTALL:BOOL="1"
+              -D ENABLE_CPPCHECK:BOOL="0"
+              -D CROSSGUID_TESTS:BOOL="0"
+              -D FMT_SYSTEM_HEADERS:BOOL="1"
+              -D FMT_INC_DIR:STRING="include"
+              -D SPDLOG_INSTALL:BOOL="1"
+              -D ARGS_BUILD_EXAMPLE:BOOL="0"
+              -D BUILD_TESTING:BOOL="0"
+              -D ENABLE_CLANG_TIDY:BOOL="0"
+              -D ARGS_BUILD_UNITTESTS:BOOL="0"
+              -D JSON_Install:BOOL="1" 
             RESULT_VARIABLE result
           )
 

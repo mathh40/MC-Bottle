@@ -34,15 +34,15 @@ namespace DamageSource
 	}
 	std::unique_ptr<DamageSource> DamageSource::causeThrownDamage(Entity* source, Entity* indirectEntityIn)
 	{
-		return std::make_unique<EntityDamageSourceIndirect>("thrown", source, indirectEntityIn).setProjectile();
+		return std::make_unique<EntityDamageSourceIndirect>("thrown", source, indirectEntityIn)->setProjectile();
 	}
 	std::unique_ptr<DamageSource> DamageSource::causeIndirectMagicDamage(Entity* source, Entity* indirectEntityIn)
 	{
-		return std::make_unique<EntityDamageSourceIndirect>("indirectMagic", source, indirectEntityIn).setDamageBypassesArmor().setMagicDamage();
+		return std::make_unique<EntityDamageSourceIndirect>("indirectMagic", source, indirectEntityIn)->setDamageBypassesArmor().setMagicDamage();
 	}
 	std::unique_ptr<DamageSource> DamageSource::causeThornsDamage(Entity* source)
 	{
-		return std::make_unique<EntityDamageSource>("thorns", source).setIsThornsDamage().setMagicDamage();
+		return std::make_unique<EntityDamageSource>("thorns", source)->setIsThornsDamage().setMagicDamage();
 	}
 	std::unique_ptr<DamageSource> DamageSource::causeExplosionDamage(std::optional<Explosion> explosionIn)
 	{

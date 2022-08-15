@@ -19,6 +19,9 @@
 [submodule "fmt"]
 	path = fmt
 	url = ../../fmtlib/fmt.git
-[submodule "cryptopp"]
-	path = cryptopp
+[submodule "Minecraft/net/minecraft/util/imgaeloader/lodepng"]
+	path = Minecraft/net/minecraft/util/imgaeloader/lodepng
+	url = https://github.com/lvandeve/lodepng.git
+[submodule "Minecraft/net/minecraft/util/crypto/cryptopp"]
+	path = Minecraft/net/minecraft/util/crypto/cryptopp
 	url = https://github.com/weidai11/cryptopp.git
