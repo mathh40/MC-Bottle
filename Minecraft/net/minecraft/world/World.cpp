@@ -1,24 +1,26 @@
 #include "World.h"
+
+#include "WorldProvider.h"
 #include "../util/ReportedException.h"
 #include "../util/EnumFacing.h"
 #include "../util/math/MathHelper.h"
-#include "../util/SoundCategory.h"
 #include "../util/Util.h"
 #include "../util/ITickable.h"
 #include "../util/EntitySelectors.h"
 #include "../Util/math/AxisAlignedBB.h"
 #include "../block/state/IBlockState.h"
+#include "../crash/CrashReport.h"
+#include "storage/WorldInfo.h"
 
-World& World::init()
+World* World::init()
 {
-	return *this;
+	return this;
 }
 
-World::World(ISaveHandler saveHandlerIn, WorldInfo info, WorldProvider providerIn, Profiler profilerIn, bool client)
-	:eventListeners{ pathListener }, spawnHostileMobs(true), spawnPeacefulMobs(true), saveHandler(saveHandlerIn), profiler(profilerIn), worldInfo(info), provider(providerIn), isRemote(client), worldBorder(providerIn.createWorldBorder())
-{
-	lightUpdateBlockList.reserve(15237248);
-}
+World::World(ISaveHandler* saveHandlerIn, WorldInfo info, WorldProvider* providerIn, Profiler profilerIn, bool client) :
+    rand(), provider(providerIn), profiler(profilerIn), isRemote(client), eventListeners{pathListener},
+    saveHandler(saveHandlerIn), worldInfo(info), spawnHostileMobs(true), spawnPeacefulMobs(true),
+    worldBorder(providerIn->createWorldBorder()) { lightUpdateBlockList.reserve(15237248); }
 
 void World::onEntityAdded(Entity* entityIn)
 {
@@ -2870,29 +2872,29 @@ int32_t World::getUniqueDataId(std::string key)
 	return mapStorage.getUniqueDataId(key);
 }
 
-void World::playBroadcastSound(int32_t id, BlockPos& pos, int32_t data)
+void World::playBroadcastSound(int32_t id, const BlockPos& pos, int32_t data)
 {
 	for (auto ev : eventListeners)
 	{
-		ev.broadcastSound(id, pos, data);
+		ev->broadcastSound(id, pos, data);
 	}
 }
 
-void World::playEvent(int32_t type, BlockPos& pos, int32_t data)
+void World::playEvent(int32_t type, const BlockPos& pos, int32_t data)
 {
 	playEvent(nullptr, type, pos, data);
 }
 
-void World::playEvent(EntityPlayer* player, int32_t type, BlockPos& pos, int32_t data)
+void World::playEvent(EntityPlayer* player, int32_t type, const BlockPos& pos, int32_t data)
 {
 	try {
 		for (auto ev : eventListeners)
 		{
-			ev.playEvent(player, type, pos, data);
+			ev->playEvent(player, type, pos, data);
 		}
 
 	}
-	catch (Throwable var8) {
+	catch (const std::exception& var8) {
 		CrashReport crashreport3 = CrashReport.makeCrashReport(var8, "Playing level event");
 		CrashReportCategory crashreportcategory3 = crashreport3.makeCategory("Level event being played");
 		crashreportcategory3.addCrashSection("Block coordinates", CrashReportCategory.getCoordinateInfo(pos));

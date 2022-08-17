@@ -27,6 +27,7 @@
 #include "gen/ChunkGeneratorEnd.h"
 #include "..\util\random\RandomJava.h"
 
+class CrashReport;
 class NextTickListEntry;
 class Packet;
 class StructureBoundingBox;
@@ -240,9 +241,9 @@ public:
 	template<class Class>
 	WorldSavedData* loadData(std::string_view dataID);
 	int32_t getUniqueDataId(std::string key);
-	void playBroadcastSound(int32_t id, BlockPos& pos, int32_t data);
-	void playEvent(int32_t type, BlockPos& pos, int32_t data);
-	void playEvent(EntityPlayer* player, int32_t type, BlockPos& pos, int32_t data);
+	void playBroadcastSound(int32_t id, const BlockPos& pos, int32_t data);
+	void playEvent(int32_t type, const BlockPos& pos, int32_t data);
+	void playEvent(EntityPlayer* player, int32_t type, const BlockPos& pos, int32_t data);
 	int32_t getHeight() const;
 	int32_t getActualHeight();
 	pcg32& setRandomSeed(int32_t seedX, int32_t seedY, int32_t seedZ);

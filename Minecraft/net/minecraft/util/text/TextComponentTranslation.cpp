@@ -1,8 +1,13 @@
 #include "TextComponentTranslation.h"
+
+#include "TextComponentString.h"
+
 #include <fmt/core.h>
 #include "../../../../../compile-time-regular-expressions/single-header/ctre.hpp"
 
 static constexpr auto STRING_VARIABLE_PATTERN = ctll::fixed_string{"(%(?:(\d+)\$)?([A-Za-z%]|$))"};
+
+std::string TextComponentTranslation::getKey() const { return key; }
 
 void TextComponentTranslation::initializeFromFormat(std::string_view format) {
     bool flag = false;
@@ -17,8 +22,8 @@ void TextComponentTranslation::initializeFromFormat(std::string_view format) {
             l = matcher.end();
             if (k > j) {
                 auto textcomponentstring =
-                    atd::make_unique<TextComponentString>(fmt::format(format.substring(j, k)));
-                textcomponentstring.getStyle().setParentStyle(this.getStyle());
+                    std::make_unique<TextComponentString>(fmt::format(format.substring(j, k)));
+                textcomponentstring.getStyle().setParentStyle(getStyle());
                 children.add(textcomponentstring);
             }
 
@@ -34,7 +39,7 @@ void TextComponentTranslation::initializeFromFormat(std::string_view format) {
                 }
 
                 String s1 = matcher.group(1);
-                int i1 = s1 != null ? Integer.parseInt(s1) - 1 : i++;
+                int i1 = s1 != nullptr ? Integer.parseInt(s1) - 1 : i++;
                 if (i1 < this.formatArgs.length) {
                     children.add(this.getFormatArgumentAsComponent(i1));
                 }
@@ -61,10 +66,15 @@ ITextComponent *TextComponentTranslation::getFormatArgumentAsComponent(uint64_t 
         if (object instanceof ITextComponent) {
             itextcomponent = (ITextComponent)object;
         } else {
-            itextcomponent = new TextComponentString(object == null ? "null" : object.toString());
+            itextcomponent = new TextComponentString(object == nullptr ? "null" : object.toString());
             ((ITextComponent)itextcomponent).getStyle().setParentStyle(this.getStyle());
         }
 
         return (ITextComponent)itextcomponent;
     }
+}
+
+bool operator==(const TextComponentTranslation &a, const TextComponentTranslation &b) 
+{ 
+    return a.formatArgs == b.formatArgs && a.key == b.key && TextComponentBase::operator==(a,b);
 }

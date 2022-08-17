@@ -2,15 +2,16 @@
 
 #include "IBlockSource.h"
 #include "../entity/IProjectile.h"
+#include "../world/World.h"
 
-ItemStack BehaviorProjectileDispense::dispenseStack(IBlockSource *source, const ItemStack &stack) {
+ItemStack BehaviorProjectileDispense::dispenseStack(IBlockSource *source, ItemStack stack) {
     World *world = source->getWorld();
     IPosition *iposition = BlockDispenser::getDispensePosition(source);
     EnumFacing enumfacing = (EnumFacing)source->getBlockState()->getValue(BlockDispenser::FACING);
     IProjectile *iprojectile = getProjectileEntity(world, iposition, stack);
     iprojectile->shoot((double)enumfacing.getXOffset(), (double)((float)enumfacing.getYOffset() + 0.1F),
                       (double)enumfacing.getZOffset(), getProjectileVelocity(), getProjectileInaccuracy());
-    world->spawnEntity((Entity)iprojectile);
+    world->spawnEntity((Entity*)iprojectile);
     stack.shrink(1);
     return stack;
 }

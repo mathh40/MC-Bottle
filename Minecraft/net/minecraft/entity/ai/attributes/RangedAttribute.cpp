@@ -38,3 +38,13 @@ double RangedAttribute::clampValue(double value) const
     value = MathHelper::clamp(value, minimumValue, maximumValue);
     return value;
 }
+
+void RangedAttribute::setMinValue(double minValue)
+{
+    minimumValue = minValue;
+}
+
+void RangedAttribute::setMaxValue(double maxValue)
+{
+    maximumValue = maxValue;
+}

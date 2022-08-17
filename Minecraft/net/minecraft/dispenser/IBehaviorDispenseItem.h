@@ -4,7 +4,10 @@
 class IBlockSource;
 
 class IBehaviorDispenseItem {
-   virtual ItemStack dispense(IBlockSource* var1, const ItemStack& var2) = 0;
+protected:
+    virtual ~IBehaviorDispenseItem() = default;
+private:
+    virtual ItemStack dispense(IBlockSource* var1, const ItemStack& var2) = 0;
 };
 
 class DefaultBehaviorDispenseItem : public IBehaviorDispenseItem{

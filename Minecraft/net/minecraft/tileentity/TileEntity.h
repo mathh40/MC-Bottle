@@ -9,7 +9,7 @@ class TileEntity
 {
 public:
    TileEntity();
-   static std::optional<ResourceLocation> getKey(TileEntity* clazz);
+   std::optional<ResourceLocation> getKey(TileEntity* clazz) const;
    World* getWorld() const;
    void setWorld(World* worldIn);
    bool hasWorld() const;

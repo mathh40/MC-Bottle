@@ -3,29 +3,28 @@
 #include <optional>
 #include "ITextComponent.h"
 #include "TextFormatting.h"
+#include "../../../../../nlohmann_json/single_include/nlohmann/json.hpp"
 #include "event/ClickEvent.h"
 #include "event/HoverEvent.h"
 
-
-#include <nlohmann/json.hpp>
+class TextFormatting;
 
 class Style
 {
 public:
-    Style &operator=(const Style &style) = default;
-	virtual ~Style() = default;
+    virtual ~Style() = default;
 	virtual std::optional<TextFormatting> getColor() const;
-	virtual const std::optional<bool> getBold() const;
-	virtual const std::optional<bool> getItalic() const;
-	virtual const std::optional<bool> getStrikethrough() const;
-	virtual const std::optional<bool> getUnderlined() const;
-	virtual const std::optional<bool> getObfuscated() const;
+	virtual std::optional<bool> getBold() const;
+	virtual std::optional<bool> getItalic() const;
+	virtual std::optional<bool> getStrikethrough() const;
+	virtual std::optional<bool> getUnderlined() const;
+	virtual std::optional<bool> getObfuscated() const;
 	bool isEmpty() const;
 	virtual std::optional <ClickEvent> getClickEvent() const;
 	virtual std::optional <HoverEvent> getHoverEvent() const;
 	virtual std::optional <std::string> getInsertion() const;
 
-	virtual Style& setColor(TextFormatting color);
+	virtual Style& setColor(TextFormatting colorIn);
 	virtual Style& setBold(bool boldIn);
 	virtual Style& setItalic(bool italicIn);
 	virtual Style& setStrikethrough(bool strikethroughIn);
@@ -34,7 +33,7 @@ public:
 	virtual Style& setClickEvent(ClickEvent eventIn);
 	virtual Style& setHoverEvent(HoverEvent eventIn);
 	virtual Style& setInsertion(std::string insertionIn);
-	virtual Style& setParentStyle(Style parent);
+	virtual Style& setParentStyle(const Style& parent);
 
 	virtual std::string to_string() const;
 	virtual std::string getFormattingCode() const;
@@ -53,40 +52,40 @@ private:
 	std::optional <HoverEvent> hoverEvent;
 	std::optional <std::string> insertion;
 
-	const Style* getParent() const;
+    Style getParent() const;
 };
 
-using json = nlohmann::json;
-
-namespace ns {
-	void to_json(json& j, const Style& p) {
-			json jsonobject;
+NLOHMANN_JSON_NAMESPACE_BEGIN
+template <>
+struct adl_serializer<Style> {
+    static void to_json(json& j, const Style& p) {
+        json jsonobject;
 			if (p.getBold()) {
-				jsonobject["bold"] = p.getBold().value();
+				j["bold"] = p.getBold().value();
 			}
 
 			if (p.getItalic()) {
-				jsonobject["italic"] = p.getItalic().value();
+				j["italic"] = p.getItalic().value();
 			}
 
 			if (p.getUnderlined()) {
-				jsonobject["underlined"] = p.getUnderlined().value();
+				j["underlined"] = p.getUnderlined().value();
 			}
 
 			if (p.getStrikethrough()) {
-				jsonobject["strikethrough"] = p.getStrikethrough().value();
+				j["strikethrough"] = p.getStrikethrough().value();
 			}
 
 			if (p.getObfuscated()) {
-				jsonobject["obfuscated"] = p.getObfuscated().value();
+				j["obfuscated"] = p.getObfuscated().value();
 			}
 
 			if (p.getColor()) {
-				jsonobject["color"] = p.getColor().value();
+				j["color"] = p.getColor().value();
 			}
 
 			if (p.getInsertion()) {
-				jsonobject["insertion"] = p.getInsertion().value();
+				j["insertion"] = p.getInsertion().value();
 			}
 		
 			if (p.getClickEvent())
@@ -94,21 +93,19 @@ namespace ns {
 				json jsonobject2;
 				jsonobject2["action"], p.getClickEvent().value().getAction().getCanonicalName();
 				jsonobject2["value"], p.getClickEvent().value().getValue();
-				jsonobject["clickEvent"] = jsonobject2;
+				j["clickEvent"] = jsonobject2;
 			}
 
 			if (p.getHoverEvent()) {
 				json jsonobject2;
-				jsonobject2["action"], p.getHoverEvent().value().getAction().getCanonicalName();
+				jsonobject2["action"] = p.getHoverEvent().value().getAction().getCanonicalName();
 				jsonobject2["value"] = p.getHoverEvent().value().getValue();
-				jsonobject["hoverEvent"] = jsonobject2;
+				j["hoverEvent"] = jsonobject2;
 			}
+    }
 
-			j = jsonobject;
-	}
-
-	void from_json(const json& j, Style& p) {
-		if (j.is_object()) {
+    static void from_json(const json& j, Style& p) {
+        if (j.is_object()) {
 			Style style;
 			auto jsonobject = j;
 			
@@ -143,7 +140,7 @@ namespace ns {
 				if (jsonobject.find("clickEvent") != jsonobject.end()) {
 					auto jsonobject2 = jsonobject.at("clickEvent");
 						auto jsonprimitive2 = jsonobject2.at("action");
-						Action clickevent$action = jsonprimitive2 == nullptr ? nullptr : Action.getValueByCanonicalName(jsonprimitive2.getAsString());
+						Action clickevent$action = jsonprimitive2 == nullptr ? nullptr : HoverEvent::Action::getValueByCanonicalName(jsonprimitive2.getAsString());
 						auto jsonprimitive1 = jsonobject2.at("value");
 						auto s = jsonprimitive1.get<std::string>();
 						if (clickevent$action != nullptr && s != nullptr && clickevent$action.shouldAllowInChat()) {
@@ -163,10 +160,9 @@ namespace ns {
 
 				p = style;
 		}
-	}
-
-
-} // namespace ns
+    }
+};
+NLOHMANN_JSON_NAMESPACE_END
 
 namespace std {
 	template <> struct hash<Style>

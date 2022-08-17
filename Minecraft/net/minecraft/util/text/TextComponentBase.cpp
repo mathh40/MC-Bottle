@@ -4,16 +4,13 @@
 #include "TextFormatting.h"
 #include <sstream>
 
-ITextComponent *TextComponentBase::appendSibling(std::shared_ptr<ITextComponent> &component) {
+ITextComponent *TextComponentBase::appendSibling(const std::shared_ptr<ITextComponent> &component) {
 	component->getStyle().setParentStyle(getStyle());
 	siblings.push_back(component);
 	return this;
 }
 
-TextComponentBase::TextComponentList& TextComponentBase::getSiblings()
-{
-	return siblings;
-}
+ITextComponent::TextComponentList TextComponentBase::getSiblings() const { return siblings; } 
 
 ITextComponent* TextComponentBase::appendText(std::string_view text)
 {
@@ -33,6 +30,9 @@ ITextComponent* TextComponentBase::setStyle(const Style& style)
 }
 
 Style& TextComponentBase::getStyle()
+{ return textstyle; }
+
+const Style& TextComponentBase::getStyle() const
 { return textstyle; }
 
 std::string TextComponentBase::getUnformattedText() const
@@ -75,4 +75,14 @@ std::string TextComponentBase::toString() const
 	}
     stringbuilder << '}';
     return stringbuilder.str();
+}
+
+size_t TextComponentBase::hashCode() const 
+{
+	auto i = 31 * std::hash<Style>{}(textstyle);
+    for (auto sib : siblings)
+    {
+		i+= 31 * sib->hashCode();
+	}
+	return i;
 }

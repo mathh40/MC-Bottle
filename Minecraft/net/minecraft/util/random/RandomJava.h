@@ -6,7 +6,7 @@ class RandomJava : public Random {
     RandomJava();
     RandomJava(uint64_t seed = 0);
 
-    void setSeed(uint64_t seed) override;
+    void setSeed(uint64_t seed, uint64_t state) override;
     void nextBytes(ByteBuffer &bytes) override;
     uint32_t nextInt() override;
     uint32_t nextInt(uint32_t bound) override;
@@ -23,7 +23,7 @@ class RandomJava : public Random {
     static uint64_t initialScramble(uint64_t seed);
 
     uint64_t seed = 0;
-    uint64_t seedUniquifierVal = 8682522807148012L;
+    static uint64_t seedUniquifierVal;
     bool haveNextGaussian = false;
-    double nextNextGaussian;
+    double nextNextGaussian = 0;
 };

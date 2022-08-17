@@ -10,7 +10,7 @@ TileEntity::TileEntity()
 {
 }
 
-std::optional<ResourceLocation> TileEntity::getKey(TileEntity* clazz)
+std::optional<ResourceLocation> TileEntity::getKey(TileEntity* clazz) const
 {
 	return REGISTRY.getNameForObject(clazz);
 }

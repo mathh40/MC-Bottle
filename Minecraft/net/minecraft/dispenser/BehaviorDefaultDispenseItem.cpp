@@ -1,10 +1,9 @@
 #include "BehaviorDefaultDispenseItem.h"
 
-
-
 #include "IBlockSource.h"
 #include "IPosition.h"
 #include "../entity/item/EntityItem.h"
+#include "../block/BlockDispenser.h"
 
 ItemStack BehaviorDefaultDispenseItem::dispense(IBlockSource *source, const ItemStack &stack) {
     ItemStack itemstack = dispenseStack(source, stack);
@@ -25,17 +24,17 @@ void BehaviorDefaultDispenseItem::doDispense(World *worldIn, const ItemStack &st
     }
 
     EntityItem* entityitem = new EntityItem(worldIn, d0, d1, d2, stack);
-    double d3 = MathHelper::nextDouble(worldIn->rand) * 0.1 + 0.2;
+    double d3 = worldIn->rand.nextDouble() * 0.1 + 0.2;
     entityitem->motionX = (double)facing.getXOffset() * d3;
     entityitem->motionY = 0.20000000298023224;
     entityitem->motionZ = (double)facing.getZOffset() * d3;
-    entityitem->motionX += MathHelper::nextGaussian<double>(worldIn->rand) * 0.007499999832361937 * (double)speed;
-    entityitem->motionY += MathHelper::nextGaussian<double>(worldIn->rand) * 0.007499999832361937 * (double)speed;
-    entityitem->motionZ += MathHelper::nextGaussian<double>(worldIn->rand) * 0.007499999832361937 * (double)speed;
+    entityitem->motionX += worldIn->rand.nextGaussian() * 0.007499999832361937 * (double)speed;
+    entityitem->motionY += worldIn->rand.nextGaussian() * 0.007499999832361937 * (double)speed;
+    entityitem->motionZ += worldIn->rand.nextGaussian() * 0.007499999832361937 * (double)speed;
     worldIn->spawnEntity(entityitem);
 }
 
-ItemStack BehaviorDefaultDispenseItem::dispenseStack(IBlockSource *source, const ItemStack &stack) {
+ItemStack BehaviorDefaultDispenseItem::dispenseStack(IBlockSource *source, ItemStack stack) {
     EnumFacing enumfacing = (EnumFacing)source->getBlockState()->getValue(BlockDispenser::FACING);
     IPosition* iposition = BlockDispenser::getDispensePosition(source);
     ItemStack itemstack = stack.splitStack(1);

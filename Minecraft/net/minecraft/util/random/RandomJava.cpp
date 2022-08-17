@@ -8,6 +8,8 @@ constexpr uint64_t mask = (1L << 48) - 1;
 constexpr double DOUBLE_UNIT = 0x1.0p-53;
 constexpr float FLOAT_UNIT = 0x1.0p-24f;
 
+uint64_t RandomJava::seedUniquifierVal = 8682522807148012L; 
+
 RandomJava::RandomJava() : RandomJava(seedUniquifier() ^ Util::currentTimeMillis()) {}
 
 RandomJava::RandomJava(uint64_t seed) : Random() {
@@ -15,16 +17,16 @@ RandomJava::RandomJava(uint64_t seed) : Random() {
 }
 
 uint32_t RandomJava::next(uint32_t bits) {
-    uint32_t oldseed = 0, nextseed = 0;
+    uint32_t nextseed = 0;
     for (;;) {
-        oldseed = seed;
+        const uint32_t oldseed = seed;
         nextseed = (oldseed * multiplier + addend) & mask;
         if (oldseed == seed) {
             seed = nextseed;
             break;
         }
     }
-    return (uint32_t)(nextseed >>> (48 - bits));
+    return nextseed >> 48 - bits;
 }
 
 uint64_t RandomJava::seedUniquifier() { 
@@ -43,15 +45,22 @@ uint64_t RandomJava::initialScramble(uint64_t seed)
     return (seed ^ multiplier) & mask; 
 }
 
-void RandomJava::setSeed(uint64_t seed) {
+void RandomJava::setSeed(uint64_t seed , uint64_t state) {
     seed = initialScramble(seed);
     haveNextGaussian = false;
 }
 
-void RandomJava::nextBytes(ByteBuffer &bytes) {
+void RandomJava::nextBytes(ByteBuffer &bytes) 
+{
     for (size_t i = 0, len = bytes.size(); i < len;)
-        for (uint32_t rnd = nextInt(), n = MathHelper::min(len - i, sizeof(uint32_t) / sizeof(std::byte); n-- > 0; rnd >>= sizeof(std::byte)))
-            bytes[i++] = (std::byte)rnd;
+    {
+        for (uint32_t rnd = nextInt(), 
+            n = MathHelper::min(len - i, 
+                sizeof(uint32_t) / sizeof(std::byte)); n-- > 0; rnd >>= sizeof(std::byte))
+        {
+            bytes.put(static_cast<std::byte>(rnd),1);
+        }
+    }
 }
 
 uint32_t RandomJava::nextInt() { 

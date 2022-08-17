@@ -1,12 +1,12 @@
 #include "TextComponentString.h"
 
-TextComponentString::TextComponentString(std::string msg)
+TextComponentString::TextComponentString(std::string_view msg)
 	:text(msg)
 {
 
 }
 
-std::string TextComponentString::getText()
+std::string TextComponentString::getText() const
 {
 	return text;
 }

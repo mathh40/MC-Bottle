@@ -7,32 +7,32 @@ RootStyle ROOT;
 
 std::optional<TextFormatting> Style::getColor() const
 {
-	return color.has_value() ? color : getParent()->getColor();
+	return color.has_value() ? color : getParent().getColor();
 }
 
-const std::optional<bool> Style::getBold() const
+std::optional<bool> Style::getBold() const
 {
-	return bold.has_value() ? bold : getParent()->getBold();
+	return bold.has_value() ? bold : getParent().getBold();
 }
 
-const std::optional<bool> Style::getItalic() const
+std::optional<bool> Style::getItalic() const
 {
-	return italic.has_value() ? italic : getParent()->getItalic();
+	return italic.has_value() ? italic : getParent().getItalic();
 }
 
-const std::optional<bool> Style::getStrikethrough() const
+std::optional<bool> Style::getStrikethrough() const
 {
-	return strikethrough.has_value() ? strikethrough : getParent()->getStrikethrough();
+	return strikethrough.has_value() ? strikethrough : getParent().getStrikethrough();
 }
 
-const std::optional<bool> Style::getUnderlined() const
+std::optional<bool> Style::getUnderlined() const
 {
-	return underlined.has_value() ? underlined : getParent()->getUnderlined();
+	return underlined.has_value() ? underlined : getParent().getUnderlined();
 }
 
-const std::optional<bool> Style::getObfuscated() const
+std::optional<bool> Style::getObfuscated() const
 {
-	return obfuscated.has_value() ? obfuscated : getParent()->getObfuscated();
+	return obfuscated.has_value() ? obfuscated : getParent().getObfuscated();
 }
 
 bool Style::isEmpty() const
@@ -42,17 +42,17 @@ bool Style::isEmpty() const
 
 std::optional<ClickEvent> Style::getClickEvent() const
 {
-	return clickEvent.has_value() ? clickEvent : getParent()->getClickEvent();
+	return clickEvent.has_value() ? clickEvent : getParent().getClickEvent();
 }
 
 std::optional<HoverEvent> Style::getHoverEvent() const
 {
-	return hoverEvent.has_value() ? hoverEvent : getParent()->getHoverEvent();
+	return hoverEvent.has_value() ? hoverEvent : getParent().getHoverEvent();
 }
 
 std::optional<std::string> Style::getInsertion() const
 {
-	return insertion.has_value() ? insertion : getParent()->getInsertion();
+	return insertion.has_value() ? insertion : getParent().getInsertion();
 }
 
 Style& Style::setColor(TextFormatting colorIn)
@@ -109,7 +109,7 @@ Style& Style::setInsertion(std::string insertionIn)
 	return *this;
 }
 
-Style& Style::setParentStyle(Style parent)
+Style& Style::setParentStyle(const Style& parent)
 {
 	parentStyle = parent;
 	return *this;
@@ -117,7 +117,7 @@ Style& Style::setParentStyle(Style parent)
 
 std::string Style::to_string() const
 {
-	return "Style{hasParent=" + (parentStyle) + ", color=" + color + ", bold=" + bold + ", italic=" + italic + ", underlined=" + underlined + ", obfuscated=" + obfuscated + ", clickEvent=" + getClickEvent() + ", hoverEvent=" + getHoverEvent() + ", insertion=" + getInsertion() + '}';
+    return fmt::format("Style{hasParent={}, color={}, bold={}, italic={}, underlined={}, obfuscated={}, clickEvent={}, hoverEvent={}, insertion={}}",parentStyle.value(),color.value(),bold.value(),italic.value(), getClickEvent().value(),underlined.value(),obfuscated.value(),getHoverEvent().value(),getInsertion().value());
 }
 
 std::string Style::getFormattingCode() const
@@ -127,77 +127,74 @@ std::string Style::getFormattingCode() const
 		return parentStyle ? parentStyle->getFormattingCode() : "";
 	}
 	else {
-		std::stringstream stringbuilder;
+
+		std::stringstream stringbuilder("");
 		if (getColor()) {
-			stringbuilder << getColor();
+                stringbuilder << getColor().value();
 		}
 
 		if (getBold()) {
-			stringbuilder << TextFormatting.BOLD;
+			stringbuilder << TextFormatting::BOLD;
 		}
 
 		if (getItalic()) {
-			stringbuilder << (TextFormatting.ITALIC);
+			stringbuilder << (TextFormatting::ITALIC);
 		}
 
 		if (getUnderlined()) {
-			stringbuilder << (TextFormatting.UNDERLINE);
+			stringbuilder << (TextFormatting::UNDERLINE);
 		}
 
 		if (getObfuscated()) {
-			stringbuilder << (TextFormatting.OBFUSCATED);
+			stringbuilder << (TextFormatting::OBFUSCATED);
 		}
 
 		if (getStrikethrough()) {
-			stringbuilder << (TextFormatting.STRIKETHROUGH);
+			stringbuilder << (TextFormatting::STRIKETHROUGH);
 		}
-
-		return stringbuilder.str();
+        return stringbuilder.str();
 	}
 }
 
-const Style* Style::getParent() const
+Style Style::getParent() const
 {
-	return parentStyle ? &parentStyle.value() : &ROOT;
+	return parentStyle.has_value() ? parentStyle.value() : ROOT;
 }
 
 bool operator==(const Style& a, const Style& b)
 {
-	bool flag;
-	if (a.getBold() == b.getBold() && a.getColor() == b.getColor() && a.getItalic() == b.getItalic() && a.getObfuscated() == b.getObfuscated() && a.getStrikethrough() == b.getStrikethrough() && a.getUnderlined() == b.getUnderlined()) {
-	label71: {
+	if (a.getBold() == b.getBold() && a.getColor() == b.getColor() && a.getItalic() == b.getItalic() && a.getObfuscated() == b.getObfuscated() && a.getStrikethrough() == b.getStrikethrough() && a.getUnderlined() == b.getUnderlined())
+	{
 		if (a.getClickEvent().has_value()) {
-			if (!a.getClickEvent() == (b.getClickEvent())) {
-				goto label71;
+			if (!(a.getClickEvent() == (b.getClickEvent()))) {
+				return false;
 			}
 		}
 		else if (b.getClickEvent().has_value()) {
-			goto label71;
+			return false;
 		}
 
 		if (a.getHoverEvent().has_value()) {
-			if (!a.getHoverEvent() == (b.getHoverEvent())) {
-				goto label71;
+			if (!(a.getHoverEvent() == (b.getHoverEvent()))) {
+				return false;
 			}
 		}
 		else if (b.getHoverEvent().has_value()) {
-			goto label71;
+			return false;
 		}
 
 		if (a.getInsertion().has_value()) {
-			if (!a.getInsertion() == (b.getInsertion())) {
-				goto label71;
+			if (!(a.getInsertion() == (b.getInsertion()))) {
+				return false;
 			}
 		}
 		else if (b.getInsertion().has_value()) {
-			goto label71;
+			return false;
 		}
-
-		flag = true;
-		return flag;
+        else 
+        {
+			return true;
 		}
 	}
-
-	flag = false;
-	return flag;
+	return false;
 }

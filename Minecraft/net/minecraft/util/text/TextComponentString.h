@@ -4,8 +4,8 @@
 class TextComponentString :public TextComponentBase
 {
 public:
-	TextComponentString(std::string msg);
-	std::string getText();
+	TextComponentString(std::string_view msg);
+	std::string getText() const;
 	std::string getUnformattedText() const override;
 	std::string toString() const override;
 private:

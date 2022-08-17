@@ -5,11 +5,12 @@ class IPosition;
 
 class BehaviorDefaultDispenseItem :public IBehaviorDispenseItem {
   public:
+    ~BehaviorDefaultDispenseItem() override = default;
     ItemStack dispense(IBlockSource *source, const ItemStack &stack) override;
     static void doDispense(World *worldIn, const ItemStack &stack, int32_t speed, EnumFacing facing,
                            IPosition *position);
 protected:
-    virtual ItemStack dispenseStack(IBlockSource *source, const ItemStack &stack);
+    virtual ItemStack dispenseStack(IBlockSource *source, ItemStack stack);
     virtual void playDispenseSound(IBlockSource *source);
     void spawnDispenseParticles(IBlockSource *source, EnumFacing facingIn) const;
 

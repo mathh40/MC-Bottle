@@ -8,6 +8,8 @@ public:
     RangedAttribute setDescription(std::string_view descriptionIn);
     std::string getDescription() const;
     double clampValue(double value) const override;
+    void setMinValue(double minValue);
+    void setMaxValue(double maxValue);
 
 private:
     double minimumValue;
