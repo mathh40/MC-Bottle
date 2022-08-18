@@ -13,7 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Add project_options v0.20.0
 # https://github.com/cpp-best-practices/project_options
 include(FetchContent)
-FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.24.1.tar.gz)
+FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.20.0.tar.gz)
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 include(${_project_options_SOURCE_DIR}/src/DynamicProjectOptions.cmake)
@@ -31,7 +31,7 @@ set(OPT_WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT TRUE)
 
 # uncomment to enable vcpkg:
 # # Setup vcpkg - should be called before defining project()
-run_vcpkg()
+#run_vcpkg()
 
 project(
 	ProjectMinecraft
@@ -40,6 +40,7 @@ project(
 	HOMEPAGE_URL "%%myurl%%"
 	LANGUAGES CXX C)
 	
+
 # This variable is set by project() in CMake 3.21+
 string(
   COMPARE EQUAL
@@ -107,6 +108,7 @@ dynamic_project_options(
   <unordered_map>
   <utility>
   <memory># This is a list of headers to pre-compile, here are some common ones
+  ENABLE_COVERAGE
   #ENABLE_CONAN
   # CONAN_OPTIONS    # Extra options to pass to conan
   # MSVC_WARNINGS    # Override the defaults for the MSVC warnings

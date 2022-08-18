@@ -1,22 +1,27 @@
 #pragma once
 #include <string>
 #include "../util/ByteBuffer.h"
+#include "../util/ResourceLocation.h"
 
-class Advancment
+#include <optional>
+#include <set>
+
+class ITextComponent;
+
+class Advancement
 {
 public:
 
     class Builder
   {
     public:
-        Builder(std::optional<ResourceLocation> parentIdIn, std::optional<DisplayInfo> displayIn, AdvancementRewards rewardsIn, Map criteriaIn, String[][] requirementsIn);
-        template<typename T>
-        bool resolveParent(T lookup);
+        Builder(std::optional<ResourceLocation> parentIdIn, std::optional<DisplayInfo> displayIn, AdvancementRewards rewardsIn, Map criteriaIn, std::string[][] requirementsIn);
+        template<typename T> bool resolveParent(T lookup);
         Advancement build(const ResourceLocation& id);
         void writeTo(ByteBuffer& buf);
-        std::string toString()
-
-
+        std::string toString();
+        static Builder deserialize(Json json);
+        static Builder readFrom(ByteBuffer& buf);
 
     private:
       ResourceLocation parentId;
@@ -24,20 +29,20 @@ public:
       DisplayInfo display;
       AdvancementRewards rewards;
       Map criteria;
-      String[][] requirements;
+      std::string[][] requirements;
   };
 
-    Advancement(ResourceLocation id, @Nullable Advancement parentIn, @Nullable DisplayInfo displayIn, AdvancementRewards rewardsIn, Map criteriaIn, String[][] requirementsIn);
+    Advancement(ResourceLocation id, std::optional<Advancement> parentIn, std::optional<DisplayInfo> displayIn, AdvancementRewards rewardsIn, Map criteriaIn, std::string[][] requirementsIn);
     Advancement* getParent();
     DisplayInfo getDisplay();
     AdvancementRewards getRewards();
     std::string toString()
     Iterable getChildren();
     Map getCriteria();
-    uint32_t getRequirementCount()
-    void addChild(Advancemen* advancementIn);
+    uint32_t getRequirementCount();
+    void addChild(Advancement* advancementIn);
     ResourceLocation getId();
-    String[][] getRequirements();
+    std::string[][] getRequirements();
     ITextComponent* getDisplayText();
 
     friend bool operator==(const Advancement& a,const Advancement& b);
@@ -49,22 +54,25 @@ private:
    AdvancementRewards rewards;
    ResourceLocation id;
    Map criteria;
-   String[][] requirements;
-   Set children = Sets.newLinkedHashSet();
+   std::string[][] requirements;
+   std::set<Advancement> children;
    ITextComponent* displayText;
 };
 
+template<typename T> bool Advancement::Builder::resolveParent(T lookup) { 
+  return false; }
+
 bool operator==(const Advancement& a, const Advancement& b) {
-    return a.id = b.id;
+    return a.id == b.id;
 }
 
 
 namespace std {
-  template <> struct hash<Foo>
+  template <> struct hash<Advancement>
   {
-    size_t operator()(const Foo & x) const noexcept
+    size_t operator()(const Advancement & x) const noexcept
     {
-      return std::hash<ResourceLocation>(id);
+      return std::hash<ResourceLocation>(x);
     }
   };
 }
