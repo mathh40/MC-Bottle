@@ -3,7 +3,6 @@ name: codacy-coverage-reporter
 'on':
   - push
   - pull_request
-
 jobs:
   codacy-coverage-reporter:
     runs-on: ubuntu-latest

@@ -1,7 +1,8 @@
 on:
   push:
     branches:
-      - '**'
+      - master
+      - develop
 
 name: Discord Notification
 
