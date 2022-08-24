@@ -1,7 +1,9 @@
 #pragma once
+#include "../util/ResourceLocation.h"
 
 class ICriterionInstance
 {
 public:
-    ResourceLocation& getId() const;
+  virtual ~ICriterionInstance() = default;
+  virtual ResourceLocation& getId() const;
 };
