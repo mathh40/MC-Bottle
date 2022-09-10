@@ -79,6 +79,26 @@ std::vector<std::string> Util::split(const std::string_view str, std::string_vie
 	return tokens;
 }
 
+std::string Util::join(std::vector<std::string> lst, std::string_view delimiter)
+{
+  std::string ret;
+  for (const auto &s : lst) {
+    if (!ret.empty()) ret += delimiter;
+    ret += s;
+  }
+  return ret;
+}
+
+std::string join(std::vector<const char> lst, std::string_view delimiter)
+{
+  std::string ret;
+  for (const auto &s : lst) {
+    if (!ret.empty()) ret += delimiter;
+    ret += s;
+  }
+  return ret;
+}
+
 bool Util::endsWith(std::string_view s, std::string_view suffix)
 {
 	return s.rfind(suffix) == (s.size() - suffix.size());

@@ -1,32 +1,34 @@
 #include "PropertyInteger.h"
+#include "../../item/ItemShears.h"
 #include <stdexcept>
 
-std::set<std::any> PropertyInteger::getAllowedValues() {
-    return allowedValues;
+std::set<std::any> PropertyInteger::getAllowedValues() const {
+  std::set<std::any> temp;
+  for (auto &i : allowedValues) { temp.emplace(i);}
+  return temp;
 }
 
-PropertyInteger PropertyInteger::create(const std::string &name, int32_t min, int32_t max) {
-    return PropertyInteger(name, min, max);
+PropertyInteger PropertyInteger::create(std::string_view name, uint32_t min, uint32_t max) {
+    return { name, min, max };
 }
 
-std::optional<std::any> PropertyInteger::parseValue(const std::string &value) {
-    return allowedValues.find(std::stoi(value)) != allowedValues.end()
-               ? std::optional<std::any>(std::stoi(value))
+std::optional<std::any> PropertyInteger::parseValue(std::string_view value) {
+  int result = 0;
+  auto [ptr, ec]{ std::from_chars(value.data(), value.data() + value.size(), result) };
+  return allowedValues.contains(result) ? std::optional<std::any>(result)
                : std::nullopt;
 }
 
-std::string PropertyInteger::getName(std::any value) {
+std::string PropertyInteger::getName(std::any value) const {
     return std::to_string(std::any_cast<int32_t>(value));
 }
 
-PropertyInteger::PropertyInteger(const std::string &name, int32_t min, int32_t max) :
-    PropertyHelper<int32_t>(name) {
-    if (min < 0) {
-        throw std::logic_error("Min value of " + name + " must be 0 or greater");
-    } else if (max <= min) {
-        throw std::logic_error("Max value of " + name + " must be greater than min (" + std::to_string(min) + ")");
+PropertyInteger::PropertyInteger(std::string_view name, uint32_t min, uint32_t max) : PropertyHelper<uint32_t>(name)
+{
+    if (max <= min) {
+        throw std::logic_error(fmt::format("Max value of {} must be greater than min ({})",name,min));
     } else {
-        for (int i = min; i <= max; ++i) {
+        for (auto i = min; i <= max; ++i) {
             allowedValues.emplace(i);
         }
     }

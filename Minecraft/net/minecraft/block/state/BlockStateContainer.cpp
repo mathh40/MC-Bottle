@@ -1,4 +1,6 @@
 #include "BlockStateContainer.h"
+
+#include "../Block.h"
 #include "../../../../../compile-time-regular-expressions/single-header/ctre.hpp"
 #include "../../util/MapPopulator.h"
 #include "../../util/math/Cartesian.h"
@@ -15,7 +17,7 @@ namespace state {
         }
 
         properties = map;
-        std::unordered_map<> map2;
+        std::unordered_map<,StateImplementation*> map2;
         std::vector<std::set<std::any>> list1;
         auto var12 = Cartesian::cartesianProduct(getAllowedValues());
         std::vector<IProperty *> vints;
@@ -25,7 +27,7 @@ namespace state {
 
         for (auto list : var12) {
             auto map1 = MapPopulator::createMap(vints, list);
-            StateImplementation blockstatecontainer$stateimplementation =
+            auto blockstatecontainer$stateimplementation =
                 StateImplementation(blockIn, ImmutableMap.copyOf(map1));
             map2.put(map1, blockstatecontainer$stateimplementation);
             list1.emplace_back(blockstatecontainer$stateimplementation);
@@ -90,8 +92,9 @@ namespace state {
         return list;
     }
 
-    std::vector<IProperty *> StateImplementation::getPropertyKeys() {
-        std::vector<IProperty *> collect;
+    std::vector<const std::string> StateImplementation::getPropertyKeys()
+    {
+        std::vector<const std::string> collect;
         collect.resize(properties.size());
         for (auto &key : properties) {
             collect.emplace_back(key.first);

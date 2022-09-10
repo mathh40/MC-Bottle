@@ -59,12 +59,12 @@ public:
     static MapColor GREEN_STAINED_HARDENED_CLAY;
     static MapColor RED_STAINED_HARDENED_CLAY;
     static MapColor BLACK_STAINED_HARDENED_CLAY;
-    int32_t colorValue;
-    int32_t colorIndex;
+    uint32_t colorValue;
+    uint32_t colorIndex;
 
-    int32_t getMapColor(int32_t index);
+    [[nodiscard]] uint32_t getMapColor(uint32_t index) const;
     static MapColor getBlockColor(EnumDyeColor dyeColorIn);
 
 private:
-    MapColor(int32_t index, int32_t color);
+    MapColor(uint32_t index, uint32_t color);
 };

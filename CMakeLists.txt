@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.16...3.23)
+cmake_minimum_required(VERSION 3.16)
+
 
 # Not ideal to use this global variable, but necessary to make sure
 # that tooling and projects use the same version
@@ -13,7 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Add project_options v0.20.0
 # https://github.com/cpp-best-practices/project_options
 include(FetchContent)
-FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.20.0.tar.gz)
+FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.25.0.zip)
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 include(${_project_options_SOURCE_DIR}/src/DynamicProjectOptions.cmake)
@@ -188,9 +189,8 @@ add_subdirectory(Minecraft/net/minecraft/crash)
 add_subdirectory(Minecraft/net/minecraft/command)
 add_subdirectory(Minecraft/net/minecraft/advancements)
 
-
-add_library(MinecraftCore STATIC)
-target_link_libraries(MinecraftCore PRIVATE project_options project_warnings nbt util args nlohmann_json::nlohmann_json fmt::fmt spdlog::spdlog util block world village tileentity nbt authlib ctre)
+#add_library(MinecraftCore STATIC)
+#target_link_libraries(MinecraftCore PRIVATE project_options project_warnings)
 
 add_executable(MinecraftServer Minecraft/main.cpp)
 target_link_libraries(MinecraftServer PRIVATE project_options project_warnings MinecraftCore)
@@ -229,7 +229,7 @@ endif()
 
 # Add other targets that you want installed here, be default we just package the one executable
 # we know we want to ship
-package_project(TARGETS MinecraftServer MinecraftCore project_options project_warnings
+package_project(TARGETS MinecraftServer project_options project_warnings
   # FIXME: this does not work! CK
   # PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
 )

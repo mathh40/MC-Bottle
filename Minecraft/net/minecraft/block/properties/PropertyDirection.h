@@ -1,15 +1,16 @@
 #pragma once
 #include "../../util/EnumFacing.h"
-
 #include "PropertyEnum.h"
+#include <functional>
 
 
 class PropertyDirection final : public PropertyEnum<EnumFacing> {
 public:
-    static PropertyDirection create(const std::string &name);
-    static PropertyDirection create(const std::string &name, std::function<bool()> filter);
-    static PropertyDirection create(const std::string &name, std::set<EnumFacing> &values);
+  static PropertyDirection create(std::string_view name);
+  static PropertyDirection create(std::string_view name, std::function<bool()> filter);
+  static PropertyDirection create(std::string_view name, std::set<EnumFacing> &values);
+
 protected:
-    ~PropertyDirection() = default;
-    PropertyDirection(const std::string &name, std::set<EnumFacing> &values);
+    ~PropertyDirection() override = default;
+    PropertyDirection(std::string_view name, std::set<EnumFacing> &values);
 };

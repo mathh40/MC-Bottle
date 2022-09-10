@@ -4,7 +4,8 @@
 
 class Material {
 public:
-    static Material AIR;
+  virtual ~Material() = default;
+  static Material AIR;
     static Material GRASS;
     static Material GROUND;
     static Material WOOD;
@@ -42,17 +43,17 @@ public:
     static Material STRUCTURE_VOID;
 
     Material(MapColor color);
-    bool isLiquid();
-    bool isSolid();
-    bool blocksLight();
-    bool blocksMovement();
-    bool getCanBurn();
-    Material &setReplaceable();
-    bool isReplaceable() const;
-    bool isOpaque();
-    bool isToolNotRequired() const;
-    EnumPushReaction getPushReaction() const;
-    MapColor &getMaterialMapColor();
+    virtual bool isLiquid();
+    virtual bool isSolid();
+    virtual bool blocksLight();
+    virtual bool blocksMovement();
+    virtual bool getCanBurn();
+    virtual Material &setReplaceable();
+    virtual bool isReplaceable() const;
+    virtual bool isOpaque();
+    virtual bool isToolNotRequired() const;
+    virtual EnumPushReaction getPushReaction() const;
+    virtual MapColor &getMaterialMapColor();
 
     friend bool operator==(const Material &lhs, const Material &rhs);
     friend bool operator!=(const Material &lhs, const Material &rhs);
@@ -71,6 +72,8 @@ private:
     bool requiresNoTool = true;
     EnumPushReaction pushReaction;
     bool isAdventureModeExempt;
+    static uint32_t count;
+    uint32_t id;
 
     Material &setTranslucent();
 };

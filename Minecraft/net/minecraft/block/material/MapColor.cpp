@@ -1,9 +1,7 @@
 #include "MapColor.h"
+#include "../item/EnumDyeColor.h"
 
-MapColor::BLOCK_COLORS [EnumDyeColor::WHITE.getMetadata()]
-=
-&
-SNOW;
+MapColor::BLOCK_COLORS[EnumDyeColor::WHITE.getMetadata()] = &MapColor::SNOW;
 MapColor::BLOCK_COLORS [EnumDyeColor::ORANGE.getMetadata()]
 =
 &
@@ -119,17 +117,20 @@ MapColor MapColor::RED_STAINED_HARDENED_CLAY(50, 9321518);
 MapColor MapColor::BLACK_STAINED_HARDENED_CLAY(51, 2430480);
 
 
-MapColor(int32_t index, int32_t color) {
-    if (index >= 0 && index <= 63) {
+MapColor::MapColor(uint32_t index, uint32_t color)
+{
+    if (index <= 63) 
+    {
         colorIndex = index;
         colorValue = color;
-        COLORS[index] = this;
+        MapColor::COLORS[index] = this;
     } else {
         throw std::logic_error("Map colour ID must be between 0 and 63 (inclusive)");
     }
 }
 
-int32_t MapColor::getMapColor(int32_t index) {
+uint32_t MapColor::getMapColor(uint32_t index) const
+{
     auto i = 220;
     if (index == 3) {
         i = 135;

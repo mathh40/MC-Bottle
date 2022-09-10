@@ -1,4 +1,4 @@
-#include "args.hxx"
+#include "../args/args.hxx"
 #include <iostream>
 #include <filesystem>
 #include "net/minecraft/util/Session.h"
@@ -6,10 +6,6 @@
 #include "net/minecraft/client/main/GameConfiguration.h"
 #include "net/minecraft/client/Minecraft.h"
 #include <nlohmann/json.hpp>
-
-// This file will be generated automatically when you run the CMake configuration step.
-// It creates a namespace called `myproject`.
-// You can modify the source template at `configured_files/config.hpp.in`.
 #include <internal_use_only/config.hpp>
 
 

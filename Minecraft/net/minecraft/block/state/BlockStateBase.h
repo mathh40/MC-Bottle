@@ -1,18 +1,21 @@
 #pragma once
 #include "IBlockState.h"
 
+#include <any>
+#include <set>
+
 class BlockStateBase : public IBlockState {
 public:
     IBlockState *cycleProperty(IProperty *property) override;
     std::string toString();
 protected:
-    template <typename T>
-    T cyclePropertyValue(std::vector<T> values, T currentValue);
+    template<typename T> T cyclePropertyValue(std::set<std::any> values, T currentValue);
+
 private:
 };
 
 template <typename T>
-T BlockStateBase::cyclePropertyValue(std::vector<T> values, T currentValue) {
+T BlockStateBase::cyclePropertyValue(std::set<std::any> values, T currentValue) {
     auto iterator = values.begin();
 
     do {

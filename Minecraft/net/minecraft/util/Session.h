@@ -1,6 +1,6 @@
 #pragma once
-#include "../../../../authlib/com/mojang/authlib/GameProfile.h"
 #include <string>
+#include "../../../../authlib/com/mojang/authlib/GameProfile.h"
 
 class Session
 {

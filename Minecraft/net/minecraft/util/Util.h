@@ -76,6 +76,9 @@ namespace Util
 	std::string_view toLowerCase(std::string_view str, const std::locale& loc);
 
 	std::vector<std::string> split(std::string_view s, std::string_view delimiter,size_t limit = 0);
+        std::string join(std::vector<std::string> lst, std::string_view delimiter);
+        std::string join(std::vector<const char> lst, std::string_view delimiter);
+
 	bool endsWith(std::string_view s, std::string_view suffix);
 
 	template<typename T, typename G>

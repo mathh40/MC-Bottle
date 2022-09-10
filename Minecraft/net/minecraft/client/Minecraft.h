@@ -5,10 +5,10 @@
 #include <queue>
 #include "../util/FrameTimer.h"
 #include "../util/MouseHelper.h"
-#include "ResourceLocation.h"
-#include "Timer.h"
-#include "math/RayTraceResult.h"
-#include "datafix/DataFixer.h"
+#include "../util/ResourceLocation.h"
+#include "../util/Timer.h"
+#include "../util/math/RayTraceResult.h"
+#include "../util/datafix/DataFixer.h"
 #include "../world/storage/ISaveFormat.h"
 
 struct GameConfiguration;
@@ -40,10 +40,11 @@ public:
 	bool inGameHasFocus;
 	FrameTimer frameTimer;
 	Profiler profiler;
-	std::string debug = "";
+	std::string_view debug = "";
 	bool renderChunksMany = true;
 
-	Minecraft(const GameConfiguration &gameConfig);
+	explicit Minecraft(const GameConfiguration &gameConfig);
+	void run();
 private:
 	std::shared_ptr<spdlog::async_logger> LOGGER;
 	const ResourceLocation LOCATION_MOJANG_PNG = ResourceLocation("textures/gui/title/mojang.png");

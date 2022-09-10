@@ -1,112 +1,49 @@
 #include "Material.h"
+#include "MaterialLiquid.h"
+#include "MaterialLogic.h"
+#include "MaterialPortal.h"
+#include "MaterialTransparent.h"
+
+uint32_t Material::count = 0;
 
 Material Material::AIR = MaterialTransparent(MapColor::AIR);
-Material Material::GRASS(MapColor::GRASS);
-Material Material::GROUND(MapColor::DIRT);
-Material Material::WOOD(MapColor::WOOD)
-.
-setBurning();
-Material Material::ROCK(MapColor::STONE)
-.
-setRequiresTool();
-Material Material::IRON(MapColor::IRON)
-.
-setRequiresTool();
-Material Material::ANVIL(MapColor::IRON)
-.
-setRequiresTool()
-.
-setImmovableMobility();
+Material Material::GRASS = Material(MapColor::GRASS);
+Material Material::GROUND = Material(MapColor::DIRT);
+Material Material::WOOD = Material(MapColor::WOOD).setBurning();
+Material Material::ROCK = Material(MapColor::STONE).setRequiresTool();
+Material Material::IRON = Material(MapColor::IRON).setRequiresTool();
+Material Material::ANVIL = Material(MapColor::IRON).setRequiresTool().setImmovableMobility();
 Material Material::WATER = MaterialLiquid(MapColor::WATER).setNoPushMobility();
 Material Material::LAVA = MaterialLiquid(MapColor::TNT).setNoPushMobility();
-Material Material::LEAVES(MapColor::FOLIAGE)
-.
-setBurning()
-.
-setTranslucent()
-.
-setNoPushMobility();
+Material Material::LEAVES = Material(MapColor::FOLIAGE).setBurning().setTranslucent().setNoPushMobility();
 Material Material::PLANTS = MaterialLogic(MapColor::FOLIAGE).setNoPushMobility();
 Material Material::VINE = MaterialLogic(MapColor::FOLIAGE).setBurning().setNoPushMobility().setReplaceable();
-Material Material::SPONGE(MapColor::YELLOW);
-Material Material::CLOTH(MapColor::CLOTH)
-.
-setBurning();
+Material Material::SPONGE = Material(MapColor::YELLOW);
+Material Material::CLOTH = Material(MapColor::CLOTH).setBurning();
 Material Material::FIRE = MaterialTransparent(MapColor::AIR).setNoPushMobility();
-Material Material::SAND(MapColor::SAND);
+Material Material::SAND = Material(MapColor::SAND);
 Material Material::CIRCUITS = MaterialLogic(MapColor::AIR).setNoPushMobility();
 Material Material::CARPET = MaterialLogic(MapColor::CLOTH).setBurning();
-Material Material::GLASS(MapColor::AIR)
-.
-setTranslucent()
-.
-setAdventureModeExempt();
-Material Material::REDSTONE_LIGHT(MapColor::AIR)
-.
-setAdventureModeExempt();
-Material Material::TNT(MapColor::TNT)
-.
-setBurning()
-.
-setTranslucent();
-Material Material::CORAL(MapColor::FOLIAGE)
-.
-setNoPushMobility();
-Material Material::ICE(MapColor::ICE)
-.
-setTranslucent()
-.
-setAdventureModeExempt();
-Material Material::PACKED_ICE(MapColor::ICE)
-.
-setAdventureModeExempt();
-Material Material::SNOW = MaterialLogic(MapColor::SNOW).setReplaceable().setTranslucent().setRequiresTool().
-                                                        setNoPushMobility();
-Material Material::CRAFTED_SNOW(MapColor::SNOW)
-.
-setRequiresTool();
-Material Material::CACTUS(MapColor::FOLIAGE)
-.
-setTranslucent()
-.
-setNoPushMobility();
-Material Material::CLAY(MapColor::CLAY);
-Material Material::GOURD(MapColor::FOLIAGE)
-.
-setNoPushMobility();
-Material Material::DRAGON_EGG(MapColor::FOLIAGE)
-.
-setNoPushMobility();
+Material Material::GLASS = Material(MapColor::AIR).setTranslucent().setAdventureModeExempt();
+Material Material::REDSTONE_LIGHT = Material(MapColor::AIR).setAdventureModeExempt();
+Material Material::TNT = Material(MapColor::TNT).setBurning().setTranslucent();
+Material Material::CORAL = Material(MapColor::FOLIAGE).setNoPushMobility();
+Material Material::ICE = Material(MapColor::ICE).setTranslucent().setAdventureModeExempt();
+Material Material::PACKED_ICE = Material(MapColor::ICE).setAdventureModeExempt();
+Material Material::SNOW = MaterialLogic(MapColor::SNOW).setReplaceable().setTranslucent().setRequiresTool().setNoPushMobility();
+Material Material::CRAFTED_SNOW = Material(MapColor::SNOW).setRequiresTool();
+Material Material::CACTUS = Material(MapColor::FOLIAGE).setTranslucent().setNoPushMobility();
+Material Material::CLAY = Material(MapColor::CLAY);
+Material Material::GOURD = Material(MapColor::FOLIAGE).setNoPushMobility();
+Material Material::DRAGON_EGG = Material(MapColor::FOLIAGE).setNoPushMobility();
 Material Material::PORTAL = MaterialPortal(MapColor::AIR).setImmovableMobility();
-Material Material::CAKE(MapColor::AIR)
-.
-setNoPushMobility();
+Material Material::CAKE = Material(MapColor::AIR).setNoPushMobility();
+Material Material::WEB = Material(MapColor::CLOTH).setRequiresTool().setNoPushMobility();
+Material Material::PISTON = Material(MapColor::STONE).setImmovableMobility();
+Material Material::BARRIER = Material(MapColor::AIR).setRequiresTool().setImmovableMobility();
+Material Material::STRUCTURE_VOID = MaterialTransparent(MapColor::AIR);
 
-Material Material::WEB(MapColor::CLOTH) {
-    public
-    boolean blocksMovement()
-    {
-        return false;
-    }
-}
-
-)
-.
-setRequiresTool()
-.
-setNoPushMobility();
-Material Material::PISTON(MapColor::STONE)
-.
-setImmovableMobility();
-Material Material::BARRIER(MapColor::AIR)
-.
-setRequiresTool()
-.
-setImmovableMobility();
-Material Material::STRUCTURE_VOIDTransparent(MapColor::AIR);
-
-Material::Material(MapColor color) :
-    pushReaction(EnumPushReaction::NORMAL), materialMapColor(color) {
+Material::Material(MapColor color) : pushReaction(EnumPushReaction::NORMAL), materialMapColor(color), id(count++) {
 
 }
 
@@ -185,9 +122,6 @@ Material &Material::setTranslucent() {
     return *this;
 }
 
-bool operator==(const Material &lhs, const Material &rhs) {
+bool operator==(const Material &lhs, const Material &rhs) { return lhs.id == rhs.id; }
 
-}
-
-bool operator!=(const Material &lhs, const Material &rhs) {
-}
+bool operator!=(const Material &lhs, const Material &rhs) { return !(lhs == rhs); }

@@ -23,7 +23,7 @@ namespace state {
 
     class StateImplementation : public BlockStateBase {
     public:
-        std::vector<IProperty *> getPropertyKeys() override;
+      std::vector<const std::string> getPropertyKeys() override;
         std::function<bool()> getValue(IProperty *propertys) override;
 
     private:

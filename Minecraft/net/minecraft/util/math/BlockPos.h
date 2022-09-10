@@ -19,7 +19,7 @@ public:
 	explicit BlockPos(Vec3i source);
 	BlockPos(const BlockPos& lhs) = default;
 	BlockPos& operator=(const BlockPos& lhs) = default;
-	BlockPos(uint32_t i2, uint32_t j4, uint32_t k2);
+        BlockPos(uint32_t i2, uint32_t j4, uint32_t k2);
 
 	BlockPos add(double x, double y, double z) const;
 	BlockPos add(int32_t x, int32_t y, int32_t z) const;

@@ -22,6 +22,6 @@
 [submodule "Minecraft/net/minecraft/util/imgaeloader/lodepng"]
 	path = Minecraft/net/minecraft/util/imgaeloader/lodepng
 	url = https://github.com/lvandeve/lodepng.git
-[submodule "Minecraft/net/minecraft/util/crypto/cryptopp"]
-	path = Minecraft/net/minecraft/util/crypto/cryptopp
-	url = https://github.com/weidai11/cryptopp.git
+[submodule "Minecraft/net/minecraft/util/crypto/cryptopp-cmake"]
+	path = Minecraft/net/minecraft/util/crypto/cryptopp-cmake
+	url = https://github.com/abdes/cryptopp-cmake.git

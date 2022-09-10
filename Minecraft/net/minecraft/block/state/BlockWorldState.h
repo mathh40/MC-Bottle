@@ -3,16 +3,16 @@
 
 class BlockWorldState {
 public:
-    BlockWorldState(World &worldIn, BlockPos &posIn, bool forceLoadIn);
-    IBlockState *getBlockState();
-    std::optional<TileEntity> getTileEntity();
-    BlockPos &getPos();
+    BlockWorldState(World *worldIn, const BlockPos &posIn, bool forceLoadIn);
+    IBlockState *getBlockState() const;
+    std::optional<TileEntity> getTileEntity() const;
+    BlockPos &getPos() const;
 private:
-    World &world;
+    World* world;
     BlockPos pos;
     bool forceLoad;
     IBlockState *state;
-    std::optional<TileEntity> tileEntity;
+    TileEntity* tileEntity;
     bool tileEntityInitialized;
 protected:
 };
