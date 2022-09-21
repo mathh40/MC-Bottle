@@ -1,5 +1,6 @@
-name: auto-clang-format
-on: [pull_request]
+name: Run clang-format Linter
+
+on: [push]
 
 jobs:
   build:
@@ -7,17 +8,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: DoozyX/clang-format-lint-action@v0.13
+    - uses: DoozyX/clang-format-lint-action@v0.14
       with:
         source: '.'
-        exclude: './third_party ./external'
-        extensions: 'h,cpp,hpp'
-        clangFormatVersion: 12
+        exclude: './lib'
+        extensions: 'h,cpp,c'
+        clangFormatVersion: 14
         inplace: True
     - uses: EndBug/add-and-commit@v4
       with:
         author_name: Clang Robot
         author_email: robot@example.com
-        message: ':art: Committing clang-format changes'
+        message: 'Committing clang-format changes'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
