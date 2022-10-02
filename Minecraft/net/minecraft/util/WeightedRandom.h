@@ -1,5 +1,5 @@
 #pragma once
-#include "pcg_random.hpp"
+#include "../util/random/Random.h"
 
 #include <span>
 namespace WeightedRandom
@@ -11,9 +11,9 @@ namespace WeightedRandom
 	};
 
     int32_t getTotalWeight(std::span<WeightedItem> collection);
-	WeightedItem getRandomItem(pcg32_unique random, std::span<WeightedItem> collection, int32_t totalWeight);
+        WeightedItem getRandomItem(Random &random, std::span<WeightedItem> collection, int32_t totalWeight);
 	WeightedItem getRandomItem(std::span<WeightedItem> collection, int32_t weight);
-	WeightedItem getRandomItem(pcg32& random, std::span<WeightedItem> collection);
+        WeightedItem getRandomItem(Random &random, std::span<WeightedItem> collection);
 
 
 }

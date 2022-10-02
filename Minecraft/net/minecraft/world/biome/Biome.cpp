@@ -109,7 +109,7 @@ bool Biome::isMutation() const
 
 Biome::Biome(BiomeProperties properties)
 {
-	topBlock = Blocks.GRASS.getDefaultState();
+	topBlock = Blocks::GRASS.getDefaultState();
 	fillerBlock = Blocks.DIRT.getDefaultState();
 	spawnableMonsterList = Lists.newArrayList();
 	spawnableCreatureList = Lists.newArrayList();
@@ -156,17 +156,17 @@ void Biome::registerBiome(int id, std::string_view name, Biome* biome)
 	}
 }
 
-WorldGenAbstractTree Biome::getRandomTreeFeature(pcg32& rand)
+WorldGenAbstractTree Biome::getRandomTreeFeature(Random& rand)
 {
 	return (rand(10) == 0 ? BIG_TREE_FEATURE : TREE_FEATURE);
 }
 
-WorldGenerator Biome::getRandomWorldGenForGrass(pcg32& rand)
+WorldGenerator Biome::getRandomWorldGenForGrass(Random &rand)
 {
 	return WorldGenTallGrass(BlockTallGrass::EnumType.GRASS);
 }
 
-BlockFlower.EnumFlowerType Biome::pickRandomFlower(pcg32& rand, BlockPos& pos)
+BlockFlower.EnumFlowerType Biome::pickRandomFlower(Random &rand, BlockPos &pos)
 {
 	return rand(3) > 0 ? BlockFlower.EnumFlowerType.DANDELION : BlockFlower.EnumFlowerType.POPPY;
 }
@@ -228,8 +228,7 @@ float Biome::getTemperature(BlockPos& pos)
 	}
 }
 
-void Biome::decorate(World* worldIn, pcg32& rand, BlockPos& pos)
-{
+void Biome::decorate(World *worldIn, Random &rand, BlockPos &pos) {
 	decorator.decorate(worldIn, rand, this, pos);
 }
 
@@ -247,12 +246,22 @@ int32_t Biome::getFoliageColorAtPos(BlockPos& pos)
 	return ColorizerFoliage.getFoliageColor(d0, d1);
 }
 
-void Biome::genTerrainBlocks(World* worldIn, pcg32& rand, ChunkPrimer chunkPrimerIn, int32_t x, int32_t z, double noiseVal)
+void Biome::genTerrainBlocks(World *worldIn,
+  Random &rand,
+  ChunkPrimer chunkPrimerIn,
+  int32_t x,
+  int32_t z,
+  double noiseVal)
 {
 	generateBiomeTerrain(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
 }
 
-void Biome::generateBiomeTerrain(World* worldIn, pcg32& rand, ChunkPrimer chunkPrimerIn, int32_t x, int32_t z, double noiseVal)
+void Biome::generateBiomeTerrain(World *worldIn,
+  Random &rand,
+  ChunkPrimer chunkPrimerIn,
+  int32_t x,
+  int32_t z,
+  double noiseVal)
 {
 	std::uniform_real_distribution<double> dis(0.0, 1.0);
 	auto i = worldIn->getSeaLevel();

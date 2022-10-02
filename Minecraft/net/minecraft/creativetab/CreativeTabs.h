@@ -18,8 +18,8 @@ class CreativeTabs
     std::string tabLabel;
     std::string backgroundTexture = "items.png";
 
-    CreativeTabs(int32_t indexIn, std::string label);
-    int32_t getIndex() const;
+    CreativeTabs(uint32_t indexIn, std::string_view label);
+    uint32_t getIndex() const;
     std::string getTabLabel() const;
     std::string getTranslationKey() const;
     ItemStack getIcon();
@@ -30,7 +30,7 @@ class CreativeTabs
     CreativeTabs &setNoTitle();
     bool hasScrollbar() const;
     CreativeTabs &setNoScrollbar();
-    int32_t getColumn() const;
+    uint32_t getColumn() const;
     bool isOnTopRow() const;
     bool isAlignedRight() const;
     std::vector<EnumEnchantmentType> getRelevantEnchantmentTypes() const;
@@ -39,7 +39,7 @@ class CreativeTabs
     void displayAllRelevantItems(std::vector<ItemStack> &p_78018_1_) const;
 
 private:
-   int32_t index;
+   uint32_t index;
    bool bhasScrollbar = true;
    bool drawTitle = true;
    std::vector<EnumEnchantmentType> enchantmentTypes;

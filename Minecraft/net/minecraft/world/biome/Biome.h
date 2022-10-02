@@ -1,5 +1,4 @@
 #pragma once
-#include "../../../../../pcg-cpp/pcg_random.hpp"
 #include "../../block/state/IBlockState.h"
 #include "../../util/ResourceLocation.h"
 #include "../../util/WeightedRandom.h"
@@ -8,10 +7,9 @@
 #include "../gen/feature/WorldGenSwamp.h"
 #include "../gen/feature/WorldGenTrees.h"
 #include "BiomeDecorator.h"
-#include "gen/NoiseGeneratorPerlin.h"
-#include "gen/feature/WorldGenAbstractTree.h"
-#include "gen/feature/WorldGenBigTree.h"
-#include "gen/feature/WorldGenDoublePlant.h"
+#include "../gen/NoiseGeneratorPerlin.h"
+#include "../gen/feature/WorldGenDoublePlant.h"
+#include "../gen/feature/WorldGenBigTree.h"
 
 enum class TempCategory
 {
@@ -73,9 +71,9 @@ public:
 	static Biome* getMutationForBiome(Biome* biome);
 
 	bool isMutation() const;
-	virtual WorldGenAbstractTree getRandomTreeFeature(pcg32& rand);
-	virtual WorldGenerator getRandomWorldGenForGrass(pcg32& rand);
-	virtual BlockFlower::EnumFlowerType pickRandomFlower(pcg32& rand, BlockPos& pos);
+	virtual WorldGenAbstractTree getRandomTreeFeature(Random& rand);
+        virtual WorldGenerator getRandomWorldGenForGrass(Random &rand);
+        virtual BlockFlower::EnumFlowerType pickRandomFlower(Random &rand, BlockPos &pos);
 	virtual int32_t getSkyColorByTemp(float currentTemperature);
 	std::vector<SpawnListEntry> getSpawnableList(EnumCreatureType creatureType);
 	bool getEnableSnow();
@@ -83,11 +81,21 @@ public:
 	bool isHighHumidity();
 	virtual float getSpawningChance();
 	float getTemperature(BlockPos& pos);
-	virtual void decorate(World* worldIn, pcg32& rand, BlockPos& pos);
+        virtual void decorate(World *worldIn, Random &rand, BlockPos &pos);
 	virtual int32_t getGrassColorAtPos(BlockPos& pos);
 	virtual int32_t getFoliageColorAtPos(BlockPos& pos);
-	virtual void genTerrainBlocks(World* worldIn, pcg32& rand, ChunkPrimer chunkPrimerIn, int32_t x, int32_t z, double noiseVal);
-	void generateBiomeTerrain(World* worldIn, pcg32& rand, ChunkPrimer chunkPrimerIn, int32_t x, int32_t z, double noiseVal);
+        virtual void genTerrainBlocks(World *worldIn,
+          Random &rand,
+          ChunkPrimer chunkPrimerIn,
+          int32_t x,
+          int32_t z,
+          double noiseVal);
+        void generateBiomeTerrain(World *worldIn,
+          Random &rand,
+          ChunkPrimer chunkPrimerIn,
+          int32_t x,
+          int32_t z,
+          double noiseVal);
 	virtual TempCategory getTempCategory();
 	static Biome* getBiome(int32_t id);
 	static Biome* getBiome(int32_t biomeId, Biome* fallback);

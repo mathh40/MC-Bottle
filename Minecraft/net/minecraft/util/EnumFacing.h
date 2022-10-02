@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
-#include "../../../../pcg-cpp/pcg_random.hpp"
 #include <vector>
 #include <unordered_map>
 #include <optional>
 #include "math/Vec3i.h"
+#include "../util/random/Random.h"
+
 
 class EntityLivingBase;
 class BlockPos;
@@ -32,7 +33,7 @@ public:
 	std::vector<EnumFacing> facings() const;
 	explicit Plane(const std::string &name);
 
-	EnumFacing random(pcg32 &rand) const;
+	EnumFacing random(Random &rand) const;
 	friend bool operator==(const Plane& lhs, const Plane& rhs);
 private:
 	std::string name;
@@ -90,7 +91,7 @@ public:
 	static EnumFacing byHorizontalIndex(int32_t horizontalIndexIn);
 	static EnumFacing fromAngle(double angle);
 	float getHorizontalAngle() const;
-	static EnumFacing random(pcg32 &rand);
+        static EnumFacing random(Random &rand);
 	static EnumFacing getFacingFromVector(float x, float y, float z);
 	std::string toString() const;
 	std::string getName() const;

@@ -15,7 +15,7 @@ public:
 	virtual std::optional<VALUE> getObject(std::optional<KEY> name);
 	void putObject(KEY key, VALUE value);
 	std::set<KEY> getKeys();
-	virtual std::optional<VALUE> getRandomObject(pcg32& random);
+        virtual std::optional<VALUE> getRandomObject(Random &random);
 	virtual bool containsKey(KEY key);
 	typename std::unordered_map<KEY, VALUE>::iterator begin();
 	typename std::unordered_map<KEY, VALUE>::iterator end();
@@ -56,7 +56,7 @@ std::set<KEY> RegistrySimple<KEY, VALUE>::getKeys()
 }
 
 template <typename KEY, typename VALUE>
-std::optional<VALUE> RegistrySimple<KEY, VALUE>::getRandomObject(pcg32& random)
+std::optional<VALUE> RegistrySimple<KEY, VALUE>::getRandomObject(Random& random)
 {
 	if (values.empty()) {
 		if (registryObjects.empty()) {

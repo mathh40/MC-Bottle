@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../../pcg-cpp/pcg_random.hpp"
+#include "../util/random/RandomJava.h"
 #include "../creativetab/CreativeTabs.h"
 #include "../entity/ai/attributes/AttributeModifier.h"
 #include "../inventory/EntityEquipmentSlot.h"
@@ -10,6 +10,7 @@
 #include "ResourceLocation.h"
 #include "math/RayTraceResult.h"
 #include "registry/RegistryNamespaced.h"
+#include <random/RandomJava.h>
 
 class Entity;
 class IBlockState;
@@ -96,7 +97,7 @@ protected:
 
     static xg::Guid ATTACK_DAMAGE_MODIFIER;
     static xg::Guid ATTACK_SPEED_MODIFIER;
-    static pcg32 itemRand;
+    static RandomJava itemRand;
     int32_t maxStackSize = 64;
     bool bFull3D;
     bool hasSubtypes;

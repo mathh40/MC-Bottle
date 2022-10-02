@@ -41,9 +41,9 @@ public:
 	virtual bool hasComparatorInputOverride() = 0;
 	virtual uint32_t getComparatorInputOverride(World* var1, const BlockPos& var2) = 0;
 	virtual float getBlockHardness(World* var1, const BlockPos& var2) = 0;
-	virtual float getPlayerRelativeBlockHardness(EntityPlayer* var1, World& var2, const BlockPos& var3) = 0;
+	virtual float getPlayerRelativeBlockHardness(EntityPlayer* var1, World* var2, const BlockPos& var3) = 0;
 	virtual uint32_t getStrongPower(IBlockAccess* var1, const BlockPos& var2, EnumFacing& var3) = 0;
-	virtual EnumPushReaction& getPushReaction() = 0;
+	virtual EnumPushReaction getPushReaction() = 0;
 	virtual IBlockState* getActualState(IBlockAccess* var1, const BlockPos& var2) = 0;
 	virtual AxisAlignedBB& getSelectedBoundingBox(World* var1, const BlockPos& var2)  = 0;
 	virtual bool shouldSideBeRendered(IBlockAccess* var1, const BlockPos& var2, EnumFacing& var3) = 0;

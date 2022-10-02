@@ -31,7 +31,7 @@ BiomeDecorator::BiomeDecorator()
 	generateFalls = true;
 }
 
-void BiomeDecorator::decorate(World* worldIn, pcg32& random, Biome* biome, BlockPos& pos)
+void BiomeDecorator::decorate(World *worldIn, Random &random, Biome *biome, BlockPos &pos)
 {
 	if (decorating) 
 	{
@@ -57,7 +57,7 @@ void BiomeDecorator::decorate(World* worldIn, pcg32& random, Biome* biome, Block
 	}
 }
 
-void BiomeDecorator::genDecorations(Biome* biomeIn, World* worldIn, pcg32& random)
+void BiomeDecorator::genDecorations(Biome *biomeIn, World *worldIn, Random &random)
 {
 	generateOres(worldIn, random);
 
@@ -299,7 +299,7 @@ void BiomeDecorator::genDecorations(Biome* biomeIn, World* worldIn, pcg32& rando
 
 }
 
-void BiomeDecorator::generateOres(World* worldIn, pcg32& random)
+void BiomeDecorator::generateOres(World *worldIn, Random &random)
 {
 	genStandardOre1(worldIn, random, chunkProviderSettings.dirtCount, dirtGen, chunkProviderSettings.dirtMinHeight, chunkProviderSettings.dirtMaxHeight);
 	genStandardOre1(worldIn, random, chunkProviderSettings.gravelCount, gravelOreGen, chunkProviderSettings.gravelMinHeight, chunkProviderSettings.gravelMaxHeight);
@@ -314,7 +314,12 @@ void BiomeDecorator::generateOres(World* worldIn, pcg32& random)
 	genStandardOre2(worldIn, random, chunkProviderSettings.lapisCount, lapisGen, chunkProviderSettings.lapisCenterHeight, chunkProviderSettings.lapisSpread);
 }
 
-void BiomeDecorator::genStandardOre1(World* worldIn, pcg32& random, int32_t blockCount, WorldGenerator* generator, int32_t minHeight, int32_t maxHeight)
+void BiomeDecorator::genStandardOre1(World *worldIn,
+  Random &random,
+  int32_t blockCount,
+  WorldGenerator *generator,
+  int32_t minHeight,
+  int32_t maxHeight)
 {
 	if (maxHeight < minHeight) 
 	{
@@ -341,7 +346,12 @@ void BiomeDecorator::genStandardOre1(World* worldIn, pcg32& random, int32_t bloc
 	}
 }
 
-void BiomeDecorator::genStandardOre2(World* worldIn, pcg32& random, int32_t blockCount, WorldGenerator* generator, int32_t centerHeight, int32_t spread)
+void BiomeDecorator::genStandardOre2(World *worldIn,
+  Random &random,
+  int32_t blockCount,
+  WorldGenerator *generator,
+  int32_t centerHeight,
+  int32_t spread)
 {
 	for (auto i = 0; i < blockCount; ++i) 
 	{

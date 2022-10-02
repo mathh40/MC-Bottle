@@ -1,6 +1,5 @@
 #include "WeightedRandom.h"
-#include <pcg_random.hpp>
-#include <random>
+#include <stdexcept>
 
 namespace WeightedRandom
 {
@@ -21,14 +20,13 @@ namespace WeightedRandom
 		itemWeight = itemWeightIn;
 	}
 
-	WeightedItem getRandomItem(pcg32& random, std::span<WeightedItem> collection, int32_t totalWeight)
+	WeightedItem getRandomItem(Random&random, std::span<WeightedItem> collection, int32_t totalWeight)
 	{
 		if (totalWeight <= 0) {
 			throw std::runtime_error("Total Weight muss higher than zero.");
 		}
 		else {
-			std::uniform_int_distribution<int> uniform_dist(1, totalWeight);
-			int i = uniform_dist(random);
+			auto i = random.nextInt(totalWeight);
 			return getRandomItem(collection, i);
 		}
 	}
@@ -47,7 +45,7 @@ namespace WeightedRandom
 		return WeightedItem(0);
 	}
 
-	WeightedItem getRandomItem(pcg32_unique random, std::span<WeightedItem> collection)
+	WeightedItem getRandomItem(Random &random, std::span<WeightedItem> collection)
 	{
 		return getRandomItem(random, collection, getTotalWeight(collection));
 	}

@@ -1,6 +1,5 @@
 #pragma once
 #include "Enchantment.h"
-#include "pcg_random.hpp"
 
 class EnchantmentThorns :public Enchantment {
 public:
@@ -10,6 +9,6 @@ public:
     int32_t getMaxLevel() const override;
     bool canApply(const ItemStack &stack) const override;
     void onUserHurt(EntityLivingBase *user, Entity *attacker, int32_t level) const override;
-    static bool shouldHit(int32_t level, pcg32 &rnd);
-    static int32_t getDamage(int32_t level, pcg32 &rnd);
+    static bool shouldHit(int32_t level, Random &rnd);
+    static int32_t getDamage(int32_t level, Random &rnd);
 };

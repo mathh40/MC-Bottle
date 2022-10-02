@@ -187,7 +187,7 @@ protected:
 
 private:
     static ResourceLocation AIR_ID;
-    CreativeTabs displayOnCreativeTab;
+    CreativeTabs *displayOnCreativeTab;
     IBlockState *defaultBlockState;
     std::string translationKey;
 

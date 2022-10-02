@@ -1,5 +1,4 @@
 #pragma once
-#include "../../../../../pcg-cpp/pcg_random.hpp"
 #include "../../util/math/BlockPos.h"
 #include "../gen/ChunkGeneratorSettings.h"
 
@@ -13,7 +12,7 @@ class BiomeDecorator
 public:
 	bool generateFalls;
 	BiomeDecorator();
-	virtual void decorate(World* worldIn, pcg32& random, Biome* biome, BlockPos& pos);
+	virtual void decorate(World* worldIn, Random& random, Biome* biome, BlockPos& pos);
 protected:
 	bool decorating;
 	BlockPos chunkPos;
@@ -53,9 +52,20 @@ protected:
 	int32_t clayPerChunk;
 	int32_t bigMushroomsPerChunk;
 
-	virtual void genDecorations(Biome* biomeIn, World* worldIn, pcg32& random);
-	virtual void generateOres(World* worldIn, pcg32& random);
-	virtual void genStandardOre1(World* worldIn, pcg32& random, int32_t blockCount, WorldGenerator* generator, int32_t minHeight, int32_t maxHeight);
-	virtual void genStandardOre2(World* worldIn, pcg32& random, int32_t blockCount, WorldGenerator* generator, int32_t centerHeight, int32_t spread);
-private:
+	virtual void genDecorations(Biome* biomeIn, World* worldIn, Random& random);
+        virtual void generateOres(World *worldIn, Random &random);
+        virtual void genStandardOre1(World *worldIn,
+          Random &random,
+          int32_t blockCount,
+          WorldGenerator *generator,
+          int32_t minHeight,
+          int32_t maxHeight);
+        virtual void genStandardOre2(World *worldIn,
+          Random &random,
+          int32_t blockCount,
+          WorldGenerator *generator,
+          int32_t centerHeight,
+          int32_t spread);
+
+      private:
 };

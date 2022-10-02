@@ -1,121 +1,71 @@
 #include "BlockStateContainer.h"
+#include <MapPopulator.h>
+#include <math/Cartesian.h>
+#include <properties/IProperty.h>
+#include <regex>
 
-#include "../Block.h"
-#include "../../../../../compile-time-regular-expressions/single-header/ctre.hpp"
-#include "../../util/MapPopulator.h"
-#include "../../util/math/Cartesian.h"
 
-namespace state {
-    static constexpr auto NAME_PATTERN = ctll::fixed_string{ "^[a-z0-9_]+$" };
-    BlockStateContainer::BlockStateContainer(Block *blockIn, std::initializer_list<IProperty *> listproperties) :
-        block(blockIn) {
-        std::unordered_map<std::string, IProperty *> map;
+static auto NAME_PATTERN = std::regex( "^[a-z0-9_]+$");
+static constexpr auto GET_NAME_FUNC = [](IProperty *p_apply_1_) {
+  return p_apply_1_ == nullptr ? "<NULL>" : p_apply_1_->getName();
+};
 
-        for (auto &iproperty : listproperties) {
-            validateProperty(blockIn, iproperty);
-            map.emplace(iproperty->getName(), iproperty);
-        }
+BlockStateContainer::BlockStateContainer(Block *blockIn, std::span<IProperty *> propertiesIn) : block(blockIn)
+{ 
+  std::unordered_map<std::string, IProperty *> tempmap;
 
-        properties = map;
-        std::unordered_map<,StateImplementation*> map2;
-        std::vector<std::set<std::any>> list1;
-        auto var12 = Cartesian::cartesianProduct(getAllowedValues());
-        std::vector<IProperty *> vints;
-        vints.reserve(properties.size());
-        for (auto const &imap : properties)
-            vints.push_back(imap.second);
+  for (auto iproperty : propertiesIn) {
+    validateProperty(blockIn, iproperty);
+    tempmap.emplace(iproperty->getName(), iproperty);
+  }
 
-        for (auto list : var12) {
-            auto map1 = MapPopulator::createMap(vints, list);
-            auto blockstatecontainer$stateimplementation =
-                StateImplementation(blockIn, ImmutableMap.copyOf(map1));
-            map2.put(map1, blockstatecontainer$stateimplementation);
-            list1.emplace_back(blockstatecontainer$stateimplementation);
-        }
+  properties = tempmap;
+  std::unordered_map<std::unordered_map<IProperty *, std::set<std::any>>, IBlockState *> map2;
+  std::vector<std::shared_ptr<BlockStateContainer::StateImplementation>> list1;
+  auto var12 = Cartesian::cartesianProduct(getAllowedValues());
 
-        for (auto blockstatecontainer$stateimplementation1 : list1) {
-            blockstatecontainer$stateimplementation1.buildPropertyValueTable(map2);
-        }
+  for (auto list : var12) {
+    auto map1 = MapPopulator::createMap(properties, list);
+    std::shared_ptr<BlockStateContainer::StateImplementation> blockstatecontainer$stateimplementation =
+      std::make_shared<BlockStateContainer::StateImplementation>(blockIn, map1);
+    map2.emplace(map1, blockstatecontainer$stateimplementation.get());
+    list1.emplace_back(blockstatecontainer$stateimplementation);
+  }
 
-        validStates = list1;
-    }
+  for (auto blockstatecontainer$stateimplementation1 : list1) {
+    blockstatecontainer$stateimplementation1->buildPropertyValueTable(map2);
+  }
 
-    std::string BlockStateContainer::validateProperty(Block *block, IProperty *property) {
-        auto s = property->getName();
+  validStates = list1;
+}
 
-        if (!ctre::match<NAME_PATTERN>(s)) {
-            throw std::runtime_error("Block: " + block->getLocalizedName() + " has invalidly named property: " + s);
-        } else {
-            auto t = property->getAllowedValues();
+std::string BlockStateContainer::validateProperty(Block *block, IProperty *propertie)
+{
+  auto s = propertie->getName();
+  if (!std::regex_match(s, NAME_PATTERN)) {
+    throw std::runtime_error("Block: " + block->getClass() + " has invalidly named property: " + s);
+  } else {
+    auto var3 = propertie->getAllowedValues().begin();
+    std::string s1;
+    do {
+      if (var3 == propertie->getAllowedValues().end()) { return s; }
+      s1 = propertie->getName(*var3);
+    } while (std::regex_match(s1, NAME_PATTERN));
 
-            std::string s1;
-            do {
-                if (!var3.hasNext()) {
-                    return s;
-                }
+    throw std::runtime_error(
+      "Block: " + block->getClass() + " has property: " + s + " with invalidly named value: " + s1);
+  }
+}
 
-                s1 = property->getName(t);
-            }
-            while (ctre::match<NAME_PATTERN>(s1));
+std::vector<std::shared_ptr<BlockStateContainer::StateImplementation>> BlockStateContainer::getValidStates() {
+  return validStates;
+}
 
-            throw std::runtime_error("Block: " + block->getLocalizedName() + " has property: " + s +
-                                     " with invalidly named value: " + s1);
-        }
-    }
+std::vector<std::set<std::any>> BlockStateContainer::getAllowedValues()
+{
+  std::vector<std::set<std::any>> list;
 
-    std::vector<std::set<std::any>> BlockStateContainer::getValidStates() const { return validStates; }
+  for (auto &iproperty : properties) { list.emplace_back(iproperty.second->getAllowedValues()); }
 
-    IBlockState *BlockStateContainer::getBaseState() { return std::any_cast<IBlockState *>(validStates[0]); }
-
-    Block *BlockStateContainer::getBlock() { return block; }
-
-    std::vector<IProperty *> BlockStateContainer::getProperties() {
-        std::vector<IProperty *> immutablecollection;
-        immutablecollection.reserve(properties.size());
-        for (auto const &imap : properties)
-            immutablecollection.push_back(imap.second);
-        return immutablecollection;
-    }
-
-    std::vector<std::set<std::any>> BlockStateContainer::getAllowedValues() {
-        std::vector<std::set<std::any>> list;
-
-        std::vector<IProperty *> immutablecollection;
-        immutablecollection.reserve(properties.size());
-        for (auto const &imap : properties)
-            immutablecollection.push_back(imap.second);
-
-        for (const auto &iproperty : immutablecollection) {
-            list.emplace_back(iproperty->getAllowedValues());
-        }
-
-        return list;
-    }
-
-    std::vector<const std::string> StateImplementation::getPropertyKeys()
-    {
-        std::vector<const std::string> collect;
-        collect.resize(properties.size());
-        for (auto &key : properties) {
-            collect.emplace_back(key.first);
-        }
-        return collect;
-    }
-
-    StateImplementation::StateImplementation(Block *blockIn,
-                                             std::unordered_map<std::string, IProperty *> propertiesIn) :
-        block(blockIn),
-        properties(propertiesIn) {
-    }
-
-    std::string StateImplementation::getValue(IProperty *propertys) {
-        auto comparable = (Comparable)properties.get(propertys);
-        if (comparable == nullptr) {
-            throw new IllegalArgumentException("Cannot get property " + property + " as it does not exist in " +
-                                               this.block.getBlockState());
-        } else {
-            return (Comparable)property.getValueClass().cast(comparable);
-        }
-    }
-
+  return list;
 }

@@ -2,37 +2,40 @@
 
 #include "../potion/PotionUtils.h"
 
-static CreativeTabs BUILDING_BLOCKS = new CreativeTabs(0, "buildingBlocks") {
+static CreativeTabs CreativeTabs::BUILDING_BLOCKS = new CreativeTabs(0, "buildingBlocks"){
       public ItemStack createIcon() {
          return new ItemStack(Item.getItemFromBlock(Blocks.BRICK_BLOCK));
       }
    };
-   static CreativeTabs DECORATIONS = new CreativeTabs(1, "decorations") {
+   static CreativeTabs CreativeTabs::DECORATIONS = new CreativeTabs(1, "decorations"){
       public ItemStack createIcon() {
          return new ItemStack(Item.getItemFromBlock(Blocks.DOUBLE_PLANT), 1, BlockDoublePlant.EnumPlantType.PAEONIA.getMeta());
       }
    };
-   static CreativeTabs REDSTONE = new CreativeTabs(2, "redstone") {
+   static CreativeTabs CreativeTabs::REDSTONE =
+     new CreativeTabs(2, "redstone"){
       public ItemStack createIcon() {
          return new ItemStack(Items.REDSTONE);
       }
    };
-   static CreativeTabs TRANSPORTATION = new CreativeTabs(3, "transportation") {
+   static CreativeTabs CreativeTabs::TRANSPORTATION = new CreativeTabs(3, "transportation"){
       public ItemStack createIcon() {
          return new ItemStack(Item.getItemFromBlock(Blocks.GOLDEN_RAIL));
       }
    };
-   static CreativeTabs MISC = new CreativeTabs(6, "misc") {
+   static CreativeTabs CreativeTabs::MISC =
+     new CreativeTabs(6, "misc"){
       public ItemStack createIcon() {
          return new ItemStack(Items.LAVA_BUCKET);
       }
    };
-   static CreativeTabs SEARCH = (new CreativeTabs(5, "search") {
+   static CreativeTabs CreativeTabs::SEARCH = (new CreativeTabs(5, "search") {
       public ItemStack createIcon() {
          return new ItemStack(Items.COMPASS);
       }
    }).setBackgroundImageName("item_search.png");
-   static CreativeTabs FOOD = new CreativeTabs(7, "food") {
+   static CreativeTabs CreativeTabs::FOOD =
+     new CreativeTabs(7, "food"){
       public ItemStack createIcon() {
          return new ItemStack(Items.APPLE);
       }
@@ -138,12 +141,12 @@ ItemStack Inventory::createIcon() {
 
 CreativeTabs* CreativeTabs::INVENTORY = new Inventory();
 
-CreativeTabs::CreativeTabs(int32_t indexIn, std::string label):
+CreativeTabs::CreativeTabs(uint32_t indexIn, std::string_view label):
     index(indexIn), tabLabel(label), icon(ItemStack::EMPTY) {
     CREATIVE_TAB_ARRAY[index] = this;
 }
 
-int32_t CreativeTabs::getIndex() const {
+uint32_t CreativeTabs::getIndex() const {
     return index;
 }
 
@@ -190,7 +193,7 @@ CreativeTabs &CreativeTabs::setNoScrollbar() {
     return *this;
 }
 
-int32_t CreativeTabs::getColumn() const {
+uint32_t CreativeTabs::getColumn() const {
     return index % 6;
 }
 
