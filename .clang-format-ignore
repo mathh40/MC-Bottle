@@ -1,0 +1,8 @@
+# ignore third_party code from clang-format checks
+./args/*
+./compile-time-regular-expressions/*
+./concurrentqueue ./crossguid/*
+./dynamic_bitset/*
+./fmt/*
+./nlohmann_json/*
+./spdlog/*
