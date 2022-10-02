@@ -1,6 +1,6 @@
 name: Run clang-format Linter
 
-on: [push]
+on: [push,pull_request]
 
 jobs:
   build:
@@ -15,18 +15,10 @@ jobs:
         extensions: 'h,cpp,hpp,c'
         clangFormatVersion: 14
         inplace: True
-    - name: Create Pull Request
-      id: cpr
-      uses: peter-evans/create-pull-request@v4
+    - uses: EndBug/add-and-commit@v4
       with:
-        token: ${{ secrets.PAT }}
-        commit-message: Clean Code Format 
-        committer: GitHub <noreply@github.com>
-        author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-        signoff: false
-        title: '[CleanUP] Code Format'
-        body: |
-          Code Format report
-        labels: |
-          report
-          automated pr
+        author_name: Clang Robot
+        author_email: robot@example.com
+        message: 'Committing clang-format changes'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
