@@ -1,13 +1,13 @@
 name: Run clang-format Linter
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: DoozyX/clang-format-lint-action@v0.14
       with:
         source: '.'
@@ -15,11 +15,20 @@ jobs:
         extensions: 'h,cpp,hpp,c'
         clangFormatVersion: 14
         inplace: True
-    - uses: EndBug/add-and-commit@v9
+    - name: Create Pull Request
+      id: cpr
+      uses: peter-evans/create-pull-request@v4
       with:
-        author_name: Clang Robot
-        author_email: robot@example.com
-        message: ':art: Committing clang-format changes'
-        commit: --signoff
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
+        commit-message: Clean Code Format 
+        committer: GitHub <noreply@github.com>
+        author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+        signoff: false
+        title: '[CleanUP] Code Format'
+        body: |
+          Code Format report
+        labels: |
+          report
+          automated pr
+        assignees: mathh40
+        reviewers: mathh40
