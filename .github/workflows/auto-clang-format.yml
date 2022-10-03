@@ -9,8 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        ref: ${{ github.event.pull_request.head.ref }}
+        ref: ${{ github.head_ref}}
         persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
         fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
     - uses: DoozyX/clang-format-lint-action@v0.14
@@ -20,11 +19,12 @@ jobs:
         extensions: 'h,cpp,hpp,c'
         clangFormatVersion: 14
         inplace: True
-    - uses: EndBug/add-and-commit@v4
+    - name: Commit files
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -m "Clang Format" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
       with:
-        author_name: Clang Robot
-        author_email: robot@example.com
-        message: 'Committing clang-format changes'
-        force: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        force_with_lease: true
