@@ -12,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - uses: binotaliu/action-discord-notifier@v1
+        uses: actions/checkout@master
+      - uses: appleboy/discord-action@master
         with:
-          message-title: New Commits Pushed
-          webhook: ${{ secrets.DISCORD }}
+          message: New Commits Pushed
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
