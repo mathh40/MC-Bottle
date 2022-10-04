@@ -80,6 +80,7 @@ hs_err_pid*
 
 ### VisualStudioCode ###
 .vscode/*
+build/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
