@@ -1,12 +1,13 @@
 #pragma once
-#include "CrashReportCategory.h"
 #include "../../../../spdlog/include/spdlog/logger.h"
+#include "CrashReportCategory.h"
 
 #include <filesystem>
 
-class CrashReport {
+class CrashReport
+{
 
-public:
+  public:
     CrashReport(std::string_view descriptionIn, std::exception &causeThrowable);
     std::string_view getDescription() const;
     std::exception &getCrashCause() const;
@@ -20,14 +21,14 @@ public:
     CrashReportCategory &makeCategoryDepth(std::string_view categoryName, int32_t stacktraceLength);
     static CrashReport makeCrashReport(std::exception &causeIn, std::string_view descriptionIn);
 
-private:
+  private:
     void populateEnvironment();
     static std::string_view getWittyComment();
 
-private:
+  private:
     static std::shared_ptr<spdlog::logger> LOGGER;
     std::string description;
-    std::exception& cause;
+    std::exception &cause;
     CrashReportCategory systemDetailsCategory;
     std::vector<CrashReportCategory> crashReportSections;
     std::filesystem::path crashReportFile;

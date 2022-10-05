@@ -1,10 +1,12 @@
 #include "MapData.h"
+
 #include "NBTTagCompound.h"
 #include "math/BlockPos.h"
 #include "math/MathHelper.h"
 
-
-MapData::MapInfo::MapInfo(EntityPlayer *player) : player(player) {}
+MapData::MapInfo::MapInfo(EntityPlayer *player) : player(player)
+{
+}
 
 void MapData::MapInfo::update(int32_t x, int32_t y)
 {
@@ -18,14 +20,16 @@ void MapData::MapInfo::update(int32_t x, int32_t y)
     else
     {
         isDirty = true;
-        minX = x;
-        minY = y;
-        maxX = x;
-        maxY = y;
+        minX    = x;
+        minY    = y;
+        maxX    = x;
+        maxY    = y;
     }
 }
 
-MapData::MapData(std::string_view mapname) : WorldSavedData(mapname) {}
+MapData::MapData(std::string_view mapname) : WorldSavedData(mapname)
+{
+}
 
 Packet MapData::getPacket(ItemStack stack)
 {
@@ -46,9 +50,9 @@ Packet MapData::getPacket(ItemStack stack)
 
 void MapData::calculateMapCenter(double x, double z, int32_t mapScale)
 {
-    auto i = 128 * (1 << mapScale);
-    auto j = MathHelper::floor((x + 64.0) / (double)i);
-    auto k = MathHelper::floor((z + 64.0) / (double)i);
+    auto i  = 128 * (1 << mapScale);
+    auto j  = MathHelper::floor((x + 64.0) / (double)i);
+    auto k  = MathHelper::floor((z + 64.0) / (double)i);
     xCenter = j * i + i / 2 - 64;
     zCenter = k * i + i / 2 - 64;
 }
@@ -56,10 +60,10 @@ void MapData::calculateMapCenter(double x, double z, int32_t mapScale)
 void MapData::readFromNBT(NBTTagCompound *nbt)
 {
     dimension = nbt->getByte("dimension");
-    xCenter = nbt->getInteger("xCenter");
-    zCenter = nbt->getInteger("zCenter");
-    scale = nbt->getByte("scale");
-    scale = MathHelper::clamp<uint8_t>(scale, 0, 4);
+    xCenter   = nbt->getInteger("xCenter");
+    zCenter   = nbt->getInteger("zCenter");
+    scale     = nbt->getByte("scale");
+    scale     = MathHelper::clamp<uint8_t>(scale, 0, 4);
     if (nbt->hasKey("trackingPosition", 1))
     {
         trackingPosition = nbt->getBoolean("trackingPosition");
@@ -70,8 +74,8 @@ void MapData::readFromNBT(NBTTagCompound *nbt)
     }
 
     unlimitedTracking = nbt->getBoolean("unlimitedTracking");
-    auto i = nbt->getShort("width");
-    auto j = nbt->getShort("height");
+    auto i            = nbt->getShort("width");
+    auto j            = nbt->getShort("height");
     if (i == 128 && j == 128)
     {
         auto temp = nbt->getByteArray("colors");
@@ -80,9 +84,9 @@ void MapData::readFromNBT(NBTTagCompound *nbt)
     else
     {
         auto abyte = nbt->getByteArray("colors");
-        colors = std::array<uint8_t, 16384>();
-        auto k = (128 - i) / 2;
-        auto l = (128 - j) / 2;
+        colors     = std::array<uint8_t, 16384>();
+        auto k     = (128 - i) / 2;
+        auto l     = (128 - j) / 2;
 
         for (auto i1 = 0; i1 < j; ++i1)
         {
@@ -151,7 +155,7 @@ void MapData::updateVisiblePlayers(EntityPlayer *player, ItemStack mapStack)
     if (mapStack.isOnItemFrame() && trackingPosition)
     {
         EntityItemFrame entityitemframe = mapStack.getItemFrame();
-        BlockPos blockpos = entityitemframe.getHangingPosition();
+        BlockPos blockpos               = entityitemframe.getHangingPosition();
         updateDecorations(MapDecoration.Type.FRAME, player.world, "frame-" + entityitemframe.getEntityId(),
                           (double)blockpos.getX(), (double)blockpos.getZ(),
                           (double)(entityitemframe.facingDirection.getHorizontalIndex() * 90));
@@ -205,13 +209,13 @@ void MapData::addTargetDecoration(ItemStack map, const BlockPos &target, std::st
 void MapData::updateDecorations(MapDecoration::Type type, World *worldIn, std::string_view decorationName,
                                 double worldX, double worldZ, double rotationIn)
 {
-    auto i = 1 << scale;
-    auto f = (float)(worldX - (double)xCenter) / (float)i;
-    auto f1 = (float)(worldZ - (double)zCenter) / (float)i;
+    auto i     = 1 << scale;
+    auto f     = (float)(worldX - (double)xCenter) / (float)i;
+    auto f1    = (float)(worldZ - (double)zCenter) / (float)i;
     uint8_t b0 = ((int)((double)(f * 2.0F) + 0.5));
     uint8_t b1 = ((int)((double)(f1 * 2.0F) + 0.5));
     uint8_t b2 = 0;
-    auto j = true;
+    auto j     = true;
     if (f >= -63.0F && f1 >= -63.0F && f <= 63.0F && f1 <= 63.0F)
     {
         rotationIn += rotationIn < 0.0 ? -8.0 : 8.0;
@@ -219,7 +223,7 @@ void MapData::updateDecorations(MapDecoration::Type type, World *worldIn, std::s
         if (dimension < 0)
         {
             auto l = (int)(worldIn->getWorldInfo().getWorldTime() / 10L);
-            b2 = (l * l * 34187121 + l * 121 >> 15 & 15);
+            b2     = (l * l * 34187121 + l * 121 >> 15 & 15);
         }
     }
     else

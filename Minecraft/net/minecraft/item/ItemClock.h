@@ -1,24 +1,25 @@
 #pragma once
+#include "../world/World.h"
 #include "Item.h"
 #include "ItemStack.h"
-#include "../world/World.h"
 
 class ClockProperty
 {
-public:
-    float apply(ItemStack stack, World* worldIn, EntityLivingBase* entityIn);
-    double wobble(World* p_185087_1_, double p_185087_2_);
+  public:
+    float apply(ItemStack stack, World *worldIn, EntityLivingBase *entityIn);
+    double wobble(World *p_185087_1_, double p_185087_2_);
 
-private:
+  private:
     double rotation;
     double rota;
     long lastUpdateTick;
 };
 
-class ItemClock :public Item
+class ItemClock : public Item
 {
-public:
+  public:
     ItemClock();
-private:
+
+  private:
     ClockProperty proberty;
 };

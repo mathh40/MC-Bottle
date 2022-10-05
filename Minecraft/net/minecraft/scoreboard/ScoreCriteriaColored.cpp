@@ -1,23 +1,24 @@
 #include "ScoreCriteriaColored.h"
+
 #include "text/TextFormatting.h"
 
-ScoreCriteriaColored::ScoreCriteriaColored(std::string name, const TextFormatting& format)
-   :goalName(name + format.getFriendlyName())
+ScoreCriteriaColored::ScoreCriteriaColored(std::string name, const TextFormatting &format)
+    : goalName(name + format.getFriendlyName())
 {
-   IScoreCriteria::INSTANCES.put(goalName, this);
+    IScoreCriteria::INSTANCES.put(goalName, this);
 }
 
 std::string ScoreCriteriaColored::getName()
 {
-   return goalName;
+    return goalName;
 }
 
 bool ScoreCriteriaColored::isReadOnly()
 {
-   return false;
+    return false;
 }
 
 IScoreCriteria::EnumRenderType ScoreCriteriaColored::getRenderType()
 {
-   return IScoreCriteria::EnumRenderType::INTEGER;
+    return IScoreCriteria::EnumRenderType::INTEGER;
 }

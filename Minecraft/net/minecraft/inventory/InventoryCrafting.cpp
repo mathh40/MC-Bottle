@@ -1,14 +1,13 @@
 #include "InventoryCrafting.h"
 
-
-
 #include "Container.h"
 #include "ItemStackHelper.h"
 #include "text/TextComponentString.h"
 #include "text/TextComponentTranslation.h"
 
 InventoryCrafting::InventoryCrafting(Container *eventHandlerIn, int32_t width, int32_t height)
-    :stackList(width * height, ItemStack::EMPTY),eventHandler(eventHandlerIn),inventoryWidth(width),inventoryHeight(height)
+    : stackList(width * height, ItemStack::EMPTY), eventHandler(eventHandlerIn), inventoryWidth(width),
+      inventoryHeight(height)
 {
 }
 
@@ -19,13 +18,13 @@ int32_t InventoryCrafting::getSizeInventory()
 
 bool InventoryCrafting::isEmpty()
 {
-    if(stackList.empty())
+    if (stackList.empty())
     {
         return true;
     }
 
     bool isEmpty = true;
-    for(auto itemstack : stackList)
+    for (auto itemstack : stackList)
     {
         isEmpty = itemstack.isEmpty();
     }
@@ -39,7 +38,9 @@ ItemStack InventoryCrafting::getStackInSlot(int32_t index)
 
 ItemStack InventoryCrafting::getStackInRowAndColumn(int32_t row, int32_t column)
 {
-    return row >= 0 && row < inventoryWidth && column >= 0 && column <= inventoryHeight ? getStackInSlot(row + column * inventoryWidth) : ItemStack::EMPTY;
+    return row >= 0 && row < inventoryWidth && column >= 0 && column <= inventoryHeight
+               ? getStackInSlot(row + column * inventoryWidth)
+               : ItemStack::EMPTY;
 }
 
 std::string InventoryCrafting::getName() const
@@ -54,7 +55,8 @@ bool InventoryCrafting::hasCustomName() const
 
 std::unique_ptr<ITextComponent> InventoryCrafting::getDisplayName() const
 {
-    return (ITextComponent)(hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getName(), new Object[0]));
+    return (ITextComponent)(hasCustomName() ? new TextComponentString(getName())
+                                            : new TextComponentTranslation(getName(), new Object[0]));
 }
 
 ItemStack InventoryCrafting::removeStackFromSlot(int32_t index)
@@ -65,7 +67,7 @@ ItemStack InventoryCrafting::removeStackFromSlot(int32_t index)
 ItemStack InventoryCrafting::decrStackSize(int32_t index, int32_t count)
 {
     const ItemStack itemstack = ItemStackHelper::getAndSplit(stackList, index, count);
-    if (!itemstack.isEmpty()) 
+    if (!itemstack.isEmpty())
     {
         eventHandler->onCraftMatrixChanged(this);
     }
@@ -113,7 +115,6 @@ int32_t InventoryCrafting::getField(int32_t id)
 
 void InventoryCrafting::setField(int32_t id, int32_t value)
 {
-
 }
 
 int32_t InventoryCrafting::getFieldCount()
@@ -136,9 +137,9 @@ int32_t InventoryCrafting::getWidth() const
     return inventoryWidth;
 }
 
-void InventoryCrafting::fillStackedContents(const RecipeItemHelper& helper)
+void InventoryCrafting::fillStackedContents(const RecipeItemHelper &helper)
 {
-    for(auto& itemstack : stackList)
+    for (auto &itemstack : stackList)
     {
         helper.accountStack(itemstack);
     }

@@ -1,9 +1,8 @@
 #include "ItemWritableBook.h"
 
-
-#include "ItemStack.h"
 #include "../nbt/NBTTagList.h"
 #include "../stats/StatList.h"
+#include "ItemStack.h"
 
 ItemWritableBook::ItemWritableBook()
 {
@@ -20,22 +19,22 @@ ActionResult ItemWritableBook::onItemRightClick(World *worldIn, EntityPlayer *pl
 
 bool ItemWritableBook::isNBTValid(NBTTagCompound *nbt)
 {
-    if (nbt == nullptr) 
+    if (nbt == nullptr)
     {
         return false;
     }
-    else if (!nbt->hasKey("pages", 9)) 
+    else if (!nbt->hasKey("pages", 9))
     {
         return false;
     }
-    else 
+    else
     {
-        NBTTagList* nbttaglist = nbt->getTagList("pages", 8);
+        NBTTagList *nbttaglist = nbt->getTagList("pages", 8);
 
-        for(auto i = 0; i < nbttaglist->tagCount(); ++i) 
+        for (auto i = 0; i < nbttaglist->tagCount(); ++i)
         {
             auto s = nbttaglist->getStringTagAt(i);
-            if (s.size() > 32767) 
+            if (s.size() > 32767)
             {
                 return false;
             }

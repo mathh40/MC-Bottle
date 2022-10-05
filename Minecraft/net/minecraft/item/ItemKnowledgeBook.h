@@ -2,12 +2,12 @@
 #include "Item.h"
 #include "spdlog/details/registry.h"
 
-class ItemKnowledgeBook :public Item
+class ItemKnowledgeBook : public Item
 {
-public:
+  public:
     ItemKnowledgeBook();
-    ActionResult onItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand handIn) override;
+    ActionResult onItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand handIn) override;
 
-private:
+  private:
     static std::shared_ptr<spdlog::logger> LOGGER;
 };

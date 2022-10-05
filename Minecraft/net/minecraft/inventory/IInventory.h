@@ -2,14 +2,14 @@
 #include "../item/ItemStack.h"
 #include "../world/IWorldNameable.h"
 
-class IInventory :public IWorldNameable
+class IInventory : public IWorldNameable
 {
-public:
+  public:
     virtual ~IInventory() = default;
 
     virtual int32_t getSizeInventory() const = 0;
 
-    virtual bool isEmpty() const = 0 ;
+    virtual bool isEmpty() const = 0;
 
     virtual ItemStack getStackInSlot(int32_t var1) = 0;
 
@@ -23,11 +23,11 @@ public:
 
     virtual void markDirty() = 0;
 
-    virtual bool isUsableByPlayer(EntityPlayer* var1) = 0;
+    virtual bool isUsableByPlayer(EntityPlayer *var1) = 0;
 
-    virtual void openInventory(EntityPlayer* var1) = 0;
+    virtual void openInventory(EntityPlayer *var1) = 0;
 
-    virtual void closeInventory(EntityPlayer* var1) = 0;
+    virtual void closeInventory(EntityPlayer *var1) = 0;
 
     virtual bool isItemValidForSlot(int32_t var1, ItemStack var2) = 0;
 

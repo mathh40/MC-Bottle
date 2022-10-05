@@ -8,69 +8,68 @@ Action Action::CHANGE_PAGE("change_page", true);
 
 bool Action::shouldAllowInChat() const
 {
-	return allowedInChat;
+    return allowedInChat;
 }
 
 std::string Action::getCanonicalName() const
 {
-	return canonicalName;
+    return canonicalName;
 }
 
-Action* Action::getValueByCanonicalName(std::string canonicalNameIn)
+Action *Action::getValueByCanonicalName(std::string canonicalNameIn)
 {
-	return NAME_MAPPING[canonicalNameIn];
+    return NAME_MAPPING[canonicalNameIn];
 }
 
 Action::Action(std::string canonicalNameIn, bool allowedInChatIn)
-	:canonicalName(canonicalNameIn), allowedInChat(allowedInChatIn)
+    : canonicalName(canonicalNameIn), allowedInChat(allowedInChatIn)
 {
-	NAME_MAPPING.emplace(canonicalNameIn, this);
+    NAME_MAPPING.emplace(canonicalNameIn, this);
 }
 
-ClickEvent::ClickEvent(Action theAction, std::string theValue)
-	: action(theAction), value(theValue)
+ClickEvent::ClickEvent(Action theAction, std::string theValue) : action(theAction), value(theValue)
 {
-
 }
 
-const Action& ClickEvent::getAction() const
+const Action &ClickEvent::getAction() const
 {
-	return action;
+    return action;
 }
 
 std::string ClickEvent::getValue() const
 {
-	return value;
+    return value;
 }
 
 std::string ClickEvent::toString()
 {
-	return "ClickEvent{action=" + action + ", value='" + value + '\'' + '}';
+    return "ClickEvent{action=" + action + ", value='" + value + '\'' + '}';
 }
 
-
-bool operator==(const ClickEvent& lhs, const ClickEvent& rhs)
+bool operator==(const ClickEvent &lhs, const ClickEvent &rhs)
 {
-	if (lhs.getAction() != rhs.getAction()) {
-		return false;
-	}
-	if (!(lhs.getValue() == rhs.getValue())) {
-		return false;
-	}
-	return true;
+    if (lhs.getAction() != rhs.getAction())
+    {
+        return false;
+    }
+    if (!(lhs.getValue() == rhs.getValue()))
+    {
+        return false;
+    }
+    return true;
 }
 
-bool operator!=(const ClickEvent& lhs, const ClickEvent& rhs)
+bool operator!=(const ClickEvent &lhs, const ClickEvent &rhs)
 {
-	return!(lhs == rhs);
+    return !(lhs == rhs);
 }
 
-bool operator==(const Action& lhs, const Action& rhs)
+bool operator==(const Action &lhs, const Action &rhs)
 {
-	return lhs.getCanonicalName() == rhs.getCanonicalName();
+    return lhs.getCanonicalName() == rhs.getCanonicalName();
 }
 
-auto operator!=(const Action& lhs, const Action& rhs) -> bool
+auto operator!=(const Action &lhs, const Action &rhs) -> bool
 {
-	return !(lhs == rhs);
+    return !(lhs == rhs);
 }

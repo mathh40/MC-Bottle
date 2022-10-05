@@ -1,10 +1,11 @@
 #pragma once
-#include "EntityMob.h"
 #include "../IEntityLivingData.h"
+#include "EntityMob.h"
 
-class EntitySpider :public EntityMob {
-public:
-    EntitySpider(World* worldIn);
+class EntitySpider : public EntityMob
+{
+  public:
+    EntitySpider(World *worldIn);
     static void registerFixesSpider(DataFixer fixer);
     double getMountedYOffset() const override;
     void onUpdate() override;
@@ -14,28 +15,28 @@ public:
     bool isPotionApplicable(PotionEffect potioneffectIn) override;
     bool isBesideClimbableBlock();
     void setBesideClimbableBlock(bool climbing);
-    IEntityLivingData* onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData* livingdata) override;
+    IEntityLivingData *onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData *livingdata) override;
     float getEyeHeight() const override;
 
-    class GroupData :public IEntityLivingData {
-    public:
+    class GroupData : public IEntityLivingData
+    {
+      public:
         Potion effect;
 
         void setRandomEffect(pcg32 &rand);
     };
 
-protected:
+  protected:
     void initEntityAI() override;
-    PathNavigate* createNavigator(World* worldIn) override;
+    PathNavigate *createNavigator(World *worldIn) override;
     void entityInit() override;
     void applyEntityAttributes() override;
     SoundEvent getAmbientSound() override;
     SoundEvent getHurtSound(DamageSource::DamageSource damageSourceIn) override;
     SoundEvent getDeathSound() override;
-    void playStepSound(BlockPos pos, Block* blockIn) override;
+    void playStepSound(BlockPos pos, Block *blockIn) override;
     std::optional<ResourceLocation> getLootTable() override;
 
-
-private:
+  private:
     static DataParameter CLIMBING;
 };

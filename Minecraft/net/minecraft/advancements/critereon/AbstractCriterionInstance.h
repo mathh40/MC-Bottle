@@ -1,16 +1,16 @@
 #pragma once
-#include "../ICriterionInstance.h"
 #include "../../util/ResourceLocation.h"
+#include "../ICriterionInstance.h"
 
 #include <string>
 
-class AbstractCriterionInstance :public ICriterionInstance
+class AbstractCriterionInstance : public ICriterionInstance
 {
-public:
-    AbstractCriterionInstance(const ResourceLocation& criterionIn);
-    ResourceLocation& getId() const override;
+  public:
+    AbstractCriterionInstance(const ResourceLocation &criterionIn);
+    ResourceLocation &getId() const override;
     std::string toString() const;
 
-private:
+  private:
     ResourceLocation criterion;
 };

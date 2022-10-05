@@ -4,7 +4,7 @@
 #include "../tileentity/TileEntityFurnace.h"
 
 SlotFurnaceFuel::SlotFurnaceFuel(IInventory *inventoryIn, int32_t slotIndex, int32_t xPosition, int32_t yPosition)
-    :Slot(inventoryIn, slotIndex, xPosition, yPosition)
+    : Slot(inventoryIn, slotIndex, xPosition, yPosition)
 {
 }
 

@@ -1,9 +1,9 @@
 #pragma once
 #include "ItemPotion.h"
 
-class ItemSplashPotion :public ItemPotion
+class ItemSplashPotion : public ItemPotion
 {
-public:
+  public:
     std::string getItemStackDisplayName(ItemStack stack) const override;
-    ActionResult onItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand handIn) override;
+    ActionResult onItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand handIn) override;
 };

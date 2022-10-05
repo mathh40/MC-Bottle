@@ -2,12 +2,11 @@
 #include "Item.h"
 
 class EntityArrow;
-class ItemArrow :public Item
+class ItemArrow : public Item
 {
-public:
+  public:
     ItemArrow();
-    virtual EntityArrow* createArrow(World *worldIn, ItemStack stack, EntityLivingBase* shooter);
+    virtual EntityArrow *createArrow(World *worldIn, ItemStack stack, EntityLivingBase *shooter);
 
-
-private:
+  private:
 };

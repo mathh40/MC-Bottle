@@ -6,6 +6,7 @@
 #define LFU_CACHE_POLICY_HPP
 
 #include "cache_policy.hpp"
+
 #include <cstddef>
 #include <iostream>
 #include <map>
@@ -26,32 +27,29 @@ namespace caches
  * as a replacement candidate.
  * \tparam Key Type of a key a policy works with
  */
-template <typename Key>
-class LFUCachePolicy : public ICachePolicy<Key>
+template <typename Key> class LFUCachePolicy : public ICachePolicy<Key>
 {
   public:
     using lfu_iterator = typename std::multimap<std::size_t, Key>::iterator;
 
-    LFUCachePolicy() = default;
+    LFUCachePolicy()           = default;
     ~LFUCachePolicy() override = default;
 
     void Insert(const Key &key) override
     {
         constexpr std::size_t INIT_VAL = 1;
         // all new value initialized with the frequency 1
-        lfu_storage[key] =
-            frequency_storage.emplace_hint(frequency_storage.cbegin(), INIT_VAL, key);
+        lfu_storage[key] = frequency_storage.emplace_hint(frequency_storage.cbegin(), INIT_VAL, key);
     }
 
     void Touch(const Key &key) override
     {
         // get the previous frequency value of a key
         auto elem_for_update = lfu_storage[key];
-        auto updated_elem = std::make_pair(elem_for_update->first + 1, elem_for_update->second);
+        auto updated_elem    = std::make_pair(elem_for_update->first + 1, elem_for_update->second);
         // update the previous value
         frequency_storage.erase(elem_for_update);
-        lfu_storage[key] =
-            frequency_storage.emplace_hint(frequency_storage.cend(), std::move(updated_elem));
+        lfu_storage[key] = frequency_storage.emplace_hint(frequency_storage.cend(), std::move(updated_elem));
     }
 
     void Erase(const Key &key) noexcept override

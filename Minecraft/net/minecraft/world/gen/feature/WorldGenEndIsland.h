@@ -3,7 +3,8 @@
 
 class WorldGenEndIsland : public WorldGenerator
 {
-public:
-	bool generate(World* worldIn, pcg32& rand, const BlockPos& position) override;
-private:
+  public:
+    bool generate(World *worldIn, pcg32 &rand, const BlockPos &position) override;
+
+  private:
 };

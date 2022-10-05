@@ -1,12 +1,13 @@
 #pragma once
 #include "Material.h"
 
-class MaterialLogic :public Material
+class MaterialLogic : public Material
 {
-public:
+  public:
     MaterialLogic(MapColor color);
     bool isSolid() override;
     bool blocksLight() override;
     bool blocksMovement() override;
-private:
+
+  private:
 };

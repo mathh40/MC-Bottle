@@ -1,8 +1,8 @@
 #include "ItemNameTag.h"
 
+#include "../pathfinding/NodeProcessor.h"
 #include "ItemStack.h"
 #include "Util.h"
-#include "../pathfinding/NodeProcessor.h"
 
 ItemNameTag::ItemNameTag()
 {
@@ -10,20 +10,20 @@ ItemNameTag::ItemNameTag()
 }
 
 bool ItemNameTag::itemInteractionForEntity(ItemStack stack, EntityPlayer *playerIn, EntityLivingBase *target,
-    EnumHand hand)
+                                           EnumHand hand)
 {
-    if (stack.hasDisplayName() && !(Util::instanceof<EntityPlayer>(target))) 
+    if (stack.hasDisplayName() && !(Util:: instanceof <EntityPlayer>(target)))
     {
         target->setCustomNameTag(stack.getDisplayName());
-        if (Util::instanceof<EntityLiving>(target)) 
+        if (Util:: instanceof <EntityLiving>(target))
         {
-            ((EntityLiving*)target)->enablePersistence();
+            ((EntityLiving *)target)->enablePersistence();
         }
 
         stack.shrink(1);
         return true;
     }
-    else 
+    else
     {
         return false;
     }

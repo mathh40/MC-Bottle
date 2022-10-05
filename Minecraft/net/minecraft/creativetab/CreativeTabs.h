@@ -1,6 +1,7 @@
 #pragma once
 #include "../enchantment/EnumEnchantmentType.h"
 #include "../item/ItemStack.h"
+
 #include <array>
 #include <string>
 
@@ -8,13 +9,13 @@ class CreativeTabs
 {
   public:
     virtual ~CreativeTabs() = default;
-    static std::array<CreativeTabs*,12> CREATIVE_TAB_ARRAY;
-    static CreativeTabs* TOOLS;
-    static CreativeTabs* COMBAT;
-    static CreativeTabs* BREWING;
-    static CreativeTabs* MATERIALS;
-    static CreativeTabs* HOTBAR;
-    static CreativeTabs* INVENTORY;
+    static std::array<CreativeTabs *, 12> CREATIVE_TAB_ARRAY;
+    static CreativeTabs *TOOLS;
+    static CreativeTabs *COMBAT;
+    static CreativeTabs *BREWING;
+    static CreativeTabs *MATERIALS;
+    static CreativeTabs *HOTBAR;
+    static CreativeTabs *INVENTORY;
     std::string tabLabel;
     std::string backgroundTexture = "items.png";
 
@@ -38,12 +39,10 @@ class CreativeTabs
     bool hasRelevantEnchantmentType(std::optional<EnumEnchantmentType> enchantmentType);
     void displayAllRelevantItems(std::vector<ItemStack> &p_78018_1_) const;
 
-private:
-   uint32_t index;
-   bool bhasScrollbar = true;
-   bool drawTitle = true;
-   std::vector<EnumEnchantmentType> enchantmentTypes;
-   ItemStack icon;
+  private:
+    uint32_t index;
+    bool bhasScrollbar = true;
+    bool drawTitle     = true;
+    std::vector<EnumEnchantmentType> enchantmentTypes;
+    ItemStack icon;
 };
-
-

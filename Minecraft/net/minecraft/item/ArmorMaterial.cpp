@@ -11,10 +11,10 @@ ArmorMaterial ArmorMaterial::GOLD("gold", 7, {1, 3, 5, 2}, 25, SoundEvents::ITEM
 ArmorMaterial ArmorMaterial::DIAMOND("diamond", 33, {3, 6, 8, 3}, 10, SoundEvents::ITEM_ARMOR_EQUIP_DIAMOND, 2.0F);
 
 ArmorMaterial::ArmorMaterial(std::string nameIn, int32_t maxDamageFactorIn,
-    const std::vector<int32_t> &damageReductionAmountArrayIn, int32_t enchantabilityIn, SoundEvent soundEventIn,
-    float toughnessIn)
-        :name(nameIn),maxDamageFactor(maxDamageFactorIn),damageReductionAmountArray(damageReductionAmountArrayIn)
-        ,enchantability(enchantabilityIn),soundEvent(soundEventIn),toughness(toughnessIn)
+                             const std::vector<int32_t> &damageReductionAmountArrayIn, int32_t enchantabilityIn,
+                             SoundEvent soundEventIn, float toughnessIn)
+    : name(nameIn), maxDamageFactor(maxDamageFactorIn), damageReductionAmountArray(damageReductionAmountArrayIn),
+      enchantability(enchantabilityIn), soundEvent(soundEventIn), toughness(toughnessIn)
 {
 }
 
@@ -38,25 +38,25 @@ SoundEvent ArmorMaterial::getSoundEvent() const
     return soundEvent;
 }
 
-Item * ArmorMaterial::getRepairItem()
+Item *ArmorMaterial::getRepairItem()
 {
-    if (this == LEATHER) 
+    if (this == LEATHER)
     {
         return Items::LEATHER;
     }
-    else if (this == CHAIN) 
+    else if (this == CHAIN)
     {
         return Items::IRON_INGOT;
     }
-    else if (this == GOLD) 
+    else if (this == GOLD)
     {
         return Items::GOLD_INGOT;
     }
-    else if (this == IRON) 
+    else if (this == IRON)
     {
         return Items::IRON_INGOT;
     }
-    else 
+    else
     {
         return this == DIAMOND ? Items::DIAMOND : nullptr;
     }

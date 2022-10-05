@@ -1,20 +1,20 @@
 #pragma once
-#include "Entity.h"
 #include "../potion/PotionType.h"
+#include "Entity.h"
 
-class EntityAreaEffectCloud :public Entity
+class EntityAreaEffectCloud : public Entity
 {
-public:
-    EntityAreaEffectCloud(World* worldIn);
-    EntityAreaEffectCloud(World* worldIn, double x, double y, double z);
+  public:
+    EntityAreaEffectCloud(World *worldIn);
+    EntityAreaEffectCloud(World *worldIn, double x, double y, double z);
     void setRadius(float radiusIn);
     float getRadius();
-    void setPotion(const PotionType& potionIn);
-    void addEffect(const PotionEffect& effect);
+    void setPotion(const PotionType &potionIn);
+    void addEffect(const PotionEffect &effect);
     int32_t getColor();
     void setColor(int32_t colorIn);
     EnumParticleTypes getParticle();
-    void setParticle(const EnumParticleTypes& particleIn);
+    void setParticle(const EnumParticleTypes &particleIn);
     int32_t getParticleParam1();
     void setParticleParam1(int32_t particleParam);
     int32_t getParticleParam2();
@@ -26,18 +26,18 @@ public:
     void setRadiusOnUse(float radiusOnUseIn);
     void setRadiusPerTick(float radiusPerTickIn);
     void setWaitTime(int32_t waitTimeIn);
-    void setOwner(EntityLivingBase* ownerIn);
-    EntityLivingBase* getOwner();
-    void notifyDataManagerChange(const DataParameter& key) override;
+    void setOwner(EntityLivingBase *ownerIn);
+    EntityLivingBase *getOwner();
+    void notifyDataManagerChange(const DataParameter &key) override;
     EnumPushReaction getPushReaction() override;
 
-protected:
+  protected:
     void entityInit() override;
     void setIgnoreRadius(bool ignoreRadius);
-    void readEntityFromNBT(NBTTagCompound* compound) override;
-    void writeEntityToNBT(NBTTagCompound* compound) override;
+    void readEntityFromNBT(NBTTagCompound *compound) override;
+    void writeEntityToNBT(NBTTagCompound *compound) override;
 
-private:
+  private:
     void updateFixedColor();
 
     static DataParameter RADIUS;
@@ -56,7 +56,7 @@ private:
     int32_t durationOnUse;
     float radiusOnUse;
     float radiusPerTick;
-    EntityLivingBase* owner;
+    EntityLivingBase *owner;
     xg::Guid ownerUniqueId;
     Util::RandomizerWithSentinelShift<> randombool;
 };

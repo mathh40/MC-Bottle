@@ -3,45 +3,51 @@
 #include "storage/MapData.h"
 
 RecipesMapExtending::RecipesMapExtending()
-    :ShapedRecipes("", 3, 3, {Ingredient::EMPTY, Ingredient::fromItems(Items::PAPER), Ingredient::fromItems(Items::PAPER), Ingredient::fromItems(Items::PAPER), Ingredient::fromItems(Items::PAPER), Ingredient::fromItem(Items::FILLED_MAP), Ingredient::fromItems(Items::PAPER), Ingredient::fromItems(Items::PAPER), Ingredient::fromItems(Items::PAPER), Ingredient::fromItems(Items::PAPER)}, ItemStack(Items::MAP))
+    : ShapedRecipes("", 3, 3,
+                    {Ingredient::EMPTY, Ingredient::fromItems(Items::PAPER), Ingredient::fromItems(Items::PAPER),
+                     Ingredient::fromItems(Items::PAPER), Ingredient::fromItems(Items::PAPER),
+                     Ingredient::fromItem(Items::FILLED_MAP), Ingredient::fromItems(Items::PAPER),
+                     Ingredient::fromItems(Items::PAPER), Ingredient::fromItems(Items::PAPER),
+                     Ingredient::fromItems(Items::PAPER)},
+                    ItemStack(Items::MAP))
 {
 }
 
 bool RecipesMapExtending::matches(InventoryCrafting *inv, World *worldIn)
 {
-    if (!ShapedRecipes::matches(inv, worldIn)) 
+    if (!ShapedRecipes::matches(inv, worldIn))
     {
         return false;
     }
-    else 
+    else
     {
         ItemStack itemstack = ItemStack::EMPTY;
 
-        for(int i = 0; i < inv->getSizeInventory() && itemstack.isEmpty(); ++i) 
+        for (int i = 0; i < inv->getSizeInventory() && itemstack.isEmpty(); ++i)
         {
             ItemStack itemstack1 = inv->getStackInSlot(i);
-            if (itemstack1.getItem() == Items::FILLED_MAP) 
+            if (itemstack1.getItem() == Items::FILLED_MAP)
             {
                 itemstack = itemstack1;
             }
         }
 
-        if (itemstack.isEmpty()) 
+        if (itemstack.isEmpty())
         {
             return false;
         }
-        else 
+        else
         {
             MapData mapdata = Items::FILLED_MAP.getMapData(itemstack, worldIn);
-            if (mapdata == nullptr) 
+            if (mapdata == nullptr)
             {
                 return false;
             }
-            else if (isExplorationMap(mapdata)) 
+            else if (isExplorationMap(mapdata))
             {
                 return false;
             }
-            else 
+            else
             {
                 return mapdata.scale < 4;
             }
@@ -53,10 +59,10 @@ ItemStack RecipesMapExtending::getCraftingResult(InventoryCrafting *inv)
 {
     ItemStack itemstack = ItemStack::EMPTY;
 
-    for(auto i = 0; i < inv->getSizeInventory() && itemstack.isEmpty(); ++i) 
+    for (auto i = 0; i < inv->getSizeInventory() && itemstack.isEmpty(); ++i)
     {
         ItemStack itemstack1 = inv->getStackInSlot(i);
-        if (itemstack1.getItem() == Items::FILLED_MAP) 
+        if (itemstack1.getItem() == Items::FILLED_MAP)
         {
             itemstack = itemstack1;
         }
@@ -64,7 +70,7 @@ ItemStack RecipesMapExtending::getCraftingResult(InventoryCrafting *inv)
 
     itemstack = itemstack.copy();
     itemstack.setCount(1);
-    if (itemstack.getTagCompound() == nullptr) 
+    if (itemstack.getTagCompound() == nullptr)
     {
         itemstack.setTagCompound(new NBTTagCompound());
     }
@@ -80,11 +86,12 @@ bool RecipesMapExtending::isDynamic()
 
 bool RecipesMapExtending::isExplorationMap(MapData p_190934_1_)
 {
-    if (!p_190934_1_.mapDecorations.empty()) 
+    if (!p_190934_1_.mapDecorations.empty())
     {
-        for(auto& entry : p_190934_1_.mapDecorations)
+        for (auto &entry : p_190934_1_.mapDecorations)
         {
-            if (entry.second.getType() == MapDecoration::Type::MANSION || entry.second.getType() == MapDecoration::Type::MONUMENT) 
+            if (entry.second.getType() == MapDecoration::Type::MANSION ||
+                entry.second.getType() == MapDecoration::Type::MONUMENT)
             {
                 return true;
             }

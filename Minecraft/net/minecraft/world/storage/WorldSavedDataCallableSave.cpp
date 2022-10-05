@@ -1,11 +1,10 @@
 #include "WorldSavedDataCallableSave.h"
 
-WorldSavedDataCallableSave::WorldSavedDataCallableSave(WorldSavedData* dataIn)
-	:data(dataIn)
+WorldSavedDataCallableSave::WorldSavedDataCallableSave(WorldSavedData *dataIn) : data(dataIn)
 {
 }
 
 void WorldSavedDataCallableSave::run() const
 {
-	data->markDirty();
+    data->markDirty();
 }

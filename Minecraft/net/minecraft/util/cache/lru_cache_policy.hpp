@@ -6,6 +6,7 @@
 #define LRU_CACHE_POLICY_HPP
 
 #include "cache_policy.hpp"
+
 #include <list>
 #include <unordered_map>
 
@@ -33,13 +34,12 @@ namespace caches
  * ```
  * \tparam Key Type of a key a policy works with
  */
-template <typename Key>
-class LRUCachePolicy : public ICachePolicy<Key>
+template <typename Key> class LRUCachePolicy : public ICachePolicy<Key>
 {
   public:
     using lru_iterator = typename std::list<Key>::iterator;
 
-    LRUCachePolicy() = default;
+    LRUCachePolicy()  = default;
     ~LRUCachePolicy() = default;
 
     void Insert(const Key &key) override

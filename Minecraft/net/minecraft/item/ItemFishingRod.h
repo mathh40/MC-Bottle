@@ -1,12 +1,12 @@
 #pragma once
 #include "Item.h"
 
-class ItemFishingRod :public Item
+class ItemFishingRod : public Item
 {
-public:
+  public:
     ItemFishingRod();
     bool isFull3D() const override;
     bool shouldRotateAroundWhenRendering() override;
-    ActionResult onItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand handIn) override;
+    ActionResult onItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand handIn) override;
     int32_t getItemEnchantability() override;
 };

@@ -2,10 +2,9 @@
 
 void MovementInput::updatePlayerMoveState()
 {
-
 }
 
 Vec2f MovementInput::getMoveVector()
 {
-	return Vec2f(moveStrafe, moveForward);
+    return Vec2f(moveStrafe, moveForward);
 }

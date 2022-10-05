@@ -14,8 +14,7 @@ namespace caches
  * \brief Cache policy abstract base class
  * \tparam Key Type of a key a policy works with
  */
-template <typename Key>
-class ICachePolicy
+template <typename Key> class ICachePolicy
 {
   public:
     virtual ~ICachePolicy() = default;
@@ -52,11 +51,10 @@ class ICachePolicy
  * there are no warranties that the first/last added key will be erased
  * \tparam Key Type of a key a policy works with
  */
-template <typename Key>
-class NoCachePolicy : public ICachePolicy<Key>
+template <typename Key> class NoCachePolicy : public ICachePolicy<Key>
 {
   public:
-    NoCachePolicy() = default;
+    NoCachePolicy()                    = default;
     ~NoCachePolicy() noexcept override = default;
 
     void Insert(const Key &key) override

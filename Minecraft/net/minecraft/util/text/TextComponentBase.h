@@ -3,7 +3,7 @@
 
 class TextComponentBase : public ITextComponent
 {
-public:
+  public:
     ~TextComponentBase() override = default;
     ITextComponent *appendSibling(const std::shared_ptr<ITextComponent> &component) override;
     TextComponentList getSiblings() const override;
@@ -16,8 +16,9 @@ public:
     virtual std::string toString() const;
     size_t hashCode() const override;
 
-protected:
+  protected:
     TextComponentList siblings;
-private:
+
+  private:
     Style textstyle;
 };

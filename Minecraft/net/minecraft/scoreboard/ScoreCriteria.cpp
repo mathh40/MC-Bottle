@@ -2,21 +2,21 @@
 
 ScoreCriteria::ScoreCriteria(std::string_view name)
 {
-   dummyName = name;
-   IScoreCriteria::INSTANCES.put(name, this);
+    dummyName = name;
+    IScoreCriteria::INSTANCES.put(name, this);
 }
 
 std::string ScoreCriteria::getName()
 {
-   return dummyName;
+    return dummyName;
 }
 
 bool ScoreCriteria::isReadOnly()
 {
-   return false;
+    return false;
 }
 
 IScoreCriteria::EnumRenderType ScoreCriteria::getRenderType()
 {
-   return IScoreCriteria::EnumRenderType::INTEGER;
+    return IScoreCriteria::EnumRenderType::INTEGER;
 }

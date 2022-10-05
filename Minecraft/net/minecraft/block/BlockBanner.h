@@ -1,14 +1,15 @@
 #pragma once
 #include "BlockContainer.h"
 
-class BlockBanner : public BlockContainer {
-public:
+class BlockBanner : public BlockContainer
+{
+  public:
     static PropertyDirection FACING;
     static PropertyInteger ROTATION;
 
     std::string getLocalizedName() const override;
-    std::optional<AxisAlignedBB>
-    getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) override;
+    std::optional<AxisAlignedBB> getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn,
+                                                         BlockPos pos) override;
     bool isFullCube(IBlockState state) override;
     bool isPassable(IBlockAccess worldIn, BlockPos pos) override;
     bool isOpaqueCube(IBlockState state) override;
@@ -23,17 +24,18 @@ public:
                       ItemStack stack) override;
     BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) override;
 
-
-protected:
+  protected:
     static AxisAlignedBB STANDING_AABB;
 
     BlockBanner();
-private:
+
+  private:
     ItemStack getTileDataItemStack(World worldIn, BlockPos pos);
 };
 
-class BlockBannerStanding : public BlockBanner {
-public:
+class BlockBannerStanding : public BlockBanner
+{
+  public:
     BlockBannerStanding();
     AxisAlignedBB &getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) override;
     IBlockState &withRotation(IBlockState state, Rotation rot) override;
@@ -41,12 +43,14 @@ public:
     void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) override;
     IBlockState &getStateFromMeta(uint16_t meta) override;
     uint16_t getMetaFromState(IBlockState state) override;
-protected:
+
+  protected:
     BlockStateContainer createBlockState() override;
 };
 
-class BlockBannerHanging : public BlockBanner {
-public:
+class BlockBannerHanging : public BlockBanner
+{
+  public:
     BlockBannerHanging();
     IBlockState &withRotation(IBlockState state, Rotation rot) override;
     IBlockState &withMirror(IBlockState state, Mirror mirrorIn) override;
@@ -54,7 +58,8 @@ public:
     void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) override;
     IBlockState &getStateFromMeta(uint16_t meta) override;
     uint16_t getMetaFromState(IBlockState state) override;
-protected:
+
+  protected:
     static AxisAlignedBB NORTH_AABB;
     static AxisAlignedBB SOUTH_AABB;
     static AxisAlignedBB WEST_AABB;

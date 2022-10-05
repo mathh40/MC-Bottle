@@ -1,33 +1,31 @@
 #include "AttributeMap.h"
 
-
-
 #include "IAttribute.h"
 #include "IAttributeInstance.h"
 #include "Util.h"
 
-ModifiableAttributeInstance * AttributeMap::getAttributeInstance(IAttribute *attribute)
+ModifiableAttributeInstance *AttributeMap::getAttributeInstance(IAttribute *attribute)
 {
-    return (ModifiableAttributeInstance*)AbstractAttributeMap::getAttributeInstance(attribute);
+    return (ModifiableAttributeInstance *)AbstractAttributeMap::getAttributeInstance(attribute);
 }
 
-ModifiableAttributeInstance * AttributeMap::getAttributeInstanceByName(std::string attributeName)
+ModifiableAttributeInstance *AttributeMap::getAttributeInstanceByName(std::string attributeName)
 {
-    IAttributeInstance* iattributeinstance = AbstractAttributeMap::getAttributeInstanceByName(attributeName);
-    if (iattributeinstance == nullptr) 
+    IAttributeInstance *iattributeinstance = AbstractAttributeMap::getAttributeInstanceByName(attributeName);
+    if (iattributeinstance == nullptr)
     {
         iattributeinstance = instancesByName[attributeName];
     }
 
-    return (ModifiableAttributeInstance*)iattributeinstance;
+    return (ModifiableAttributeInstance *)iattributeinstance;
 }
 
-IAttributeInstance * AttributeMap::registerAttribute(IAttribute *attribute)
+IAttributeInstance *AttributeMap::registerAttribute(IAttribute *attribute)
 {
-    IAttributeInstance* iattributeinstance = AbstractAttributeMap::registerAttribute(attribute);
-    if (Util::instanceof<RangedAttribute>(attribute) && ((RangedAttribute*)attribute).getDescription() != nullptr) 
+    IAttributeInstance *iattributeinstance = AbstractAttributeMap::registerAttribute(attribute);
+    if (Util:: instanceof <RangedAttribute>(attribute) && ((RangedAttribute *)attribute).getDescription() != nullptr)
     {
-        instancesByName.emplace(((RangedAttribute*)attribute).getDescription(), iattributeinstance);
+        instancesByName.emplace(((RangedAttribute *)attribute).getDescription(), iattributeinstance);
     }
 
     return iattributeinstance;
@@ -35,25 +33,25 @@ IAttributeInstance * AttributeMap::registerAttribute(IAttribute *attribute)
 
 void AttributeMap::onAttributeModified(IAttributeInstance *instance)
 {
-    if (instance->getAttribute()->getShouldWatch()) 
+    if (instance->getAttribute()->getShouldWatch())
     {
         dirtyInstances.emplace(instance);
     }
 
     Iterator var2 = descendantsByParent.get(instance->getAttribute()).iterator();
 
-    while(var2.hasNext()) 
+    while (var2.hasNext())
     {
-        IAttribute* iattribute = (IAttribute)var2.next();
-        ModifiableAttributeInstance* modifiableattributeinstance = getAttributeInstance(iattribute);
-        if (modifiableattributeinstance != nullptr) 
+        IAttribute *iattribute                                   = (IAttribute)var2.next();
+        ModifiableAttributeInstance *modifiableattributeinstance = getAttributeInstance(iattribute);
+        if (modifiableattributeinstance != nullptr)
         {
             modifiableattributeinstance->flagForUpdate();
         }
     }
 }
 
-std::unordered_set<IAttributeInstance *> & AttributeMap::getDirtyInstances()
+std::unordered_set<IAttributeInstance *> &AttributeMap::getDirtyInstances()
 {
     return dirtyInstances;
 }
@@ -62,9 +60,9 @@ std::unordered_set<IAttributeInstance *> AttributeMap::getWatchedAttributes() co
 {
     std::unordered_set<IAttributeInstance *> set;
 
-    for(auto& iattributeinstance : getAllAttributes())
+    for (auto &iattributeinstance : getAllAttributes())
     {
-        if (iattributeinstance->getAttribute()->getShouldWatch()) 
+        if (iattributeinstance->getAttribute()->getShouldWatch())
         {
             set.emplace(iattributeinstance);
         }
@@ -73,8 +71,7 @@ std::unordered_set<IAttributeInstance *> AttributeMap::getWatchedAttributes() co
     return set;
 }
 
-IAttributeInstance * AttributeMap::createInstance(IAttribute *attribute)
+IAttributeInstance *AttributeMap::createInstance(IAttribute *attribute)
 {
     return new ModifiableAttributeInstance(this, attribute);
 }
-

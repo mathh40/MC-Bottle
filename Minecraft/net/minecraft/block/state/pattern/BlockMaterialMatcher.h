@@ -4,11 +4,11 @@ class IBlockState;
 
 class BlockMaterialMatcher
 {
-public:
+  public:
     static BlockMaterialMatcher forMaterial(Material materialIn);
-  bool operator()(IBlockState* p_apply_1_);
+    bool operator()(IBlockState *p_apply_1_);
 
-private:
+  private:
     BlockMaterialMatcher(Material materialIn);
 
     Material material;

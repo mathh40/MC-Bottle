@@ -1,76 +1,74 @@
 #include "EntityAITarget.h"
 
-
-#include "EntityAIBeg.h"
-#include "Util.h"
 #include "../../pathfinding/Path.h"
 #include "../../pathfinding/PathPoint.h"
 #include "../../scoreboard/Team.h"
+#include "EntityAIBeg.h"
+#include "Util.h"
 #include "attributes/IAttributeInstance.h"
 #include "biome/Biome.h"
 #include "math/BlockPos.h"
 
-EntityAITarget::EntityAITarget(EntityCreature *creature, bool checkSight)
-    :EntityAITarget(creature, checkSight, false)
+EntityAITarget::EntityAITarget(EntityCreature *creature, bool checkSight) : EntityAITarget(creature, checkSight, false)
 {
 }
 
 EntityAITarget::EntityAITarget(EntityCreature *creature, bool checkSight, bool onlyNearby)
-    :unseenMemoryTicks(60),taskOwner(creature),shouldCheckSight(checkSight),nearbyOnly(onlyNearby)
+    : unseenMemoryTicks(60), taskOwner(creature), shouldCheckSight(checkSight), nearbyOnly(onlyNearby)
 {
-
 }
 
 bool EntityAITarget::shouldContinueExecuting()
 {
-    EntityLivingBase* entitylivingbase = taskOwner->getAttackTarget();
-    if (entitylivingbase == nullptr) 
+    EntityLivingBase *entitylivingbase = taskOwner->getAttackTarget();
+    if (entitylivingbase == nullptr)
     {
         entitylivingbase = target;
     }
 
-    if (entitylivingbase == nullptr) 
+    if (entitylivingbase == nullptr)
     {
         return false;
     }
-    else if (!entitylivingbase->isEntityAlive()) 
+    else if (!entitylivingbase->isEntityAlive())
     {
         return false;
     }
-    else 
+    else
     {
-        Team* team = taskOwner->getTeam();
-        Team* team1 = entitylivingbase->getTeam();
-        if (team != nullptr && team1 == team) 
+        Team *team  = taskOwner->getTeam();
+        Team *team1 = entitylivingbase->getTeam();
+        if (team != nullptr && team1 == team)
         {
             return false;
         }
-        else 
+        else
         {
             double d0 = getTargetDistance();
-            if (taskOwner->getDistanceSq(entitylivingbase) > d0 * d0) 
+            if (taskOwner->getDistanceSq(entitylivingbase) > d0 * d0)
             {
                 return false;
             }
-            else 
+            else
             {
-                if (shouldCheckSight) 
+                if (shouldCheckSight)
                 {
-                    if (taskOwner->getEntitySenses().canSee(entitylivingbase)) 
+                    if (taskOwner->getEntitySenses().canSee(entitylivingbase))
                     {
                         targetUnseenTicks = 0;
                     }
-                    else if (++targetUnseenTicks > unseenMemoryTicks) 
+                    else if (++targetUnseenTicks > unseenMemoryTicks)
                     {
                         return false;
                     }
                 }
 
-                if (Util::instanceof<EntityPlayer>(entitylivingbase) && ((EntityPlayer*)entitylivingbase)->capabilities.disableDamage) 
+                if (Util:: instanceof <EntityPlayer>(entitylivingbase) &&
+                                          ((EntityPlayer *)entitylivingbase)->capabilities.disableDamage)
                 {
                     return false;
                 }
-                else 
+                else
                 {
                     taskOwner->setAttackTarget(entitylivingbase);
                     return true;
@@ -83,8 +81,8 @@ bool EntityAITarget::shouldContinueExecuting()
 void EntityAITarget::startExecuting()
 {
     targetSearchStatus = 0;
-    targetSearchDelay = 0;
-    targetUnseenTicks = 0;
+    targetSearchDelay  = 0;
+    targetUnseenTicks  = 0;
 }
 
 void EntityAITarget::resetTask()
@@ -94,43 +92,46 @@ void EntityAITarget::resetTask()
 }
 
 bool EntityAITarget::isSuitableTarget(EntityLiving *attacker, EntityLivingBase *target, bool includeInvincibles,
-    bool checkSight)
+                                      bool checkSight)
 {
-    if (target == nullptr) 
+    if (target == nullptr)
     {
         return false;
     }
-    else if (target == attacker) 
+    else if (target == attacker)
     {
         return false;
     }
-    else if (!target->isEntityAlive()) 
+    else if (!target->isEntityAlive())
     {
         return false;
     }
-    else if (!attacker->canAttackClass(target->getClass())) 
+    else if (!attacker->canAttackClass(target->getClass()))
     {
         return false;
     }
-    else if (attacker->isOnSameTeam(target)) 
+    else if (attacker->isOnSameTeam(target))
     {
         return false;
     }
-    else 
+    else
     {
-        if (Util::instanceof<IEntityOwnable>(attacker) && ((IEntityOwnable*)attacker)->getOwnerId() != nullptr) 
+        if (Util:: instanceof <IEntityOwnable>(attacker) && ((IEntityOwnable *)attacker)->getOwnerId() != nullptr)
         {
-            if (Util::instanceof<IEntityOwnable>(target) && ((IEntityOwnable*)attacker)->getOwnerId().equals(((IEntityOwnable*)target)->getOwnerId())) 
+            if (Util:: instanceof
+                <IEntityOwnable>(target) &&
+                    ((IEntityOwnable *)attacker)->getOwnerId().equals(((IEntityOwnable *)target)->getOwnerId()))
             {
                 return false;
             }
 
-            if (target == ((IEntityOwnable*)attacker)->getOwner()) 
+            if (target == ((IEntityOwnable *)attacker)->getOwner())
             {
                 return false;
             }
         }
-        else if (Util::instanceof<EntityPlayer>(target) && !includeInvincibles && ((EntityPlayer*)target)->capabilities.disableDamage) 
+        else if (Util:: instanceof <EntityPlayer>(target) && !includeInvincibles &&
+                                       ((EntityPlayer *)target)->capabilities.disableDamage)
         {
             return false;
         }
@@ -139,7 +140,7 @@ bool EntityAITarget::isSuitableTarget(EntityLiving *attacker, EntityLivingBase *
     }
 }
 
-EntityAITarget * EntityAITarget::setUnseenMemoryTicks(int32_t p_190882_1_)
+EntityAITarget *EntityAITarget::setUnseenMemoryTicks(int32_t p_190882_1_)
 {
     unseenMemoryTicks = p_190882_1_;
     return this;
@@ -147,35 +148,35 @@ EntityAITarget * EntityAITarget::setUnseenMemoryTicks(int32_t p_190882_1_)
 
 double EntityAITarget::getTargetDistance()
 {
-    IAttributeInstance* iattributeinstance = taskOwner->getEntityAttribute(SharedMonsterAttributes::FOLLOW_RANGE);
+    IAttributeInstance *iattributeinstance = taskOwner->getEntityAttribute(SharedMonsterAttributes::FOLLOW_RANGE);
     return iattributeinstance == nullptr ? 16.0 : iattributeinstance.getAttributeValue();
 }
 
 bool EntityAITarget::isSuitableTarget(EntityLivingBase *target, bool includeInvincibles)
 {
-    if (!isSuitableTarget(taskOwner, target, includeInvincibles, shouldCheckSight)) 
+    if (!isSuitableTarget(taskOwner, target, includeInvincibles, shouldCheckSight))
     {
         return false;
     }
-    else if (!taskOwner->isWithinHomeDistanceFromPosition(BlockPos(target))) 
+    else if (!taskOwner->isWithinHomeDistanceFromPosition(BlockPos(target)))
     {
         return false;
     }
-    else 
+    else
     {
-        if (nearbyOnly) 
+        if (nearbyOnly)
         {
-            if (--targetSearchDelay <= 0) 
+            if (--targetSearchDelay <= 0)
             {
                 targetSearchStatus = 0;
             }
 
-            if (targetSearchStatus == 0) 
+            if (targetSearchStatus == 0)
             {
                 targetSearchStatus = canEasilyReach(target) ? 1 : 2;
             }
 
-            if (targetSearchStatus == 2) 
+            if (targetSearchStatus == 2)
             {
                 return false;
             }
@@ -188,19 +189,19 @@ bool EntityAITarget::isSuitableTarget(EntityLivingBase *target, bool includeInvi
 bool EntityAITarget::canEasilyReach(EntityLivingBase *target)
 {
     targetSearchDelay = 10 + taskOwner->getRNG().nextInt(5);
-    auto path = taskOwner->getNavigator().getPathToEntityLiving(target);
-    if (!path.has_value()) 
+    auto path         = taskOwner->getNavigator().getPathToEntityLiving(target);
+    if (!path.has_value())
     {
         return false;
     }
-    else 
+    else
     {
         PathPoint pathpoint = path->getFinalPathPoint();
-        if (pathpoint == nullptr) 
+        if (pathpoint == nullptr)
         {
             return false;
         }
-        else 
+        else
         {
             auto i = pathpoint.x - MathHelper::floor(target->posX);
             auto j = pathpoint.z - MathHelper::floor(target->posZ);
@@ -208,4 +209,3 @@ bool EntityAITarget::canEasilyReach(EntityLivingBase *target)
         }
     }
 }
-

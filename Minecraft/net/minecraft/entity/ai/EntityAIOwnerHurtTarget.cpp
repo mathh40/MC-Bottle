@@ -1,29 +1,30 @@
 #include "EntityAIOwnerHurtTarget.h"
 
 EntityAIOwnerHurtTarget::EntityAIOwnerHurtTarget(EntityTameable *theEntityTameableIn)
-    :EntityAITarget(theEntityTameableIn, false),tameable(theEntityTameableIn)
+    : EntityAITarget(theEntityTameableIn, false), tameable(theEntityTameableIn)
 {
     setMutexBits(1);
 }
 
 bool EntityAIOwnerHurtTarget::shouldExecute()
 {
-    if (!tameable->isTamed()) 
+    if (!tameable->isTamed())
     {
         return false;
     }
-    else 
+    else
     {
-        EntityLivingBase* entitylivingbase = tameable->getOwner();
-        if (entitylivingbase == nullptr) 
+        EntityLivingBase *entitylivingbase = tameable->getOwner();
+        if (entitylivingbase == nullptr)
         {
             return false;
         }
-        else 
+        else
         {
             attacker = entitylivingbase->getLastAttackedEntity();
-            auto i = entitylivingbase->getLastAttackedEntityTime();
-            return i != timestamp && isSuitableTarget(attacker, false) && tameable->shouldAttackEntity(attacker, entitylivingbase);
+            auto i   = entitylivingbase->getLastAttackedEntityTime();
+            return i != timestamp && isSuitableTarget(attacker, false) &&
+                   tameable->shouldAttackEntity(attacker, entitylivingbase);
         }
     }
 }
@@ -31,8 +32,8 @@ bool EntityAIOwnerHurtTarget::shouldExecute()
 void EntityAIOwnerHurtTarget::startExecuting()
 {
     taskOwner->setAttackTarget(attacker);
-    EntityLivingBase* entitylivingbase = tameable->getOwner();
-    if (entitylivingbase != nullptr) 
+    EntityLivingBase *entitylivingbase = tameable->getOwner();
+    if (entitylivingbase != nullptr)
     {
         timestamp = entitylivingbase->getLastAttackedEntityTime();
     }

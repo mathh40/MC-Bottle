@@ -1,15 +1,16 @@
 #include "EntityAIMoveThroughVillage.h"
 
-#include "RandomPositionGenerator.h"
-#include "Util.h"
 #include "../../pathfinding/PathNavigateGround.h"
 #include "../../village/Village.h"
+#include "RandomPositionGenerator.h"
+#include "Util.h"
 
-EntityAIMoveThroughVillage::EntityAIMoveThroughVillage(EntityCreature *entityIn, double movementSpeedIn,bool isNocturnalIn)
-    :entity(entityIn),movementSpeed(movementSpeedIn),isNocturnal(isNocturnalIn)
+EntityAIMoveThroughVillage::EntityAIMoveThroughVillage(EntityCreature *entityIn, double movementSpeedIn,
+                                                       bool isNocturnalIn)
+    : entity(entityIn), movementSpeed(movementSpeedIn), isNocturnal(isNocturnalIn)
 {
     setMutexBits(1);
-    if (!(Util::instanceof<PathNavigateGround>(entityIn->getNavigator()))) 
+    if (!(Util:: instanceof <PathNavigateGround>(entityIn->getNavigator())))
     {
         throw std::logic_error("Unsupported mob for MoveThroughVillageGoal");
     }
@@ -18,43 +19,46 @@ EntityAIMoveThroughVillage::EntityAIMoveThroughVillage(EntityCreature *entityIn,
 bool EntityAIMoveThroughVillage::shouldExecute()
 {
     resizeDoorList();
-    if (isNocturnal && entity->world.isDaytime()) 
+    if (isNocturnal && entity->world.isDaytime())
     {
         return false;
     }
-    else 
+    else
     {
         std::optional<Village> village = entity->world.getVillageCollection().getNearestVillage(BlockPos(entity), 0);
-        if (!village.has_value()) 
+        if (!village.has_value())
         {
             return false;
         }
-        else 
+        else
         {
             doorInfo = findNearestDoor(village);
-            if (!doorInfo) 
+            if (!doorInfo)
             {
                 return false;
             }
             else
             {
                 PathNavigateGround pathnavigateground = (PathNavigateGround)entity->getNavigator();
-                bool flag = pathnavigateground.getEnterDoors();
+                bool flag                             = pathnavigateground.getEnterDoors();
                 pathnavigateground.setBreakDoors(false);
                 path = pathnavigateground.getPathToPos(doorInfo.getDoorBlockPos());
                 pathnavigateground.setBreakDoors(flag);
-                if (path) 
+                if (path)
                 {
                     return true;
                 }
-                else 
+                else
                 {
-                    auto vec3d = RandomPositionGenerator::findRandomTargetBlockTowards(entity, 10, 7, Vec3d((double)doorInfo->getDoorBlockPos().getx(), (double)doorInfo->getDoorBlockPos().gety(), (double)doorInfo->getDoorBlockPos().getz()));
-                    if (!vec3d) 
+                    auto vec3d = RandomPositionGenerator::findRandomTargetBlockTowards(
+                        entity, 10, 7,
+                        Vec3d((double)doorInfo->getDoorBlockPos().getx(), (double)doorInfo->getDoorBlockPos().gety(),
+                              (double)doorInfo->getDoorBlockPos().getz()));
+                    if (!vec3d)
                     {
                         return false;
                     }
-                    else 
+                    else
                     {
                         pathnavigateground.setBreakDoors(false);
                         path = entity->getNavigator().getPathToXYZ(vec3d.x, vec3d.y, vec3d.z);
@@ -69,11 +73,11 @@ bool EntityAIMoveThroughVillage::shouldExecute()
 
 bool EntityAIMoveThroughVillage::shouldContinueExecuting()
 {
-    if (entity->getNavigator().noPath()) 
+    if (entity->getNavigator().noPath())
     {
-         return false;
+        return false;
     }
-    else 
+    else
     {
         float f = entity->width + 4.0F;
         return entity->getDistanceSq(doorInfo->getDoorBlockPos()) > (double)(f * f);
@@ -87,7 +91,7 @@ void EntityAIMoveThroughVillage::startExecuting()
 
 void EntityAIMoveThroughVillage::resetTask()
 {
-    if (entity->getNavigator().noPath() || entity->getDistanceSq(doorInfo->getDoorBlockPos()) < 16.0) 
+    if (entity->getNavigator().noPath() || entity->getDistanceSq(doorInfo->getDoorBlockPos()) < 16.0)
     {
         doorList.add(doorInfo);
     }
@@ -98,13 +102,14 @@ std::optional<VillageDoorInfo> EntityAIMoveThroughVillage::findNearestDoor(const
     std::optional<VillageDoorInfo> villagedoorinfo;
     auto i = std::numeric_limits<int32_t>::max();
 
-    for(auto villagedoorinfo1 : villageIn.getVillageDoorInfoList())
+    for (auto villagedoorinfo1 : villageIn.getVillageDoorInfoList())
     {
-        int32_t j = villagedoorinfo1.getDistanceSquared(MathHelper::floor(entity->posX), MathHelper::floor(entity->posY), MathHelper::floor(entity->posZ));
-        if (j < i && !doesDoorListContain(villagedoorinfo1)) 
+        int32_t j = villagedoorinfo1.getDistanceSquared(
+            MathHelper::floor(entity->posX), MathHelper::floor(entity->posY), MathHelper::floor(entity->posZ));
+        if (j < i && !doesDoorListContain(villagedoorinfo1))
         {
             villagedoorinfo = villagedoorinfo1;
-            i = j;
+            i               = j;
         }
     }
 
@@ -116,23 +121,22 @@ bool EntityAIMoveThroughVillage::doesDoorListContain(VillageDoorInfo doorInfoIn)
     Iterator var2 = doorList;
 
     VillageDoorInfo villagedoorinfo;
-    do 
+    do
     {
-        if (!var2.hasNext()) 
+        if (!var2.hasNext())
         {
             return false;
         }
 
         villagedoorinfo = (VillageDoorInfo)var2.next();
-    }
-    while(!doorInfoIn.getDoorBlockPos().equals(villagedoorinfo.getDoorBlockPos()));
+    } while (!doorInfoIn.getDoorBlockPos().equals(villagedoorinfo.getDoorBlockPos()));
 
     return true;
 }
 
 void EntityAIMoveThroughVillage::resizeDoorList()
 {
-    if (doorList.size() > 15) 
+    if (doorList.size() > 15)
     {
         doorList.erase(doorList.begin());
     }

@@ -4,21 +4,21 @@
 
 class World;
 class EntityCreature;
-class EntityAIFleeSun :public EntityAIBase
+class EntityAIFleeSun : public EntityAIBase
 {
-public:
-    EntityAIFleeSun(EntityCreature* theCreatureIn, double movementSpeedIn);
+  public:
+    EntityAIFleeSun(EntityCreature *theCreatureIn, double movementSpeedIn);
     bool shouldExecute() override;
     bool shouldContinueExecuting() override;
     void startExecuting() override;
 
-private:
+  private:
     std::optional<Vec3d> findPossibleShelter();
 
-    EntityCreature* creature;
+    EntityCreature *creature;
     double shelterX;
     double shelterY;
     double shelterZ;
     double movementSpeed;
-    World* world;
+    World *world;
 };

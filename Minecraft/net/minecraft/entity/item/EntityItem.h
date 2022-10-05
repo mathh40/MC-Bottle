@@ -1,23 +1,23 @@
 #pragma once
 #include "../Entity.h"
 
-class EntityItem :public Entity 
+class EntityItem : public Entity
 {
-public:
-    EntityItem(World* worldIn, double x, double y, double z);
-    EntityItem(World* worldIn, double x, double y, double z, ItemStack stack);
-    explicit EntityItem(World* worldIn);
+  public:
+    EntityItem(World *worldIn, double x, double y, double z);
+    EntityItem(World *worldIn, double x, double y, double z, ItemStack stack);
+    explicit EntityItem(World *worldIn);
     void onUpdate() override;
     void setAgeToCreativeDespawnTime();
     bool handleWaterMovement();
     bool attackEntityFrom(DamageSource::DamageSource source, float amount) override;
     static void registerFixesItem(DataFixer fixer);
-    void writeEntityToNBT(NBTTagCompound* compound) override;
-    void readEntityFromNBT(NBTTagCompound* compound) override;
-    void onCollideWithPlayer(EntityPlayer* entityIn) override;
+    void writeEntityToNBT(NBTTagCompound *compound) override;
+    void readEntityFromNBT(NBTTagCompound *compound) override;
+    void onCollideWithPlayer(EntityPlayer *entityIn) override;
     std::string getName() override;
     bool canBeAttackedWithItem() override;
-    Entity* changeDimension(int32_t dimensionIn) override;
+    Entity *changeDimension(int32_t dimensionIn) override;
     ItemStack getItem();
     void setItem(ItemStack stack);
     std::string getOwner() const;
@@ -34,13 +34,15 @@ public:
     void makeFakeItem();
 
     float hoverStart;
-protected:
+
+  protected:
     bool canTriggerWalking() override;
     void entityInit() override;
     void dealFireDamage(int32_t amount) override;
-private:
+
+  private:
     void searchForOtherItemsNearby();
-    bool combineItems(EntityItem* other);
+    bool combineItems(EntityItem *other);
 
     static std::shared_ptr<spdlog::logger> LOGGER;
     static DataParameter ITEM;

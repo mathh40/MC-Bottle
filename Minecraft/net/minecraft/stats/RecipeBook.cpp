@@ -2,68 +2,68 @@
 
 void RecipeBook::copyFrom(RecipeBook that)
 {
-	recipes.clear();
-	newRecipes.clear();
-	recipes |= that.recipes;
-	newRecipes |= that.newRecipes;
+    recipes.clear();
+    newRecipes.clear();
+    recipes |= that.recipes;
+    newRecipes |= that.newRecipes;
 }
 
-void RecipeBook::unlock(IRecipe* recipe)
+void RecipeBook::unlock(IRecipe *recipe)
 {
-	if (!recipe->isDynamic()) 
-	{
-		recipes.set(getRecipeId(recipe));
-	}
+    if (!recipe->isDynamic())
+    {
+        recipes.set(getRecipeId(recipe));
+    }
 }
 
-bool RecipeBook::isUnlocked(IRecipe* recipe)
+bool RecipeBook::isUnlocked(IRecipe *recipe)
 {
-	return recipes[getRecipeId(recipe)];
+    return recipes[getRecipeId(recipe)];
 }
 
-void RecipeBook::lock(IRecipe* recipe)
+void RecipeBook::lock(IRecipe *recipe)
 {
-	int32_t i = getRecipeId(recipe);
-	recipes.set(i,false);
-	newRecipes.set(i,false);
+    int32_t i = getRecipeId(recipe);
+    recipes.set(i, false);
+    newRecipes.set(i, false);
 }
 
-bool RecipeBook::isNew(IRecipe* recipe)
+bool RecipeBook::isNew(IRecipe *recipe)
 {
-	return newRecipes[getRecipeId(recipe)];
+    return newRecipes[getRecipeId(recipe)];
 }
 
-void RecipeBook::markSeen(IRecipe* recipe)
+void RecipeBook::markSeen(IRecipe *recipe)
 {
-	newRecipes.set(getRecipeId(recipe),false);
+    newRecipes.set(getRecipeId(recipe), false);
 }
 
-void RecipeBook::markNew(IRecipe* recipe)
+void RecipeBook::markNew(IRecipe *recipe)
 {
-	newRecipes.set(getRecipeId(recipe));
+    newRecipes.set(getRecipeId(recipe));
 }
 
 bool RecipeBook::isGuiOpen() const
 {
-	return bisGuiOpen;
+    return bisGuiOpen;
 }
 
 void RecipeBook::setGuiOpen(bool open)
 {
-	bisGuiOpen = open;
+    bisGuiOpen = open;
 }
 
 bool RecipeBook::isFilteringCraftable() const
 {
-	return bisFilteringCraftable;
+    return bisFilteringCraftable;
 }
 
 void RecipeBook::setFilteringCraftable(bool shouldFilter) const
 {
-	bisFilteringCraftable = shouldFilter;
+    bisFilteringCraftable = shouldFilter;
 }
 
-int32_t RecipeBook::getRecipeId(IRecipe* recipe)
+int32_t RecipeBook::getRecipeId(IRecipe *recipe)
 {
-	return CraftingManager::REGISTRY.getIDForObject(recipe);
+    return CraftingManager::REGISTRY.getIDForObject(recipe);
 }

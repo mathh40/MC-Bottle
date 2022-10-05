@@ -3,13 +3,14 @@
 #include <string_view>
 #include <vector>
 
-class CommandException :public std::exception {
+class CommandException : public std::exception
+{
 
-public:
+  public:
     CommandException(std::string_view message, const std::vector<> &objects);
     std::vector<> getErrorObjects();
     virtual std::exception &fillInStackTrace();
 
-private:
+  private:
     std::vector<> errorObjects;
 };

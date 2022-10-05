@@ -1,5 +1,7 @@
 #include "NBTTagByte.h"
+
 #include "NBTSizeTracker.h"
+
 #include <istream>
 #include <string>
 
@@ -7,64 +9,62 @@ NBTTagByte::NBTTagByte()
 {
 }
 
-NBTTagByte::NBTTagByte(uint8_t data)
-	:data(data)
+NBTTagByte::NBTTagByte(uint8_t data) : data(data)
 {
-
 }
 
-void NBTTagByte::write(std::ostream& output)
+void NBTTagByte::write(std::ostream &output)
 {
-	output.write(reinterpret_cast<char*>(&data), sizeof(data));
+    output.write(reinterpret_cast<char *>(&data), sizeof(data));
 }
 
-void NBTTagByte::read(std::istream& input, int depth, NBTSizeTracker sizeTracker)
+void NBTTagByte::read(std::istream &input, int depth, NBTSizeTracker sizeTracker)
 {
-	sizeTracker.read(72L);
-	input.read(reinterpret_cast<char*>(&data), sizeof(data));
+    sizeTracker.read(72L);
+    input.read(reinterpret_cast<char *>(&data), sizeof(data));
 }
 
 uint8_t NBTTagByte::getId() const
 {
-	return 1;
+    return 1;
 }
 
 std::string NBTTagByte::to_string() const
 {
-	return std::to_string(data) + "b";
+    return std::to_string(data) + "b";
 }
 
 int64_t NBTTagByte::getLong() const
 {
-	return data;
+    return data;
 }
 
 int32_t NBTTagByte::getInt() const
 {
-	return data;
+    return data;
 }
 
 int16_t NBTTagByte::getShort() const
 {
-	return data;
+    return data;
 }
 
 uint8_t NBTTagByte::getByte() const
 {
-	return data;
+    return data;
 }
 
 double NBTTagByte::getDouble() const
 {
-	return data;
+    return data;
 }
 
 float NBTTagByte::getFloat() const
 {
-	return data;
+    return data;
 }
 
-bool operator==(const NBTTagByte& a, const NBTTagByte& b)
+bool operator==(const NBTTagByte &a, const NBTTagByte &b)
 {
-	return a.data == b.data;
+    return a.data == b.data;
 }

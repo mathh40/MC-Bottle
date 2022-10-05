@@ -1,17 +1,18 @@
 #include "../args/args.hxx"
-#include <iostream>
-#include <filesystem>
-#include "net/minecraft/util/Session.h"
 #include "ThreadName.h"
-#include "net/minecraft/client/main/GameConfiguration.h"
 #include "net/minecraft/client/Minecraft.h"
-#include <nlohmann/json.hpp>
-#include <internal_use_only/config.hpp>
+#include "net/minecraft/client/main/GameConfiguration.h"
+#include "net/minecraft/util/Session.h"
 
+#include <filesystem>
+#include <internal_use_only/config.hpp>
+#include <iostream>
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     args::ArgumentParser parser("Minecraft.", "This goes after the options.");
     args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
     args::Group group(parser, "This group is all exclusive:", args::Group::Validators::Xor);
@@ -41,31 +42,35 @@ int main(int argc, char **argv) {
     args::ValueFlag<std::string> userType(parser, "userType", "User Type", {"userType"}, "legacy");
     args::ValueFlag<std::string> versionType(parser, "versionType", "Version Type", {"versionType"}, "release");
 
-    try {
+    try
+    {
         parser.ParseCLI(argc, argv);
-    } catch (const args::Completion &e) {
+    }
+    catch (const args::Completion &e)
+    {
         std::cout << e.what();
         return 0;
     }
-    catch (const args::Help &) {
+    catch (const args::Help &)
+    {
         std::cout << parser;
         return 0;
     }
-    catch (const args::ParseError &e) {
+    catch (const args::ParseError &e)
+    {
         std::cerr << e.what() << std::endl;
         std::cerr << parser;
         return 1;
     }
 
-
-    auto propertymap = json::parse(userProperties.Get()).get<PropertyMap>();
-    auto propertymap1 = json::parse(profileProperties.Get()).get<PropertyMap>();
-    std::filesystem::path asset = assetsDir.HasFlag() ? assetsDir.Get() : gameDir + "assets/";
+    auto propertymap               = json::parse(userProperties.Get()).get<PropertyMap>();
+    auto propertymap1              = json::parse(profileProperties.Get()).get<PropertyMap>();
+    std::filesystem::path asset    = assetsDir.HasFlag() ? assetsDir.Get() : gameDir + "assets/";
     std::filesystem::path resource = resourcePackDir.HasFlag() ? resourcePackDir.Get() : gameDir + "resourcepacks/";
-    auto u = uuid.HasFlag() ? uuid.Get() : username.Get();
-    auto index = assetIndex.HasFlag() ? assetIndex.Get() : "";
+    auto u                         = uuid.HasFlag() ? uuid.Get() : username.Get();
+    auto index                     = assetIndex.HasFlag() ? assetIndex.Get() : "";
 
-    Session session = Session(username.Get(), u, accessToken.Get(), userType.Get());
+    Session session                     = Session(username.Get(), u, accessToken.Get(), userType.Get());
     GameConfiguration gameconfiguration = GameConfiguration(
         GameConfiguration::UserInformation(session, propertymap, propertymap1),
         GameConfiguration::DisplayInformation(width.Get(), height.Get(), fullscreen.Get(), checkGlErrors.Get()),
@@ -75,10 +80,7 @@ int main(int argc, char **argv) {
 
     Minecraft clientTask(gameconfiguration);
 
-    std::thread client([&]()
-    {
-        clientTask.run();
-    });
+    std::thread client([&]() { clientTask.run(); });
 
     setName(client, "Client thread");
 

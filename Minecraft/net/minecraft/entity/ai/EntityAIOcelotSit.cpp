@@ -4,7 +4,7 @@
 #include "../../tileentity/TileEntityChest.h"
 
 EntityAIOcelotSit::EntityAIOcelotSit(EntityOcelot *ocelotIn, double p_i45315_2_)
-    :EntityAIMoveToBlock(ocelotIn, p_i45315_2_, 8),ocelot(ocelotIn)
+    : EntityAIMoveToBlock(ocelotIn, p_i45315_2_, 8), ocelot(ocelotIn)
 {
 }
 
@@ -29,11 +29,11 @@ void EntityAIOcelotSit::updateTask()
 {
     EntityAIMoveToBlock::updateTask();
     ocelot->getAISit().setSitting(false);
-    if (!getIsAboveDestination()) 
+    if (!getIsAboveDestination())
     {
         ocelot->setSitting(false);
     }
-    else if (!ocelot->isSitting()) 
+    else if (!ocelot->isSitting())
     {
         ocelot->setSitting(true);
     }
@@ -41,30 +41,30 @@ void EntityAIOcelotSit::updateTask()
 
 bool EntityAIOcelotSit::shouldMoveTo(World *worldIn, BlockPos pos)
 {
-    if (!worldIn->isAirBlock(pos.up())) 
+    if (!worldIn->isAirBlock(pos.up()))
     {
         return false;
     }
     else
     {
-        IBlockState* iblockstate = worldIn->getBlockState(pos);
-        Block* block = iblockstate->getBlock();
-        if (block == Blocks::CHEST) 
+        IBlockState *iblockstate = worldIn->getBlockState(pos);
+        Block *block             = iblockstate->getBlock();
+        if (block == Blocks::CHEST)
         {
-            TileEntity* tileentity = worldIn->getTileEntity(pos);
-            if (Util::instanceof<TileEntityChest>(tileentity) && ((TileEntityChest*)tileentity)->numPlayersUsing < 1) 
+            TileEntity *tileentity = worldIn->getTileEntity(pos);
+            if (Util:: instanceof <TileEntityChest>(tileentity) && ((TileEntityChest *)tileentity)->numPlayersUsing < 1)
             {
                 return true;
             }
         }
-        else 
+        else
         {
-            if (block == Blocks::LIT_FURNACE) 
+            if (block == Blocks::LIT_FURNACE)
             {
                 return true;
             }
 
-            if (block == Blocks::BED && iblockstate.getValue(BlockBed::PART) != BlockBed::EnumPartType::HEAD) 
+            if (block == Blocks::BED && iblockstate.getValue(BlockBed::PART) != BlockBed::EnumPartType::HEAD)
             {
                 return true;
             }

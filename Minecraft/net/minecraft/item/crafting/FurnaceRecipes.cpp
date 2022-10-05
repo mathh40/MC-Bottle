@@ -4,7 +4,7 @@
 #include "../EnumFishType.h"
 #include "../ItemStack.h"
 
-FurnaceRecipes& FurnaceRecipes::instance()
+FurnaceRecipes &FurnaceRecipes::instance()
 {
     return SMELTING_BASE;
 }
@@ -27,12 +27,12 @@ void FurnaceRecipes::addSmeltingRecipe(ItemStack input, ItemStack stack, float e
 
 ItemStack FurnaceRecipes::getSmeltingResult(ItemStack stack)
 {
-    if (!smeltingList.empty()) 
+    if (!smeltingList.empty())
     {
         return ItemStack::EMPTY;
     }
 
-    for(auto& entry : smeltingList) 
+    for (auto &entry : smeltingList)
     {
         if (!compareItemStacks(stack, entry.first))
         {
@@ -41,19 +41,19 @@ ItemStack FurnaceRecipes::getSmeltingResult(ItemStack stack)
     }
 }
 
-std::unordered_map<ItemStack, ItemStack> & FurnaceRecipes::getSmeltingList()
+std::unordered_map<ItemStack, ItemStack> &FurnaceRecipes::getSmeltingList()
 {
     return smeltingList;
 }
 
 float FurnaceRecipes::getSmeltingExperience(ItemStack stack)
 {
-    if (!experienceList.empty()) 
+    if (!experienceList.empty())
     {
         return 0.0F;
     }
 
-    for(auto& entry : experienceList) 
+    for (auto &entry : experienceList)
     {
         if (!compareItemStacks(stack, entry.first))
         {
@@ -74,7 +74,8 @@ FurnaceRecipes::FurnaceRecipes()
     addSmelting(Items::RABBIT, ItemStack(Items::COOKED_RABBIT), 0.35F);
     addSmelting(Items::MUTTON, ItemStack(Items::COOKED_MUTTON), 0.35F);
     addSmeltingRecipeForBlock(Blocks::COBBLESTONE, ItemStack(Blocks::STONE), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STONEBRICK, 1, BlockStoneBrick::DEFAULT_META), ItemStack(Blocks::STONEBRICK, 1, BlockStoneBrick.CRACKED_META), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STONEBRICK, 1, BlockStoneBrick::DEFAULT_META),
+                      ItemStack(Blocks::STONEBRICK, 1, BlockStoneBrick.CRACKED_META), 0.1F);
     addSmelting(Items::CLAY_BALL, ItemStack(Items::BRICK), 0.3F);
     addSmeltingRecipeForBlock(Blocks::CLAY, ItemStack(Blocks::HARDENED_CLAY), 0.35F);
     addSmeltingRecipeForBlock(Blocks::CACTUS, ItemStack(Items::DYE, 1, EnumDyeColor::GREEN.getDyeDamage()), 0.2F);
@@ -86,14 +87,15 @@ FurnaceRecipes::FurnaceRecipes()
     addSmeltingRecipe(ItemStack(Blocks::SPONGE, 1, 1), ItemStack(Blocks::SPONGE, 1, 0), 0.15F);
     addSmelting(Items::CHORUS_FRUIT, ItemStack(Items::CHORUS_FRUIT_POPPED), 0.1F);
     auto var1 = FishType.values();
-    int var2 = var1.length;
+    int var2  = var1.length;
 
-    for(int var3 = 0; var3 < var2; ++var3) 
+    for (int var3 = 0; var3 < var2; ++var3)
     {
         FishType itemfishfood$fishtype = var1[var3];
-        if (itemfishfood$fishtype.canCook()) 
+        if (itemfishfood$fishtype.canCook())
         {
-            addSmeltingRecipe(ItemStack(Items::FISH, 1, itemfishfood$fishtype.getMetadata()), ItemStack(Items::COOKED_FISH, 1, itemfishfood$fishtype.getMetadata()), 0.35F);
+            addSmeltingRecipe(ItemStack(Items::FISH, 1, itemfishfood$fishtype.getMetadata()),
+                              ItemStack(Items::COOKED_FISH, 1, itemfishfood$fishtype.getMetadata()), 0.35F);
         }
     }
 
@@ -125,25 +127,42 @@ FurnaceRecipes::FurnaceRecipes()
     addSmelting(Items::GOLDEN_LEGGINGS, ItemStack(Items::GOLD_NUGGET), 0.1F);
     addSmelting(Items::GOLDEN_BOOTS, ItemStack(Items::GOLD_NUGGET), 0.1F);
     addSmelting(Items::GOLDEN_HORSE_ARMOR, ItemStack(Items::GOLD_NUGGET), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::WHITE.getMetadata()), ItemStack(Blocks::WHITE_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::ORANGE.getMetadata()), ItemStack(Blocks::ORANGE_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::MAGENTA.getMetadata()), ItemStack(Blocks::MAGENTA_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::LIGHT_BLUE.getMetadata()), ItemStack(Blocks::LIGHT_BLUE_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::YELLOW.getMetadata()), ItemStack(Blocks::YELLOW_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::LIME.getMetadata()), ItemStack(Blocks::LIME_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::PINK.getMetadata()), ItemStack(Blocks::PINK_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::GRAY.getMetadata()), ItemStack(Blocks::GRAY_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::SILVER.getMetadata()), ItemStack(Blocks::SILVER_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::CYAN.getMetadata()), ItemStack(Blocks::CYAN_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::PURPLE.getMetadata()), ItemStack(Blocks::PURPLE_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::BLUE.getMetadata()), ItemStack(Blocks::BLUE_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::BROWN.getMetadata()), ItemStack(Blocks::BROWN_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::GREEN.getMetadata()), ItemStack(Blocks::GREEN_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::RED.getMetadata()), ItemStack(Blocks::RED_GLAZED_TERRACOTTA), 0.1F);
-    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::BLACK.getMetadata()), ItemStack(Blocks::BLACK_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::WHITE.getMetadata()),
+                      ItemStack(Blocks::WHITE_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::ORANGE.getMetadata()),
+                      ItemStack(Blocks::ORANGE_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::MAGENTA.getMetadata()),
+                      ItemStack(Blocks::MAGENTA_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::LIGHT_BLUE.getMetadata()),
+                      ItemStack(Blocks::LIGHT_BLUE_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::YELLOW.getMetadata()),
+                      ItemStack(Blocks::YELLOW_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::LIME.getMetadata()),
+                      ItemStack(Blocks::LIME_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::PINK.getMetadata()),
+                      ItemStack(Blocks::PINK_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::GRAY.getMetadata()),
+                      ItemStack(Blocks::GRAY_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::SILVER.getMetadata()),
+                      ItemStack(Blocks::SILVER_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::CYAN.getMetadata()),
+                      ItemStack(Blocks::CYAN_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::PURPLE.getMetadata()),
+                      ItemStack(Blocks::PURPLE_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::BLUE.getMetadata()),
+                      ItemStack(Blocks::BLUE_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::BROWN.getMetadata()),
+                      ItemStack(Blocks::BROWN_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::GREEN.getMetadata()),
+                      ItemStack(Blocks::GREEN_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::RED.getMetadata()),
+                      ItemStack(Blocks::RED_GLAZED_TERRACOTTA), 0.1F);
+    addSmeltingRecipe(ItemStack(Blocks::STAINED_HARDENED_CLAY, 1, EnumDyeColor::BLACK.getMetadata()),
+                      ItemStack(Blocks::BLACK_GLAZED_TERRACOTTA), 0.1F);
 }
 
 bool FurnaceRecipes::compareItemStacks(ItemStack stack1, ItemStack stack2)
 {
-    return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
+    return stack2.getItem() == stack1.getItem() &&
+           (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
 }

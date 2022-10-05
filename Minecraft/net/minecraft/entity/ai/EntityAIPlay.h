@@ -4,19 +4,19 @@
 class EntityVillager;
 class EntityLivingBase;
 
-class EntityAIPlay :public EntityAIBase
+class EntityAIPlay : public EntityAIBase
 {
-public:
-    EntityAIPlay(EntityVillager* villagerIn, double speedIn);
+  public:
+    EntityAIPlay(EntityVillager *villagerIn, double speedIn);
     bool shouldExecute() override;
     bool shouldContinueExecuting() override;
     void startExecuting() override;
     void resetTask() override;
     void updateTask() override;
 
-private:
-    EntityVillager* villager;
-    EntityLivingBase* targetVillager;
+  private:
+    EntityVillager *villager;
+    EntityLivingBase *targetVillager;
     double speed;
     int32_t playTime;
 };

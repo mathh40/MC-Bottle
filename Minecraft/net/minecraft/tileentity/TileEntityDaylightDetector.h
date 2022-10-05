@@ -1,9 +1,10 @@
 #include "ITickable.h"
 #include "TileEntity.h"
 
-class TileEntityDaylightDetector :public TileEntity , ITickable
+class TileEntityDaylightDetector : public TileEntity, ITickable
 {
-public:
-	void update() override;
-private:
+  public:
+    void update() override;
+
+  private:
 };

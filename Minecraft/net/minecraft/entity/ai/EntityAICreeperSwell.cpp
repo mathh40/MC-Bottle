@@ -1,15 +1,15 @@
 #include "EntityAICreeperSwell.h"
 
-EntityAICreeperSwell::EntityAICreeperSwell(EntityCreeper *entitycreeperIn)
-    :swellingCreeper(entitycreeperIn)
+EntityAICreeperSwell::EntityAICreeperSwell(EntityCreeper *entitycreeperIn) : swellingCreeper(entitycreeperIn)
 {
     setMutexBits(1);
 }
 
 bool EntityAICreeperSwell::shouldExecute()
 {
-    EntityLivingBase* entitylivingbase = swellingCreeper->getAttackTarget();
-    return swellingCreeper->getCreeperState() > 0 || entitylivingbase != nullptr && swellingCreeper->getDistanceSq(entitylivingbase) < 9.0;
+    EntityLivingBase *entitylivingbase = swellingCreeper->getAttackTarget();
+    return swellingCreeper->getCreeperState() > 0 ||
+           entitylivingbase != nullptr && swellingCreeper->getDistanceSq(entitylivingbase) < 9.0;
 }
 
 void EntityAICreeperSwell::startExecuting()
@@ -25,19 +25,19 @@ void EntityAICreeperSwell::resetTask()
 
 void EntityAICreeperSwell::updateTask()
 {
-    if (creeperAttackTarget == nullptr) 
+    if (creeperAttackTarget == nullptr)
     {
         swellingCreeper->setCreeperState(-1);
     }
-    else if (swellingCreeper->getDistanceSq(creeperAttackTarget) > 49.0) 
+    else if (swellingCreeper->getDistanceSq(creeperAttackTarget) > 49.0)
     {
         swellingCreeper->setCreeperState(-1);
     }
-    else if (!swellingCreeper->getEntitySenses().canSee(creeperAttackTarget)) 
+    else if (!swellingCreeper->getEntitySenses().canSee(creeperAttackTarget))
     {
         swellingCreeper->setCreeperState(-1);
     }
-    else 
+    else
     {
         swellingCreeper->setCreeperState(1);
     }

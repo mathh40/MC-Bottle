@@ -1,85 +1,84 @@
 #include "BossInfo.h"
 
 BossInfo::BossInfo(xg::Guid uniqueIdIn, std::unique_ptr<ITextComponent> nameIn, Color colorIn, Overlay overlayIn)
-	:uniqueId(uniqueIdIn), name(std::move(nameIn)), color(colorIn), overlay(overlayIn), percent(1.0f)
+    : uniqueId(uniqueIdIn), name(std::move(nameIn)), color(colorIn), overlay(overlayIn), percent(1.0f)
 {
-
 }
 
 xg::Guid BossInfo::getUniqueId() const
 {
-	return uniqueId;
+    return uniqueId;
 }
 
-ITextComponent* BossInfo::getName() const
+ITextComponent *BossInfo::getName() const
 {
-	return name.get();
+    return name.get();
 }
 
 void BossInfo::setName(std::unique_ptr<ITextComponent> nameIn)
 {
-	name = std::move(nameIn);
+    name = std::move(nameIn);
 }
 
 float BossInfo::getPercent() const
 {
-	return percent;
+    return percent;
 }
 
 void BossInfo::setPercent(float percentIn)
 {
-	percent = percentIn;
+    percent = percentIn;
 }
 
 Color BossInfo::getColor() const
 {
-	return color;
+    return color;
 }
 
 void BossInfo::setColor(Color colorIn)
 {
-	color = colorIn;
+    color = colorIn;
 }
 
 Overlay BossInfo::getOverlay() const
 {
-	return overlay;
+    return overlay;
 }
 
 void BossInfo::setOverlay(Overlay overlayIn)
 {
-	overlay = overlayIn;
+    overlay = overlayIn;
 }
 
 bool BossInfo::shouldDarkenSky() const
 {
-	return darkenSky;
+    return darkenSky;
 }
 
-BossInfo& BossInfo::setDarkenSky(bool darkenSkyIn)
+BossInfo &BossInfo::setDarkenSky(bool darkenSkyIn)
 {
-	darkenSky = darkenSkyIn;
-	return *this;
+    darkenSky = darkenSkyIn;
+    return *this;
 }
 
 bool BossInfo::shouldPlayEndBossMusic() const
 {
-	return playEndBossMusic;
+    return playEndBossMusic;
 }
 
-BossInfo& BossInfo::setPlayEndBossMusic(bool playEndBossMusicIn)
+BossInfo &BossInfo::setPlayEndBossMusic(bool playEndBossMusicIn)
 {
-	playEndBossMusic = playEndBossMusicIn;
-	return *this;
+    playEndBossMusic = playEndBossMusicIn;
+    return *this;
 }
 
-BossInfo& BossInfo::setCreateFog(bool createFogIn)
+BossInfo &BossInfo::setCreateFog(bool createFogIn)
 {
-	createFog = createFogIn;
-	return *this;
+    createFog = createFogIn;
+    return *this;
 }
 
 bool BossInfo::shouldCreateFog() const
 {
-	return createFog;
+    return createFog;
 }

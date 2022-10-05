@@ -1,13 +1,15 @@
 #pragma once
 #include "Potion.h"
 
-class PotionAttackDamage :public Potion
+class PotionAttackDamage : public Potion
 {
-public:
-  double getAttributeModifierAmount(int32_t amplifier, AttributeModifier modifier);
-protected:
-  PotionAttackDamage(bool isBadEffectIn, int32_t liquidColorIn, double bonusPerLevelIn);
+  public:
+    double getAttributeModifierAmount(int32_t amplifier, AttributeModifier modifier);
 
-  double bonusPerLevel;
-private:
+  protected:
+    PotionAttackDamage(bool isBadEffectIn, int32_t liquidColorIn, double bonusPerLevelIn);
+
+    double bonusPerLevel;
+
+  private:
 };

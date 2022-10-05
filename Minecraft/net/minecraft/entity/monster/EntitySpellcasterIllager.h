@@ -1,11 +1,13 @@
 #pragma once
-#include "AbstractIllager.h"
 #include "../ai/EntityAIBase.h"
+#include "AbstractIllager.h"
 
-class EntitySpellcasterIllager : public AbstractIllager {
-public:
-    class SpellType {
-    public:
+class EntitySpellcasterIllager : public AbstractIllager
+{
+  public:
+    class SpellType
+    {
+      public:
         static SpellType NONE;
         static SpellType SUMMON_VEX;
         static SpellType FANGS;
@@ -19,15 +21,15 @@ public:
         int32_t getID() const;
         std::array<double, 3> getParticleSpeed() const;
 
-    private:
+      private:
         int32_t id;
         std::array<double, 3> particleSpeed;
         static std::vector<SpellType *> valu;
     };
 
-    class AIUseSpell : public EntityAIBase {
-    public:
-
+    class AIUseSpell : public EntityAIBase
+    {
+      public:
         AIUseSpell(EntitySpellcasterIllager *entitySpellcasterIllagerIn);
 
         bool shouldExecute() override;
@@ -38,7 +40,7 @@ public:
 
         void updateTask() override;
 
-    protected:
+      protected:
         int32_t spellWarmup;
         int32_t spellCooldown;
 
@@ -53,12 +55,14 @@ public:
         virtual std::optional<SoundEvent> getSpellPrepareSound() = 0;
 
         virtual EntitySpellcasterIllager::SpellType getSpellType() = 0;
-    public:
+
+      public:
         EntitySpellcasterIllager *entitySpellcasterIllager;
     };
 
-    class AICastingApell : public EntityAIBase {
-    public:
+    class AICastingApell : public EntityAIBase
+    {
+      public:
         AICastingApell(EntitySpellcasterIllager *entitySpellcasterIllagerIn);
 
         bool shouldExecute() override;
@@ -68,26 +72,27 @@ public:
         void resetTask() override;
 
         void updateTask() override;
-    private:
+
+      private:
         EntitySpellcasterIllager *entitySpellcasterIllager;
     };
 
-    EntitySpellcasterIllager(World* p_i47506_1_);
-    void readEntityFromNBT(NBTTagCompound* compound) override;
-    void writeEntityToNBT(NBTTagCompound* compound) override;
+    EntitySpellcasterIllager(World *p_i47506_1_);
+    void readEntityFromNBT(NBTTagCompound *compound) override;
+    void writeEntityToNBT(NBTTagCompound *compound) override;
     AbstractIllager::IllagerArmPose getArmPose() override;
     bool isSpellcasting() const;
     void setSpellType(EntitySpellcasterIllager::SpellType spellType);
     void onUpdate() override;
 
-protected:
-    void entityInit() override;  
+  protected:
+    void entityInit() override;
     EntitySpellcasterIllager::SpellType getSpellType();
     void updateAITasks() override;
     int32_t getSpellTicks() const;
-    virtual  SoundEvent getSpellSound() = 0;
+    virtual SoundEvent getSpellSound() = 0;
 
-private:
+  private:
     static DataParameter SPELL;
     int32_t spellTicks;
     EntitySpellcasterIllager::SpellType activeSpell;

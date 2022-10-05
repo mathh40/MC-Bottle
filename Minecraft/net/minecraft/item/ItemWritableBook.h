@@ -1,11 +1,10 @@
 #pragma once
 #include "Item.h"
 
-class ItemWritableBook :public Item
+class ItemWritableBook : public Item
 {
-public:
+  public:
     ItemWritableBook();
-    ActionResult onItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand handIn) override;
-    static bool isNBTValid(NBTTagCompound* nbt);
-
+    ActionResult onItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand handIn) override;
+    static bool isNBTValid(NBTTagCompound *nbt);
 };

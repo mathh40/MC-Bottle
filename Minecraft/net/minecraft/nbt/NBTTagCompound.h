@@ -2,20 +2,20 @@
 #include "NBTBase.h"
 #include "NBTTagByte.h"
 #include "NBTTagList.h"
+
 #include <ByteBuffer.h>
 #include <memory>
 #include <spdlog/logger.h>
 #include <unordered_map>
 
-
 namespace xg
 {
-    class Guid;
+class Guid;
 }
 
 class NBTTagCompound : public NBTBase
 {
-public:
+  public:
     void write(std::ostream &output) const override;
     void read(std::istream &input, int depth, NBTSizeTracker sizeTracker);
     uint8_t getId() const override;
@@ -25,7 +25,6 @@ public:
 
     friend bool operator==(const NBTTagCompound &a, const NBTTagCompound &b);
     void merge(NBTTagCompound *other);
-
 
     void setTag(std::string key, std::unique_ptr<NBTBase> value);
     void setByte(std::string key, uint8_t value);
@@ -60,10 +59,10 @@ public:
     void removeTag(std::string key);
     const std::unordered_map<const std::string, std::unique_ptr<NBTBase>> &getCompoundMap() const;
 
-protected:
+  protected:
     std::string handleEscape(std::string p_193582_0_) const;
 
-private:
+  private:
     static std::shared_ptr<spdlog::logger> LOGGER;
     std::unordered_map<const std::string, std::unique_ptr<NBTBase>> tagMap;
 
@@ -78,19 +77,18 @@ private:
 
 namespace std
 {
-    template <>
-    struct hash<NBTTagCompound>
+template <> struct hash<NBTTagCompound>
+{
+    size_t operator()(const NBTTagCompound &x) const noexcept
     {
-        size_t operator()(const NBTTagCompound &x) const noexcept
+        size_t hash = 0;
+
+        for (auto byte : x.getCompoundMap())
         {
-            size_t hash = 0;
-
-            for (auto byte : x.getCompoundMap())
-            {
-                hash = hash * 31 + std::hash<NBTBase>{}(*byte.second);
-            }
-
-            return std::hash<NBTBase>{}(x) ^ hash;
+            hash = hash * 31 + std::hash<NBTBase>{}(*byte.second);
         }
-    };
+
+        return std::hash<NBTBase>{}(x) ^ hash;
+    }
+};
 } // namespace std

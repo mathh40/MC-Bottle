@@ -1,13 +1,10 @@
 #include "InventoryCraftResult.h"
 
-
-
 #include "ItemStackHelper.h"
 #include "text/TextComponentString.h"
 #include "text/TextComponentTranslation.h"
 
-InventoryCraftResult::InventoryCraftResult()
-    :stackResult(1, ItemStack::EMPTY)
+InventoryCraftResult::InventoryCraftResult() : stackResult(1, ItemStack::EMPTY)
 {
 }
 
@@ -18,13 +15,13 @@ int32_t InventoryCraftResult::getSizeInventory()
 
 bool InventoryCraftResult::isEmpty()
 {
-    if(stackResult.empty())
+    if (stackResult.empty())
     {
         return true;
     }
 
     bool isEmpty = true;
-    for(auto itemstack : stackResult)
+    for (auto itemstack : stackResult)
     {
         isEmpty = itemstack.isEmpty();
     }
@@ -48,7 +45,8 @@ bool InventoryCraftResult::hasCustomName() const
 
 std::unique_ptr<ITextComponent> InventoryCraftResult::getDisplayName() const
 {
-    return (ITextComponent)(hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getName(), new Object[0]));
+    return (ITextComponent)(hasCustomName() ? new TextComponentString(getName())
+                                            : new TextComponentTranslation(getName(), new Object[0]));
 }
 
 ItemStack InventoryCraftResult::decrStackSize(int32_t index, int32_t count)
@@ -73,7 +71,6 @@ int32_t InventoryCraftResult::getInventoryStackLimit() const
 
 void InventoryCraftResult::markDirty()
 {
-
 }
 
 bool InventoryCraftResult::isUsableByPlayer(EntityPlayer *player)
@@ -101,7 +98,6 @@ int32_t InventoryCraftResult::getField(int32_t id)
 
 void InventoryCraftResult::setField(int32_t id, int32_t value)
 {
-
 }
 
 int32_t InventoryCraftResult::getFieldCount()
@@ -119,7 +115,7 @@ void InventoryCraftResult::setRecipeUsed(IRecipe *p_193056_1_)
     recipeUsed = p_193056_1_;
 }
 
-IRecipe * InventoryCraftResult::getRecipeUsed() const
+IRecipe *InventoryCraftResult::getRecipeUsed() const
 {
     return recipeUsed;
 }

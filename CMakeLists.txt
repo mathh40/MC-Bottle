@@ -26,7 +26,7 @@ include(${_project_options_SOURCE_DIR}/src/DynamicProjectOptions.cmake)
 set(ENABLE_DEVELOPER_MODE
     TRUE
     CACHE BOOL "Enable 'developer mode'")
-	
+
 # Change this to false if you want to disable warnings_as_errors in developer mode
 set(OPT_WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT TRUE)
 
@@ -40,7 +40,7 @@ project(
 	DESCRIPTION ""
 	HOMEPAGE_URL "%%myurl%%"
 	LANGUAGES CXX C)
-	
+
 
 # This variable is set by project() in CMake 3.21+
 string(
@@ -62,7 +62,7 @@ string(
             0
             8
             GIT_SHORT_SHA)
-			
+
 get_property(BUILDING_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(BUILDING_MULTI_CONFIG)
   if(NOT CMAKE_BUILD_TYPE)

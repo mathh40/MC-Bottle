@@ -1,22 +1,21 @@
 #include "ModifiableAttributeInstance.h"
 
-
-
 #include "AbstractAttributeMap.h"
 #include "AttributeModifier.h"
 #include "IAttribute.h"
 
 ModifiableAttributeInstance::ModifiableAttributeInstance(AbstractAttributeMap *attributeMapIn,
                                                          IAttribute *genericAttributeIn)
-        :attributeMap(attributeMapIn),genericAttribute(genericAttributeIn),baseValue(genericAttributeIn->getDefaultValue())
+    : attributeMap(attributeMapIn), genericAttribute(genericAttributeIn),
+      baseValue(genericAttributeIn->getDefaultValue())
 {
-    for(auto i = 0; i < 3; ++i) 
+    for (auto i = 0; i < 3; ++i)
     {
         mapByOperation.emplace(i, {});
     }
 }
 
-IAttribute * ModifiableAttributeInstance::getAttribute()
+IAttribute *ModifiableAttributeInstance::getAttribute()
 {
     return genericAttribute;
 }
@@ -28,7 +27,7 @@ double ModifiableAttributeInstance::getBaseValue()
 
 void ModifiableAttributeInstance::setBaseValue(double baseValue)
 {
-    if (baseValue != getBaseValue()) 
+    if (baseValue != getBaseValue())
     {
         baseValue = baseValue;
         flagForUpdate();
@@ -44,12 +43,12 @@ std::vector<AttributeModifier> ModifiableAttributeInstance::getModifiers()
 {
     std::unordered_set<> set;
 
-    for(auto i = 0; i < 3; ++i) 
+    for (auto i = 0; i < 3; ++i)
     {
         set.addAll(getModifiersByOperation(i));
     }
 
-    return set;    
+    return set;
 }
 
 AttributeModifier ModifiableAttributeInstance::getModifier(const xg::Guid &uuid)
@@ -64,14 +63,14 @@ bool ModifiableAttributeInstance::hasModifier(const AttributeModifier &modifier)
 
 void ModifiableAttributeInstance::applyModifier(const AttributeModifier &modifier)
 {
-    if (getModifier(modifier.getID()) != nullptr) 
+    if (getModifier(modifier.getID()) != nullptr)
     {
         throw std::logic_error("Modifier is already applied on this attribute!");
     }
-    else 
+    else
     {
         Set set = (Set)mapByName.get(modifier.getName());
-        if (set.empty()) 
+        if (set.empty())
         {
             set = Sets.newHashSet();
             mapByName.put(modifier.getName(), set);
@@ -86,17 +85,17 @@ void ModifiableAttributeInstance::applyModifier(const AttributeModifier &modifie
 
 void ModifiableAttributeInstance::removeModifier(const AttributeModifier &modifier)
 {
-    for(auto i = 0; i < 3; ++i) 
+    for (auto i = 0; i < 3; ++i)
     {
         Set set = (Set)mapByOperation.get(i);
         set.remove(modifier);
     }
 
     Set set1 = (Set)mapByName.get(modifier.getName());
-    if (set1 != nullptr) 
+    if (set1 != nullptr)
     {
         set1.remove(modifier);
-        if (set1.isEmpty()) 
+        if (set1.isEmpty())
         {
             mapByName.remove(modifier.getName());
         }
@@ -109,7 +108,7 @@ void ModifiableAttributeInstance::removeModifier(const AttributeModifier &modifi
 void ModifiableAttributeInstance::removeModifier(const xg::Guid &p_188479_1_)
 {
     AttributeModifier attributemodifier = getModifier(p_188479_1_);
-    if (attributemodifier != nullptr) 
+    if (attributemodifier != nullptr)
     {
         removeModifier(attributemodifier);
     }
@@ -118,11 +117,12 @@ void ModifiableAttributeInstance::removeModifier(const xg::Guid &p_188479_1_)
 void ModifiableAttributeInstance::removeAllModifiers()
 {
     std::vector<AttributeModifier> collection = getModifiers();
-    if (collection != nullptr) 
+    if (collection != nullptr)
     {
         Iterator var2 = Lists.newArrayList(collection).iterator();
 
-        while(var2.hasNext()) {
+        while (var2.hasNext())
+        {
             AttributeModifier attributemodifier = (AttributeModifier)var2.next();
             removeModifier(attributemodifier);
         }
@@ -131,7 +131,7 @@ void ModifiableAttributeInstance::removeAllModifiers()
 
 double ModifiableAttributeInstance::getAttributeValue()
 {
-    if (needsUpdate) 
+    if (needsUpdate)
     {
         cachedValue = computeValue();
         needsUpdate = false;
@@ -151,7 +151,7 @@ double ModifiableAttributeInstance::computeValue()
     double d0 = getBaseValue();
 
     AttributeModifier attributemodifier;
-    for(Iterator var3 = getAppliedModifiers(0).iterator(); var3.hasNext(); d0 += attributemodifier.getAmount()) 
+    for (Iterator var3 = getAppliedModifiers(0).iterator(); var3.hasNext(); d0 += attributemodifier.getAmount())
     {
         attributemodifier = (AttributeModifier)var3.next();
     }
@@ -160,12 +160,12 @@ double ModifiableAttributeInstance::computeValue()
 
     Iterator var5;
     AttributeModifier attributemodifier2;
-    for(var5 = getAppliedModifiers(1).iterator(); var5.hasNext(); d1 += d0 * attributemodifier2.getAmount()) 
+    for (var5 = getAppliedModifiers(1).iterator(); var5.hasNext(); d1 += d0 * attributemodifier2.getAmount())
     {
         attributemodifier2 = (AttributeModifier)var5.next();
     }
 
-    for(var5 = getAppliedModifiers(2).iterator(); var5.hasNext(); d1 *= 1.0 + attributemodifier2.getAmount()) 
+    for (var5 = getAppliedModifiers(2).iterator(); var5.hasNext(); d1 *= 1.0 + attributemodifier2.getAmount())
     {
         attributemodifier2 = (AttributeModifier)var5.next();
     }
@@ -177,10 +177,11 @@ std::vector<AttributeModifier> ModifiableAttributeInstance::getAppliedModifiers(
 {
     Set set = Sets.newHashSet(getModifiersByOperation(operation));
 
-    for(IAttribute* iattribute = genericAttribute->getParent(); iattribute != nullptr; iattribute = iattribute->getParent()) 
+    for (IAttribute *iattribute = genericAttribute->getParent(); iattribute != nullptr;
+         iattribute             = iattribute->getParent())
     {
-        IAttributeInstance* iattributeinstance = attributeMap->getAttributeInstance(iattribute);
-        if (iattributeinstance != nullptr) 
+        IAttributeInstance *iattributeinstance = attributeMap->getAttributeInstance(iattribute);
+        if (iattributeinstance != nullptr)
         {
             set.addAll(iattributeinstance->getModifiersByOperation(operation));
         }

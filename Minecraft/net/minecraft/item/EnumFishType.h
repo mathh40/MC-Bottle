@@ -7,13 +7,14 @@ class ItemStack;
 
 class FishType
 {
-public:
+  public:
     static FishType COD;
     static FishType SALMON;
     static FishType CLOWNFISH;
     static FishType PUFFERFISH;
 
-    FishType(int32_t meta, std::string_view unlocalizedName, int32_t uncookedHeal, float uncookedSaturation, int32_t cookedHeal, float cookedSaturation,bool bcookable = true);
+    FishType(int32_t meta, std::string_view unlocalizedName, int32_t uncookedHeal, float uncookedSaturation,
+             int32_t cookedHeal, float cookedSaturation, bool bcookable = true);
     FishType(int32_t meta, std::string_view unlocalizedName, int32_t uncookedHeal, float uncookedSaturation);
     int32_t getMetadata() const;
     std::string getTranslationKey() const;
@@ -25,8 +26,8 @@ public:
     static FishType byMetadata(int32_t meta);
     static FishType byItemStack(ItemStack stack);
 
-private:
-    static std::unordered_map<int32_t,FishType> META_LOOKUP;
+  private:
+    static std::unordered_map<int32_t, FishType> META_LOOKUP;
     int32_t meta;
     std::string translationKey;
     int32_t uncookedHealAmount;

@@ -1,11 +1,11 @@
 #include "WorldProviderSurface.h"
 
-DimensionType& WorldProviderSurface::getDimensionType()
+DimensionType &WorldProviderSurface::getDimensionType()
 {
-	return DimensionType::OVERWORLD;
+    return DimensionType::OVERWORLD;
 }
 
 bool WorldProviderSurface::canDropChunk(int32_t x, int32_t z)
 {
-	return !world->isSpawnChunk(x, z);
+    return !world->isSpawnChunk(x, z);
 }

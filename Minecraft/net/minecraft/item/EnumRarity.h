@@ -3,7 +3,7 @@
 
 class EnumRarity
 {
-public:
+  public:
     static EnumRarity COMMON;
     static EnumRarity UNCOMMON;
     static EnumRarity RARE;

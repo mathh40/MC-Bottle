@@ -1,21 +1,20 @@
 #include "ReportedException.h"
 
-ReportedException::ReportedException(CrashReport& report)
-	:crashReport(report)
+ReportedException::ReportedException(CrashReport &report) : crashReport(report)
 {
-
 }
 
-CrashReport& ReportedException::getCrashReport()
+CrashReport &ReportedException::getCrashReport()
 {
-	return crashReport;
+    return crashReport;
 }
 
-std::exception& ReportedException::getCause() const {
-	return crashReport.getCrashCause();
+std::exception &ReportedException::getCause() const
+{
+    return crashReport.getCrashCause();
 }
 
-char const * ReportedException::what() const
+char const *ReportedException::what() const
 {
-	return crashReport.getDescription().data();
+    return crashReport.getDescription().data();
 }

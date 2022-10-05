@@ -1,88 +1,102 @@
-#include "ITextComponent.h"
 #include "TextComponentBase.h"
+
+#include "ITextComponent.h"
 #include "TextComponentString.h"
 #include "TextFormatting.h"
+
 #include <sstream>
 
-ITextComponent *TextComponentBase::appendSibling(const std::shared_ptr<ITextComponent> &component) {
-	component->getStyle().setParentStyle(getStyle());
-	siblings.push_back(component);
-	return this;
+ITextComponent *TextComponentBase::appendSibling(const std::shared_ptr<ITextComponent> &component)
+{
+    component->getStyle().setParentStyle(getStyle());
+    siblings.push_back(component);
+    return this;
 }
 
-ITextComponent::TextComponentList TextComponentBase::getSiblings() const { return siblings; } 
+ITextComponent::TextComponentList TextComponentBase::getSiblings() const
+{
+    return siblings;
+}
 
-ITextComponent* TextComponentBase::appendText(std::string_view text)
+ITextComponent *TextComponentBase::appendText(std::string_view text)
 {
     auto appText = std::make_shared<TextComponentString>(text);
     return appendSibling(appText);
 }
 
-ITextComponent* TextComponentBase::setStyle(const Style& style)
+ITextComponent *TextComponentBase::setStyle(const Style &style)
 {
     textstyle = style;
 
-	for(auto itextcomponent : siblings)
-	{
-		itextcomponent->getStyle().setParentStyle(getStyle());
-	}
-	return this;
+    for (auto itextcomponent : siblings)
+    {
+        itextcomponent->getStyle().setParentStyle(getStyle());
+    }
+    return this;
 }
 
-Style& TextComponentBase::getStyle()
-{ return textstyle; }
+Style &TextComponentBase::getStyle()
+{
+    return textstyle;
+}
 
-const Style& TextComponentBase::getStyle() const
-{ return textstyle; }
+const Style &TextComponentBase::getStyle() const
+{
+    return textstyle;
+}
 
 std::string TextComponentBase::getUnformattedText() const
 {
-	std::stringstream stringbuilder;
+    std::stringstream stringbuilder;
 
-	for(auto itextcomponent : siblings)
-	{
-		stringbuilder << (itextcomponent->getUnformattedComponentText());
-	}
+    for (auto itextcomponent : siblings)
+    {
+        stringbuilder << (itextcomponent->getUnformattedComponentText());
+    }
 
-	return stringbuilder.str();
+    return stringbuilder.str();
 }
 
 std::string TextComponentBase::getFormattedText() const
 {
-	std::stringstream stringbuilder;
+    std::stringstream stringbuilder;
 
-	for (auto itextcomponent : siblings) {
-		auto s = itextcomponent->getUnformattedComponentText();
-		if (!s.empty()) {
-			stringbuilder << (itextcomponent->getStyle().getFormattingCode());
-			stringbuilder << (s);
-			stringbuilder << (TextFormatting::RESET);
-		}
-	}
+    for (auto itextcomponent : siblings)
+    {
+        auto s = itextcomponent->getUnformattedComponentText();
+        if (!s.empty())
+        {
+            stringbuilder << (itextcomponent->getStyle().getFormattingCode());
+            stringbuilder << (s);
+            stringbuilder << (TextFormatting::RESET);
+        }
+    }
 
-	return stringbuilder.str();
+    return stringbuilder.str();
 }
 
 std::string TextComponentBase::toString() const
 {
     std::stringstream stringbuilder("BaseComponent{style=" + textstyle.to_string() + ", siblings=");
-    for (auto sib : siblings) {
-        if (!sib) {
+    for (auto sib : siblings)
+    {
+        if (!sib)
+        {
 
             stringbuilder << sib->getUnformattedText();
             stringbuilder << ',';
         }
-	}
+    }
     stringbuilder << '}';
     return stringbuilder.str();
 }
 
-size_t TextComponentBase::hashCode() const 
+size_t TextComponentBase::hashCode() const
 {
-	auto i = 31 * std::hash<Style>{}(textstyle);
+    auto i = 31 * std::hash<Style>{}(textstyle);
     for (auto sib : siblings)
     {
-		i+= 31 * sib->hashCode();
-	}
-	return i;
+        i += 31 * sib->hashCode();
+    }
+    return i;
 }

@@ -1,25 +1,25 @@
 #pragma once
-#include "IMerchant.h"
 #include "../inventory/InventoryMerchant.h"
 #include "../village/MerchantRecipeList.h"
+#include "IMerchant.h"
 
-class NpcMerchant :public IMerchant {
-public:
-    NpcMerchant(EntityPlayer* customerIn, ITextComponent* nameIn);
-    EntityPlayer* getCustomer() override;
-    void setCustomer(EntityPlayer* player) override;
-    std::optional<MerchantRecipeList> getRecipes(EntityPlayer* player) override;
+class NpcMerchant : public IMerchant
+{
+  public:
+    NpcMerchant(EntityPlayer *customerIn, ITextComponent *nameIn);
+    EntityPlayer *getCustomer() override;
+    void setCustomer(EntityPlayer *player) override;
+    std::optional<MerchantRecipeList> getRecipes(EntityPlayer *player) override;
     void setRecipes(std::optional<MerchantRecipeList> recipeListIn);
     void useRecipe(MerchantRecipe recipe) override;
     void verifySellingItem(ItemStack stack) override;
-    ITextComponent* getDisplayName() override;
-    World* getWorld() override;
+    ITextComponent *getDisplayName() override;
+    World *getWorld() override;
     BlockPos getPos() override;
 
-
-private:
+  private:
     InventoryMerchant merchantInventory;
-    EntityPlayer* customer;
+    EntityPlayer *customer;
     std::optional<MerchantRecipeList> recipeList;
-    ITextComponent* name;
+    ITextComponent *name;
 };

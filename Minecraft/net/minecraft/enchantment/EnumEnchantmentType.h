@@ -2,10 +2,11 @@
 #include <vector>
 class Item;
 
-class EnumEnchantmentType {
-    public:
-
-    enum class Type {
+class EnumEnchantmentType
+{
+  public:
+    enum class Type
+    {
         ALL,
         ARMOR,
         ARMOR_FEET,
@@ -33,13 +34,14 @@ class EnumEnchantmentType {
     static EnumEnchantmentType BOW;
     static EnumEnchantmentType WEARABLE;
 
-    friend bool operator==(const EnumEnchantmentType& lhs , const EnumEnchantmentType& rhs);
-    friend bool operator!=(const EnumEnchantmentType& lhs , const EnumEnchantmentType& rhs);
+    friend bool operator==(const EnumEnchantmentType &lhs, const EnumEnchantmentType &rhs);
+    friend bool operator!=(const EnumEnchantmentType &lhs, const EnumEnchantmentType &rhs);
 
     explicit EnumEnchantmentType(Type type);
-        bool canEnchantItem(Item* itemIn);
-        static std::vector<EnumEnchantmentType*> value();
-    private:
-        static std::vector<EnumEnchantmentType*> val;
-        Type type;
-    };
+    bool canEnchantItem(Item *itemIn);
+    static std::vector<EnumEnchantmentType *> value();
+
+  private:
+    static std::vector<EnumEnchantmentType *> val;
+    Type type;
+};

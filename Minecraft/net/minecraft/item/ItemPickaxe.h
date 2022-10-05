@@ -1,15 +1,15 @@
 #pragma once
 #include "ItemTool.h"
 
-class ItemPickaxe :public ItemTool
+class ItemPickaxe : public ItemTool
 {
-public:   
-    bool canHarvestBlock(IBlockState* blockIn) override;
-    float getDestroySpeed(ItemStack stack, IBlockState* state) override;
+  public:
+    bool canHarvestBlock(IBlockState *blockIn) override;
+    float getDestroySpeed(ItemStack stack, IBlockState *state) override;
 
-protected:
+  protected:
     ItemPickaxe(ToolMaterial material);
-private:
+
+  private:
     static std::unordered_set<Block *> EFFECTIVE_ON;
-    
 };

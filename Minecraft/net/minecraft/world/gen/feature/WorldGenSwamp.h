@@ -5,12 +5,13 @@ class PropertyBool;
 
 class WorldGenSwamp : public WorldGenAbstractTree
 {
-public:
-	WorldGenSwamp();
-	bool generate(World* worldIn, pcg32& rand, const BlockPos& position) override;
-private:
-	static IBlockState* TRUNK;
-	static IBlockState* LEAF;
+  public:
+    WorldGenSwamp();
+    bool generate(World *worldIn, pcg32 &rand, const BlockPos &position) override;
 
-	void addVine(World* worldIn, const BlockPos& pos, PropertyBool* prop);
+  private:
+    static IBlockState *TRUNK;
+    static IBlockState *LEAF;
+
+    void addVine(World *worldIn, const BlockPos &pos, PropertyBool *prop);
 };

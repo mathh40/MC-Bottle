@@ -2,13 +2,12 @@
 #include "Rotation.h"
 #include "TileEntity.h"
 
-
 class TileEntityStructure : public TileEntity
 {
-public:
+  public:
     class Mode
     {
-    public:
+      public:
         static Mode SAVE;
         static Mode LOAD;
         static Mode CORNER;
@@ -19,7 +18,7 @@ public:
 
         Mode(std::string modeNameIn, int32_t modeIdIn);
 
-    private:
+      private:
         static std::vector<Mode *> MODES;
         std::string modeName;
         int32_t modeId;
@@ -67,7 +66,7 @@ public:
     void setShowBoundingBox(bool showBoundingBoxIn);
     ITextComponent *getDisplayName() override;
 
-private:
+  private:
     void updateBlockState();
     std::vector<TileEntityStructure *> filterRelatedCornerBlocks(std::vector<TileEntityStructure *> p_184415_1_);
     std::vector<TileEntityStructure *> getNearbyCornerBlocks(BlockPos p_184418_1_, BlockPos p_184418_2_);
@@ -76,10 +75,10 @@ private:
     bool save(boolean writeToDisk);
     bool load(bool requireMatchingSize);
 
-    std::string name = "";
-    std::string author = "";
+    std::string name     = "";
+    std::string author   = "";
     std::string metadata = "";
-    BlockPos position = BlockPos(0, 1, 0);
+    BlockPos position    = BlockPos(0, 1, 0);
     BlockPos size;
     Mirror mirror;
     Rotation rotation;

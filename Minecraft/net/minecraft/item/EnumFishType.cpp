@@ -9,15 +9,16 @@ FishType FishType::CLOWNFISH(2, "clownfish", 1, 0.1F);
 FishType FishType::PUFFERFISH(3, "pufferfish", 1, 0.1F);
 
 FishType::FishType(int32_t meta, std::string_view unlocalizedName, int32_t uncookedHeal, float uncookedSaturation,
-    int32_t cookedHeal, float cookedSaturation, bool bcookable)
-        :meta(meta),translationKey(unlocalizedName),uncookedHealAmount(uncookedHeal),uncookedSaturationModifier(uncookedSaturation)
-        ,cookedHealAmount(cookedHeal),cookedSaturationModifier(cookedSaturation),cookable(bcookable)
+                   int32_t cookedHeal, float cookedSaturation, bool bcookable)
+    : meta(meta), translationKey(unlocalizedName), uncookedHealAmount(uncookedHeal),
+      uncookedSaturationModifier(uncookedSaturation), cookedHealAmount(cookedHeal),
+      cookedSaturationModifier(cookedSaturation), cookable(bcookable)
 {
-    META_LOOKUP.emplace(meta,*this);
+    META_LOOKUP.emplace(meta, *this);
 }
 
 FishType::FishType(int32_t meta, std::string_view unlocalizedName, int32_t uncookedHeal, float uncookedSaturation)
-    :FishType(meta,unlocalizedName,uncookedHeal,uncookedSaturation,0,0.0f,false)
+    : FishType(meta, unlocalizedName, uncookedHeal, uncookedSaturation, 0, 0.0f, false)
 {
 }
 
@@ -64,5 +65,5 @@ FishType FishType::byMetadata(int32_t meta)
 
 FishType FishType::byItemStack(ItemStack stack)
 {
-    return Util::instanceof<ItemFishFood>(stack.getItem()) ? byMetadata(stack.getMetadata()) : COD;
+    return Util:: instanceof <ItemFishFood>(stack.getItem()) ? byMetadata(stack.getMetadata()) : COD;
 }

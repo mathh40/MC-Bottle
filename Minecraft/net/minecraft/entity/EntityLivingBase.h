@@ -6,85 +6,87 @@
 #include "EnumCreatureAttribute.h"
 #include "EnumHandSide.h"
 #include "ai/attributes/AttributeModifier.h"
+
 #include <DamageSource.h>
 class IAttribute;
 class AbstractAttributeMap;
 class IAttributeInstance;
-class EntityLivingBase :public Entity
+class EntityLivingBase : public Entity
 {
-public:
-    explicit EntityLivingBase(World* worldIn);
+  public:
+    explicit EntityLivingBase(World *worldIn);
     void onKillCommand() override;
     bool canBreatheUnderwater();
     void onEntityUpdate() override;
     virtual bool isChild();
-    pcg32& getRNG();
-    EntityLivingBase* getRevengeTarget() const;
-    void setRevengeTarget(EntityLivingBase* livingBase);
-    EntityLivingBase* getLastAttackedEntity() const;
+    pcg32 &getRNG();
+    EntityLivingBase *getRevengeTarget() const;
+    void setRevengeTarget(EntityLivingBase *livingBase);
+    EntityLivingBase *getLastAttackedEntity() const;
     int32_t getLastAttackedEntityTime() const;
-    void setLastAttackedEntity(Entity* entityIn);
+    void setLastAttackedEntity(Entity *entityIn);
     int32_t getIdleTime() const;
-    void writeEntityToNBT(NBTTagCompound* compound) override;
-    void readEntityFromNBT(NBTTagCompound* compound) override;
-    static bool areAllPotionsAmbient(const std::vector<PotionEffect>& potionEffects);
+    void writeEntityToNBT(NBTTagCompound *compound) override;
+    void readEntityFromNBT(NBTTagCompound *compound) override;
+    static bool areAllPotionsAmbient(const std::vector<PotionEffect> &potionEffects);
     void clearActivePotions();
     std::vector<PotionEffect> getActivePotionEffects() const;
-    std::unordered_map<Potion,PotionEffect> getActivePotionMap() const;
+    std::unordered_map<Potion, PotionEffect> getActivePotionMap() const;
     bool isPotionActive(Potion potionIn) const;
     std::optional<PotionEffect> getActivePotionEffect(Potion potionIn);
     virtual void addPotionEffect(PotionEffect potioneffectIn);
     virtual bool isPotionApplicable(PotionEffect potioneffectIn);
     bool isEntityUndead();
-    PotionEffect removeActivePotionEffect(Potion* potioneffectin);
-    void removePotionEffect(Potion* potionIn);
+    PotionEffect removeActivePotionEffect(Potion *potioneffectin);
+    void removePotionEffect(Potion *potionIn);
     void heal(float healAmount);
     float getHealth();
     void setHealth(float health);
     bool attackEntityFrom(DamageSource::DamageSource source, float amount);
     DamageSource::DamageSource getLastDamageSource();
-    void renderBrokenItemStack(const ItemStack& stack);
+    void renderBrokenItemStack(const ItemStack &stack);
     virtual void onDeath(DamageSource::DamageSource cause);
-    void knockBack(Entity* entityIn, float strength, double xRatio, double zRatio);
+    void knockBack(Entity *entityIn, float strength, double xRatio, double zRatio);
     virtual bool isOnLadder();
     bool isEntityAlive();
     void fall(float distance, float damageMultiplier) override;
     void performHurtAnimation() override;
     int32_t getTotalArmorValue();
     CombatTracker getCombatTracker() const;
-    EntityLivingBase* getAttackingEntity();
+    EntityLivingBase *getAttackingEntity();
     float getMaxHealth();
     int32_t getArrowCountInEntity();
     void setArrowCountInEntity(int32_t count);
     virtual void swingArm(EnumHand hand);
     void handleStatusUpdate(std::byte id) override;
-    IAttributeInstance* getEntityAttribute(IAttribute* attribute);
-    AbstractAttributeMap* getAttributeMap();
+    IAttributeInstance *getEntityAttribute(IAttribute *attribute);
+    AbstractAttributeMap *getAttributeMap();
     virtual EnumCreatureAttribute getCreatureAttribute();
     ItemStack getHeldItemMainhand();
     ItemStack getHeldItemOffhand();
     ItemStack getHeldItem(EnumHand hand);
     void setHeldItem(EnumHand hand, ItemStack stack);
     bool hasItemInSlot(EntityEquipmentSlot p_190630_1_);
-    virtual std::vector<ItemStack>& getArmorInventoryList() = 0;
-    virtual ItemStack getItemStackFromSlot(EntityEquipmentSlot var1) = 0;
+    virtual std::vector<ItemStack> &getArmorInventoryList()                   = 0;
+    virtual ItemStack getItemStackFromSlot(EntityEquipmentSlot var1)          = 0;
     virtual void setItemStackToSlot(EntityEquipmentSlot var1, ItemStack var2) = 0;
     void setSprinting(bool sprinting) override;
-    void dismountEntity(Entity* entityIn);
+    void dismountEntity(Entity *entityIn);
     bool getAlwaysRenderNameTagForRender() override;
     virtual void travel(float strafe, float vertical, float forward);
     float getAIMoveSpeed() const;
     virtual void setAIMoveSpeed(float speedIn);
-    virtual bool attackEntityAsMob(Entity* entityIn);
+    virtual bool attackEntityAsMob(Entity *entityIn);
     virtual bool isPlayerSleeping();
     void onUpdate() override;
     virtual void onLivingUpdate();
     void dismountRidingEntity() override;
     void updateRidden() override;
-    void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int32_t posRotationIncrements, bool teleport) override;
+    void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
+                                      int32_t posRotationIncrements, bool teleport) override;
     void setJumping(bool jumping);
-    virtual void onItemPickup(Entity* entityIn, int32_t quantity);
-    bool canEntityBeSeen(Entity* entityIn);
+    virtual void onItemPickup(Entity *entityIn, int32_t quantity);
+    bool canEntityBeSeen(Entity *entityIn);
     Vec3d getLook(float partialTicks) override;
     float getSwingProgress(float partialTickTime) const;
     bool isServerWorld() const;
@@ -142,15 +144,16 @@ public:
     float moveVertical;
     float moveForward;
     float randomYawVelocity;
-protected:
+
+  protected:
     void entityInit() override;
     virtual void applyEntityAttributes();
-    void updateFallState(double y, bool onGroundIn, IBlockState* state, const BlockPos& pos) override;
-    virtual void frostWalk(const BlockPos& pos);
+    void updateFallState(double y, bool onGroundIn, IBlockState *state, const BlockPos &pos) override;
+    virtual void frostWalk(const BlockPos &pos);
     virtual void onDeathUpdate();
     virtual bool canDropLoot();
     int32_t decreaseAirSupply(int32_t air);
-    virtual int32_t getExperiencePoints(EntityPlayer* player);
+    virtual int32_t getExperiencePoints(EntityPlayer *player);
     virtual bool isPlayer();
     void playEquipSound(ItemStack stack);
     void updatePotionEffects();
@@ -159,7 +162,7 @@ protected:
     virtual void onNewPotionEffect(PotionEffect id);
     virtual void onChangedPotionEffect(PotionEffect id, bool p_70695_2_);
     virtual void onFinishedPotionEffect(PotionEffect effect);
-    virtual void blockUsingShield(EntityLivingBase* p_190629_1_);
+    virtual void blockUsingShield(EntityLivingBase *p_190629_1_);
     virtual void playHurtSound(DamageSource::DamageSource source);
     virtual void dropLoot(bool wasRecentlyHit, int32_t lootingModifier, DamageSource::DamageSource source);
     virtual void dropEquipment(bool wasRecentlyHit, int32_t lootingModifier);
@@ -185,18 +188,16 @@ protected:
     virtual float updateDistance(float p_110146_1_, float p_110146_2_);
     virtual void updateEntityActionState();
     virtual void collideWithNearbyEntities();
-    virtual void collideWithEntity(Entity* entityIn);
+    virtual void collideWithEntity(Entity *entityIn);
     void markVelocityChanged() override;
     void markPotionsDirty();
     void updateActiveHand();
     void updateItemUse(ItemStack stack, int32_t eatingParticleCount);
     virtual void onItemUseFinish();
 
-
-
     static DataParameter HAND_STATES;
     int32_t ticksSinceLastSwing;
-    EntityPlayer* attackingPlayer;
+    EntityPlayer *attackingPlayer;
     int32_t recentlyHit;
     bool dead;
     int idleTime;
@@ -217,32 +218,30 @@ protected:
     ItemStack activeItemStack;
     int32_t activeItemStackUseCount;
     int32_t ticksElytraFlying;
-private:
+
+  private:
     bool checkTotemDeathProtection(DamageSource::DamageSource p_190628_1_);
     bool canBlockDamageSource(DamageSource::DamageSource damageSourceIn);
-    bool canGoThroughtTrapDoorOnLadder(BlockPos pos, IBlockState* state);
+    bool canGoThroughtTrapDoorOnLadder(BlockPos pos, IBlockState *state);
     int32_t getArmSwingAnimationEnd();
     void updateElytra();
 
-
-
-
     static std::shared_ptr<spdlog::logger> LOGGER;
     static xg::Guid SPRINTING_SPEED_BOOST_ID;
-    static AttributeModifier SPRINTING_SPEED_BOOST;    
+    static AttributeModifier SPRINTING_SPEED_BOOST;
     static DataParameter HEALTH;
     static DataParameter POTION_EFFECTS;
     static DataParameter HIDE_PARTICLES;
     static DataParameter ARROW_COUNT_IN_ENTITY;
-    AbstractAttributeMap* attributeMap;
+    AbstractAttributeMap *attributeMap;
     CombatTracker combatTracker;
-    std::unordered_map<Potion,PotionEffect> activePotionsMap;
+    std::unordered_map<Potion, PotionEffect> activePotionsMap;
     std::vector<ItemStack> handInventory;
     std::vector<ItemStack> armorArray;
     bool potionsNeedUpdate;
-    EntityLivingBase* revengeTarget;
+    EntityLivingBase *revengeTarget;
     int32_t revengeTimer;
-    EntityLivingBase* lastAttackedEntity;
+    EntityLivingBase *lastAttackedEntity;
     int32_t lastAttackedEntityTime;
     float landMovementFactor;
     int32_t jumpTicks;

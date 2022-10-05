@@ -1,9 +1,9 @@
 #pragma once
 #include "ItemColored.h"
 
-class ItemLilyPad :public ItemColored
+class ItemLilyPad : public ItemColored
 {
-public:
-    ItemLilyPad(Block* block);
-    ActionResult onItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand handIn) override;
+  public:
+    ItemLilyPad(Block *block);
+    ActionResult onItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand handIn) override;
 };

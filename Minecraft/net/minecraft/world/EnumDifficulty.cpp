@@ -7,24 +7,26 @@ EnumDifficulty EnumDifficulty::HARD(3, "options.difficulty.hard");
 
 uint16_t EnumDifficulty::getId() const
 {
-	return id;
+    return id;
 }
 
-EnumDifficulty& EnumDifficulty::byId(uint16_t id)
+EnumDifficulty &EnumDifficulty::byId(uint16_t id)
 {
-	return *ID_MAPPING[id % ID_MAPPING.size()];
+    return *ID_MAPPING[id % ID_MAPPING.size()];
 }
 
-std::string EnumDifficulty::getTranslationKey() const {
-	return translationKey;
+std::string EnumDifficulty::getTranslationKey() const
+{
+    return translationKey;
 }
 
 EnumDifficulty::EnumDifficulty(uint16_t difficultyIdIn, std::string difficultyResourceKeyIn)
-	: id(difficultyIdIn),translationKey(difficultyResourceKeyIn)
+    : id(difficultyIdIn), translationKey(difficultyResourceKeyIn)
 {
-	ID_MAPPING.emplace_back(*this);
+    ID_MAPPING.emplace_back(*this);
 }
 
-bool operator==(const EnumDifficulty &lhs, const EnumDifficulty &rhs) {
-	return lhs.getId() == rhs.getId();
+bool operator==(const EnumDifficulty &lhs, const EnumDifficulty &rhs)
+{
+    return lhs.getId() == rhs.getId();
 }

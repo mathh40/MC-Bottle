@@ -3,15 +3,15 @@
 
 class EntityMoveHelper
 {
-public:
+  public:
     virtual ~EntityMoveHelper() = default;
 
-    explicit EntityMoveHelper(EntityLiving* entitylivingIn);
+    explicit EntityMoveHelper(EntityLiving *entitylivingIn);
     bool isUpdating() const;
     double getSpeed() const;
     void setMoveTo(double x, double y, double z, double speedIn);
     void strafe(float forward, float strafe);
-    void read(const EntityMoveHelper& that);
+    void read(const EntityMoveHelper &that);
     virtual void onUpdateMoveHelper();
     double getX() const;
     double getY() const;
@@ -26,15 +26,17 @@ public:
     };
 
     Action action;
-protected:
+
+  protected:
     float limitAngle(float sourceAngle, float targetAngle, float maximumChange) const;
 
-    EntityLiving* entity;
+    EntityLiving *entity;
     double posX;
     double posY;
     double posZ;
     double speed;
     float moveForward;
     float moveStrafe;
-private:
+
+  private:
 };

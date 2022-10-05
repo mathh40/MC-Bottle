@@ -1,11 +1,9 @@
 #pragma once
 #include "EntityMoveHelper.h"
 
-class EntityFlyHelper :public EntityMoveHelper
+class EntityFlyHelper : public EntityMoveHelper
 {
-public:
-    explicit EntityFlyHelper(EntityLiving* p_i47418_1_);
+  public:
+    explicit EntityFlyHelper(EntityLiving *p_i47418_1_);
     void onUpdateMoveHelper();
 };
-
-

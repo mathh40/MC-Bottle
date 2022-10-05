@@ -1,28 +1,35 @@
 #include "EntityGolem.h"
 
-EntityGolem::EntityGolem(World *worldIn)
-    :EntityCreature(worldIn){
+EntityGolem::EntityGolem(World *worldIn) : EntityCreature(worldIn)
+{
 }
 
-void EntityGolem::fall(float distance, float damageMultiplier) {
+void EntityGolem::fall(float distance, float damageMultiplier)
+{
 }
 
-int32_t EntityGolem::getTalkInterval() {
+int32_t EntityGolem::getTalkInterval()
+{
     return 120;
 }
 
-SoundEvent EntityGolem::getAmbientSound() {
-    return std::nullopt;;
+SoundEvent EntityGolem::getAmbientSound()
+{
+    return std::nullopt;
+    ;
 }
 
-SoundEvent EntityGolem::getHurtSound(DamageSource::DamageSource damageSourceIn) {
+SoundEvent EntityGolem::getHurtSound(DamageSource::DamageSource damageSourceIn)
+{
     return std::nullopt;
 }
 
-SoundEvent EntityGolem::getDeathSound() {
+SoundEvent EntityGolem::getDeathSound()
+{
     return std::nullopt;
 }
 
-bool EntityGolem::canDespawn() {
+bool EntityGolem::canDespawn()
+{
     return false;
 }

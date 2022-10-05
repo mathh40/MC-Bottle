@@ -4,9 +4,9 @@
 
 class ITabCompleter
 {
-public:
-	virtual ~ITabCompleter() = default;
-	virtual void setCompletions(std::vector<std::string> var1) = 0;
-private:
-	
+  public:
+    virtual ~ITabCompleter()                                   = default;
+    virtual void setCompletions(std::vector<std::string> var1) = 0;
+
+  private:
 };

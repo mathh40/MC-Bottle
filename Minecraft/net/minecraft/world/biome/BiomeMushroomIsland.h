@@ -1,8 +1,8 @@
 #pragma once
 #include "Biome.h"
 
-class BiomeMushroomIsland :public Biome
+class BiomeMushroomIsland : public Biome
 {
-public:
-	BiomeMushroomIsland(BiomeProperties properties);
+  public:
+    BiomeMushroomIsland(BiomeProperties properties);
 };

@@ -6,69 +6,68 @@ Action Action::SHOW_ENTITY("show_entity", true);
 
 bool Action::shouldAllowInChat() const
 {
-	return allowedInChat;
+    return allowedInChat;
 }
 
 std::string Action::getCanonicalName() const
 {
-	return canonicalName;
+    return canonicalName;
 }
 
-Action* Action::getValueByCanonicalName(std::string canonicalNameIn)
+Action *Action::getValueByCanonicalName(std::string canonicalNameIn)
 {
-	return NAME_MAPPING[canonicalNameIn];
+    return NAME_MAPPING[canonicalNameIn];
 }
 
 Action::Action(std::string canonicalNameIn, bool allowedInChatIn)
-	:canonicalName(canonicalNameIn), allowedInChat(allowedInChatIn)
+    : canonicalName(canonicalNameIn), allowedInChat(allowedInChatIn)
 {
-	NAME_MAPPING.emplace(canonicalNameIn, this);
+    NAME_MAPPING.emplace(canonicalNameIn, this);
 }
 
-HoverEvent::HoverEvent(Action theAction, ITextComponent* theValue)
-	: action(theAction), value(theValue)
+HoverEvent::HoverEvent(Action theAction, ITextComponent *theValue) : action(theAction), value(theValue)
 {
-
 }
 
-const Action& HoverEvent::getAction() const
+const Action &HoverEvent::getAction() const
 {
-	return action;
+    return action;
 }
 
-ITextComponent* HoverEvent::getValue() const
+ITextComponent *HoverEvent::getValue() const
 {
-	return value;
+    return value;
 }
 
 std::string HoverEvent::toString()
 {
-	return "HoverEvent{action=" + action + ", value='" + value + '\'' + '}';
+    return "HoverEvent{action=" + action + ", value='" + value + '\'' + '}';
 }
 
-
-bool operator==(const HoverEvent& lhs, const HoverEvent& rhs)
+bool operator==(const HoverEvent &lhs, const HoverEvent &rhs)
 {
-	if (lhs.getAction() != rhs.getAction()) {
-		return false;
-	}
-	if (!(lhs.getValue() == rhs.getValue())) {
-		return false;
-	}
-	return true;
+    if (lhs.getAction() != rhs.getAction())
+    {
+        return false;
+    }
+    if (!(lhs.getValue() == rhs.getValue()))
+    {
+        return false;
+    }
+    return true;
 }
 
-bool operator!=(const HoverEvent& lhs, const HoverEvent& rhs)
+bool operator!=(const HoverEvent &lhs, const HoverEvent &rhs)
 {
-	return!(lhs == rhs);
+    return !(lhs == rhs);
 }
 
-bool operator==(const Action & lhs, const Action & rhs)
+bool operator==(const Action &lhs, const Action &rhs)
 {
-	return lhs.getCanonicalName() == rhs.getCanonicalName();
+    return lhs.getCanonicalName() == rhs.getCanonicalName();
 }
 
-auto operator!=(const Action & lhs, const Action & rhs) -> bool
+auto operator!=(const Action &lhs, const Action &rhs) -> bool
 {
-	return !(lhs == rhs);
+    return !(lhs == rhs);
 }

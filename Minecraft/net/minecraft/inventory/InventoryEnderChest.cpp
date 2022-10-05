@@ -3,8 +3,7 @@
 #include "../nbt/NBTTagList.h"
 #include "../tileentity/TileEntityEnderChest.h"
 
-InventoryEnderChest::InventoryEnderChest()
-    :InventoryBasic("container.enderchest", false, 27)
+InventoryEnderChest::InventoryEnderChest() : InventoryBasic("container.enderchest", false, 27)
 {
 }
 
@@ -15,32 +14,32 @@ void InventoryEnderChest::setChestTileEntity(TileEntityEnderChest *chestTileEnti
 
 void InventoryEnderChest::loadInventoryFromNBT(NBTTagList *p_70486_1_)
 {
-    for(auto k = 0; k < getSizeInventory(); ++k) 
+    for (auto k = 0; k < getSizeInventory(); ++k)
     {
         setInventorySlotContents(k, ItemStack::EMPTY);
     }
 
-    for(auto k = 0; k < p_70486_1_->tagCount(); ++k) 
+    for (auto k = 0; k < p_70486_1_->tagCount(); ++k)
     {
         std::shared_ptr<NBTTagCompound> nbttagcompound = p_70486_1_->getCompoundTagAt(k);
-        auto j = nbttagcompound->getByte("Slot") & 255;
-        if (j >= 0 && j < getSizeInventory()) 
+        auto j                                         = nbttagcompound->getByte("Slot") & 255;
+        if (j >= 0 && j < getSizeInventory())
         {
             setInventorySlotContents(j, ItemStack(nbttagcompound));
         }
     }
 }
 
-NBTTagList * InventoryEnderChest::saveInventoryToNBT() const
+NBTTagList *InventoryEnderChest::saveInventoryToNBT() const
 {
-    NBTTagList* nbttaglist = new NBTTagList();
+    NBTTagList *nbttaglist = new NBTTagList();
 
-    for(auto i = 0; i < getSizeInventory(); ++i) 
+    for (auto i = 0; i < getSizeInventory(); ++i)
     {
         ItemStack itemstack = getStackInSlot(i);
-        if (!itemstack.isEmpty()) 
+        if (!itemstack.isEmpty())
         {
-            NBTTagCompound* nbttagcompound = new NBTTagCompound();
+            NBTTagCompound *nbttagcompound = new NBTTagCompound();
             nbttagcompound->setByte("Slot", i);
             itemstack.writeToNBT(nbttagcompound);
             nbttaglist->appendTag(nbttagcompound);
@@ -52,12 +51,13 @@ NBTTagList * InventoryEnderChest::saveInventoryToNBT() const
 
 bool InventoryEnderChest::isUsableByPlayer(EntityPlayer *player)
 {
-    return associatedChest != nullptr && !associatedChest->canBeUsed(player) ? false : InventoryBasic::isUsableByPlayer(player);
+    return associatedChest != nullptr && !associatedChest->canBeUsed(player) ? false
+                                                                             : InventoryBasic::isUsableByPlayer(player);
 }
 
 void InventoryEnderChest::openInventory(EntityPlayer *player)
 {
-    if (associatedChest != nullptr) 
+    if (associatedChest != nullptr)
     {
         associatedChest->openChest();
     }
@@ -67,7 +67,7 @@ void InventoryEnderChest::openInventory(EntityPlayer *player)
 
 void InventoryEnderChest::closeInventory(EntityPlayer *player)
 {
-    if (associatedChest != nullptr) 
+    if (associatedChest != nullptr)
     {
         associatedChest->closeChest();
     }

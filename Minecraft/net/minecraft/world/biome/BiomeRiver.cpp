@@ -1,7 +1,6 @@
 #include "BiomeRiver.h"
 
-BiomeRiver::BiomeRiver(BiomeProperties properties)
-	:Biome(properties)
+BiomeRiver::BiomeRiver(BiomeProperties properties) : Biome(properties)
 {
-	spawnableCreatureList.clear();
+    spawnableCreatureList.clear();
 }

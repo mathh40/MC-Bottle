@@ -1,43 +1,44 @@
 #include "ScoreObjective.h"
 
-ScoreObjective::ScoreObjective(Scoreboard* scoreboard, std::string_view nameIn, IScoreCriteria* objectiveCriteriaIn)
-   :scoreboard(scoreboard),name(nameIn),objectiveCriteria(objectiveCriteriaIn),displayName(nameIn),renderType(objectiveCriteriaIn->getRenderType())
+ScoreObjective::ScoreObjective(Scoreboard *scoreboard, std::string_view nameIn, IScoreCriteria *objectiveCriteriaIn)
+    : scoreboard(scoreboard), name(nameIn), objectiveCriteria(objectiveCriteriaIn), displayName(nameIn),
+      renderType(objectiveCriteriaIn->getRenderType())
 {
 }
 
-Scoreboard* ScoreObjective::getScoreboard() const
+Scoreboard *ScoreObjective::getScoreboard() const
 {
-   return scoreboard;
+    return scoreboard;
 }
 
 std::string ScoreObjective::getName() const
 {
-   return name;
+    return name;
 }
 
-IScoreCriteria* ScoreObjective::getCriteria() const
+IScoreCriteria *ScoreObjective::getCriteria() const
 {
-   return objectiveCriteria;
+    return objectiveCriteria;
 }
 
 std::string ScoreObjective::getDisplayName() const
 {
-   return displayName;
+    return displayName;
 }
 
 void ScoreObjective::setDisplayName(std::string_view nameIn)
 {
-   displayName = nameIn;
-   scoreboard->onObjectiveDisplayNameChanged(*this);
+    displayName = nameIn;
+    scoreboard->onObjectiveDisplayNameChanged(*this);
 }
 
 IScoreCriteria::EnumRenderType ScoreObjective::getRenderType() const
 {
-   return renderType;
+    return renderType;
 }
 
 void ScoreObjective::setRenderType(IScoreCriteria::EnumRenderType type)
 {
-   renderType = type;
-   scoreboard->onObjectiveDisplayNameChanged(*this);
+    renderType = type;
+    scoreboard->onObjectiveDisplayNameChanged(*this);
 }

@@ -3,6 +3,6 @@
 
 class MinecraftException : public std::exception
 {
-public:
-	explicit MinecraftException(const char* msg);
+  public:
+    explicit MinecraftException(const char *msg);
 };

@@ -3,9 +3,9 @@
 
 class AttributeModifier
 {
-public:
+  public:
     AttributeModifier(std::string_view nameIn, double amountIn, int32_t operationIn);
-    AttributeModifier(xg::Guid& idIn, std::string_view nameIn, double amountIn, int32_t operationIn);
+    AttributeModifier(xg::Guid &idIn, std::string_view nameIn, double amountIn, int32_t operationIn);
     xg::Guid getID() const;
     std::string getName() const;
     int32_t getOperation() const;
@@ -15,8 +15,9 @@ public:
     std::size_t hash_code() const;
     std::string toString();
 
-    friend bool operator==(const AttributeModifier& lhs,const AttributeModifier& rhs);
-private:
+    friend bool operator==(const AttributeModifier &lhs, const AttributeModifier &rhs);
+
+  private:
     double amount;
     int32_t operation;
     std::string name;
@@ -26,13 +27,11 @@ private:
 
 namespace std
 {
-    template<> struct hash<AttributeModifier>
+template <> struct hash<AttributeModifier>
+{
+    std::size_t operator()(AttributeModifier const &s) const noexcept
     {
-        std::size_t operator()(AttributeModifier const& s) const noexcept
-        {
-            return s.hash_code();
-        }
-    };
-}
-
-
+        return s.hash_code();
+    }
+};
+} // namespace std

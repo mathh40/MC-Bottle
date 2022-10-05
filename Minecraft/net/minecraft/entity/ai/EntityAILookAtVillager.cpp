@@ -1,25 +1,26 @@
 #include "EntityAILookAtVillager.h"
+
 #include "EntityIronGolem.h"
 
-EntityAILookAtVillager::EntityAILookAtVillager(EntityIronGolem *ironGolemIn)
-    :ironGolem(ironGolemIn)
+EntityAILookAtVillager::EntityAILookAtVillager(EntityIronGolem *ironGolemIn) : ironGolem(ironGolemIn)
 {
     setMutexBits(3);
 }
 
 bool EntityAILookAtVillager::shouldExecute()
 {
-    if (!ironGolem->world.isDaytime()) 
+    if (!ironGolem->world.isDaytime())
     {
         return false;
     }
-    else if (ironGolem->getRNG().nextInt(8000) != 0) 
+    else if (ironGolem->getRNG().nextInt(8000) != 0)
     {
         return false;
     }
-    else 
+    else
     {
-        villager = ironGolem->world.findNearestEntityWithinAABB(EntityVillager.class, ironGolem->getEntityBoundingBox().grow(6.0, 2.0, 6.0), ironGolem);
+        villager = ironGolem->world.findNearestEntityWithinAABB(
+            EntityVillager.class, ironGolem->getEntityBoundingBox().grow(6.0, 2.0, 6.0), ironGolem);
         return villager != nullptr;
     }
 }

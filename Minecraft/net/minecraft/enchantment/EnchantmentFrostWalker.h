@@ -5,9 +5,10 @@
 class BlockPos;
 class World;
 
-class EnchantmentFrostWalker :public Enchantment {
+class EnchantmentFrostWalker : public Enchantment
+{
   public:
-    EnchantmentFrostWalker(Enchantment::Rarity rarityIn, std::span<const EntityEquipmentSlot>slots);
+    EnchantmentFrostWalker(Enchantment::Rarity rarityIn, std::span<const EntityEquipmentSlot> slots);
     int32_t getMinEnchantability(int32_t enchantmentLevel) const override;
     int32_t getMaxEnchantability(int32_t enchantmentLevel) const override;
     bool isTreasureEnchantment() const override;

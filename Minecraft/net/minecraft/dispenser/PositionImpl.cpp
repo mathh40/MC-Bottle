@@ -1,17 +1,20 @@
 #include "PositionImpl.h"
 
-PositionImpl::PositionImpl(double xCoord, double yCoord, double zCoord):
-    x(xCoord), y(yCoord), z(zCoord) {
+PositionImpl::PositionImpl(double xCoord, double yCoord, double zCoord) : x(xCoord), y(yCoord), z(zCoord)
+{
 }
 
-double PositionImpl::getx() {
+double PositionImpl::getx()
+{
     return x;
 }
 
-double PositionImpl::gety() {
+double PositionImpl::gety()
+{
     return y;
 }
 
-double PositionImpl::getz() {
+double PositionImpl::getz()
+{
     return z;
 }

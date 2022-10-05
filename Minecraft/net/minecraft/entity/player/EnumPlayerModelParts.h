@@ -3,8 +3,9 @@
 
 class ITextComponent;
 
-class EnumPlayerModelParts {
-public:
+class EnumPlayerModelParts
+{
+  public:
     static EnumPlayerModelParts CAPE;
     static EnumPlayerModelParts JACKET;
     static EnumPlayerModelParts LEFT_SLEEVE;
@@ -14,19 +15,17 @@ public:
     static EnumPlayerModelParts HAT;
     EnumPlayerModelParts(int32_t partIdIn, std::string_view partNameIn);
 
-   int32_t getPartMask() const;
+    int32_t getPartMask() const;
 
-   int32_t getPartId() const;
+    int32_t getPartId() const;
 
-   std::string_view getPartName() const;
+    std::string_view getPartName() const;
 
-   ITextComponent *getName() const;
+    ITextComponent *getName() const;
 
-private:
-   int32_t partId;
-   int32_t partMask;
-   std::string_view partName;
-   ITextComponent* name;
-
+  private:
+    int32_t partId;
+    int32_t partMask;
+    std::string_view partName;
+    ITextComponent *name;
 };
-

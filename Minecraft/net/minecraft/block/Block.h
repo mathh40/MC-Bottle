@@ -8,9 +8,11 @@
 #include "../world/IBlockAccess.h"
 #include "../world/chunk/BlockStateContainer.h"
 #include "SoundType.h"
+
 #include <EnumHand.h>
 
-enum class EnumOffsetType {
+enum class EnumOffsetType
+{
     NONE,
     XZ,
     XYZ
@@ -21,8 +23,9 @@ class ITooltipFlag;
 class Mirror;
 class TileEntity;
 
-class Block {
-public:
+class Block
+{
+  public:
     static RegistryNamespacedDefaultedByKey<ResourceLocation, Block> REGISTRY;
     static std::unordered_map<IBlockState *, uint32_t> BLOCK_STATE_IDS;
     static AxisAlignedBB FULL_BLOCK_AABB;
@@ -89,7 +92,7 @@ public:
     void dropBlockAsItem(World *worldIn, const BlockPos &pos, IBlockState *state, uint32_t fortune);
     virtual void dropBlockAsItemWithChance(World *worldIn, const BlockPos &pos, IBlockState *state, float chance,
                                            uint32_t fortune);
-    static void spawnAsEntity(World *worldIn, const BlockPos &pos, ItemStack& stack);
+    static void spawnAsEntity(World *worldIn, const BlockPos &pos, ItemStack &stack);
     virtual uint32_t damageDropped(IBlockState *state);
     float getExplosionResistance(Entity *exploder);
     std::optional<RayTraceResult> collisionRayTrace(IBlockState *blockState, World *worldIn, const BlockPos &pos,
@@ -101,7 +104,7 @@ public:
     virtual bool onBlockActivated(World *worldIn, const BlockPos &pos, IBlockState *state, EntityPlayer *playerIn,
                                   EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ);
     void onEntityWalk(World *worldIn, const BlockPos &pos, Entity *entityIn);
-    virtual IBlockState* getStateForPlacement(World *worldIn, const BlockPos &pos, EnumFacing facing, float hitX,
+    virtual IBlockState *getStateForPlacement(World *worldIn, const BlockPos &pos, EnumFacing facing, float hitX,
                                               float hitY, float hitZ, uint32_t meta, EntityLivingBase *placer);
     void onBlockClicked(World *worldIn, const BlockPos &pos, EntityPlayer *playerIn);
     Vec3d modifyAcceleration(World *worldIn, const BlockPos &pos, Entity *entityIn, Vec3d motion);
@@ -141,13 +144,13 @@ public:
     Vec3d getOffset(IBlockState *state, IBlockAccess *worldIn, const BlockPos &pos);
     SoundType getSoundType();
     std::string toString() const;
-    void addInformation(ItemStack& stack, World *worldIn, std::vector<std::string> tooltip, ITooltipFlag *flagIn);
+    void addInformation(ItemStack &stack, World *worldIn, std::vector<std::string> tooltip, ITooltipFlag *flagIn);
     static void registerBlocks();
 
     Block(Material blockMaterialIn, MapColor blockMapColorIn);
     friend bool operator==(const Block &lhs, const Block &rhs);
 
-protected:
+  protected:
     virtual ~Block() = default;
     bool fullBlock;
     uint16_t lightOpacity;
@@ -174,18 +177,19 @@ protected:
     Block *setHardness(float hardness);
     Block *setBlockUnbreakable();
     Block *setTickRandomly(bool shouldTick);
-    static void addCollisionBoxToList(const BlockPos& pos, AxisAlignedBB entityBox, std::vector<AxisAlignedBB> &collidingBoxes,
+    static void addCollisionBoxToList(const BlockPos &pos, AxisAlignedBB entityBox,
+                                      std::vector<AxisAlignedBB> &collidingBoxes,
                                       std::optional<AxisAlignedBB> blockBox);
     virtual void updateTick(World *worldIn, const BlockPos &pos, IBlockState *state, Random &rand);
     void dropXpOnBlockBreak(World *worldIn, const BlockPos &pos, uint32_t amount);
-    std::optional<RayTraceResult> rayTrace(const BlockPos& pos, Vec3d start, Vec3d end, AxisAlignedBB boundingBox);
+    std::optional<RayTraceResult> rayTrace(const BlockPos &pos, Vec3d start, Vec3d end, AxisAlignedBB boundingBox);
     bool canSilkHarvest();
     ItemStack getSilkTouchDrop(IBlockState *state);
     Block *disableStats();
     virtual BlockStateContainer &createBlockState();
     void setDefaultState(IBlockState *state);
 
-private:
+  private:
     static ResourceLocation AIR_ID;
     CreativeTabs *displayOnCreativeTab;
     IBlockState *defaultBlockState;

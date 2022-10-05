@@ -1,10 +1,12 @@
 #pragma once
 #include "../../item/EnumDyeColor.h"
+
 #include <array>
 #include <cstdint>
 
-class MapColor {
-public:
+class MapColor
+{
+  public:
     static std::array<MapColor *, 64> COLORS;
     static std::array<MapColor *, 16> BLOCK_COLORS;
     static MapColor AIR;
@@ -65,6 +67,6 @@ public:
     [[nodiscard]] uint32_t getMapColor(uint32_t index) const;
     static MapColor getBlockColor(EnumDyeColor dyeColorIn);
 
-private:
+  private:
     MapColor(uint32_t index, uint32_t color);
 };

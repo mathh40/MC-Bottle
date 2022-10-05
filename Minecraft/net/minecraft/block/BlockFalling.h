@@ -2,8 +2,9 @@
 
 class EntityFallingBlock;
 
-class BlockFalling : public Block {
-public:
+class BlockFalling : public Block
+{
+  public:
     static bool fallInstantly;
 
     BlockFalling();
@@ -19,9 +20,11 @@ public:
     virtual void onBroken(World *worldIn, const BlockPos &pos);
     void randomDisplayTick(IBlockState *stateIn, World *worldIn, const BlockPos &pos, pcg32 &rand) override;
     int32_t getDustColor(IBlockState *state);
-protected:
+
+  protected:
     ~BlockFalling() = default;
     virtual void onStartFalling(EntityFallingBlock *fallingEntity);
-private:
+
+  private:
     void checkFallable(World *worldIn, const BlockPos &pos);
 };

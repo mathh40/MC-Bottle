@@ -1,5 +1,6 @@
 #pragma once
-enum class BlockFaceShape {
+enum class BlockFaceShape
+{
     SOLID,
     BOWL,
     CENTER_SMALL,

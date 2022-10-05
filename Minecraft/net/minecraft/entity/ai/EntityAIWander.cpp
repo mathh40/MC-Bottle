@@ -2,43 +2,41 @@
 
 #include "RandomPositionGenerator.h"
 
-EntityAIWander::EntityAIWander(EntityCreature *creatureIn, double speedIn)
-    :EntityAIWander(creatureIn, speedIn, 120)
+EntityAIWander::EntityAIWander(EntityCreature *creatureIn, double speedIn) : EntityAIWander(creatureIn, speedIn, 120)
 {
-
 }
 
 EntityAIWander::EntityAIWander(EntityCreature *creatureIn, double speedIn, int32_t chance)
-    :entity(creatureIn),speed(speedIn),executionChance(chance)
+    : entity(creatureIn), speed(speedIn), executionChance(chance)
 {
     setMutexBits(1);
 }
 
 bool EntityAIWander::shouldExecute()
 {
-    if (!mustUpdate) 
+    if (!mustUpdate)
     {
-        if (entity->getIdleTime() >= 100) 
+        if (entity->getIdleTime() >= 100)
         {
             return false;
         }
 
-        if (entity->getRNG().nextInt(executionChance) != 0) 
+        if (entity->getRNG().nextInt(executionChance) != 0)
         {
             return false;
         }
     }
 
     auto vec3d = getPosition();
-    if (!vec3d) 
+    if (!vec3d)
     {
         return false;
     }
-    else 
+    else
     {
-        x = vec3d->getx();
-        y = vec3d->gety();
-        z = vec3d->getz();
+        x          = vec3d->getx();
+        y          = vec3d->gety();
+        z          = vec3d->getz();
         mustUpdate = false;
         return true;
     }

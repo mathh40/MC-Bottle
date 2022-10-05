@@ -2,35 +2,43 @@
 
 #include "../IBlockState.h"
 
-BlockStateMatcher::BlockStateMatcher(BlockStateContainer blockStateIn) : blockstate(blockStateIn) {
-
+BlockStateMatcher::BlockStateMatcher(BlockStateContainer blockStateIn) : blockstate(blockStateIn)
+{
 }
 
-BlockStateMatcher BlockStateMatcher::forBlock(Block* blockIn) {
+BlockStateMatcher BlockStateMatcher::forBlock(Block *blockIn)
+{
     return BlockStateMatcher(blockIn->getBlockState());
 }
 
-bool BlockStateMatcher::operator()(IBlockState* p_apply_1_) {
-    if (p_apply_1_ != nullptr && p_apply_1_->getBlock()==(blockstate.getBlock())) {
-         if (propertyPredicates.empty()) {
+bool BlockStateMatcher::operator()(IBlockState *p_apply_1_)
+{
+    if (p_apply_1_ != nullptr && p_apply_1_->getBlock() == (blockstate.getBlock()))
+    {
+        if (propertyPredicates.empty())
+        {
             return true;
-         } else {
+        }
+        else
+        {
             Iterator var2 = propertyPredicates.entrySet().iterator();
 
             Entry entry;
-            do {
-               if (!var2.hasNext()) {
-                  return true;
-               }
+            do
+            {
+                if (!var2.hasNext())
+                {
+                    return true;
+                }
 
-               entry = (Entry)var2.next();
-            } while(matches(p_apply_1_, (IProperty)entry.getKey(), (Predicate)entry.getValue()));
+                entry = (Entry)var2.next();
+            } while (matches(p_apply_1_, (IProperty)entry.getKey(), (Predicate)entry.getValue()));
 
             return false;
-         }
-      } else {
-         return false;
-      }
+        }
+    }
+    else
+    {
+        return false;
+    }
 }
-
-

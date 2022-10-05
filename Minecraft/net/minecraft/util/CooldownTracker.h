@@ -5,29 +5,30 @@ class Item;
 
 class CooldownTracker
 {
-public:
-	bool hasCooldown(Item* itemIn);
-	float getCooldown(Item* itemIn, float partialTicks);
-	void tick();
-	void setCooldown(Item* itemIn, uint32_t ticksIn);
-	void removeCooldown(Item* itemIn);
-protected:
+  public:
+    bool hasCooldown(Item *itemIn);
+    float getCooldown(Item *itemIn, float partialTicks);
+    void tick();
+    void setCooldown(Item *itemIn, uint32_t ticksIn);
+    void removeCooldown(Item *itemIn);
+
+  protected:
     virtual void notifyOnSet(Item *itemIn, uint32_t ticksIn);
-	virtual void notifyOnRemove(Item* itemIn);
+    virtual void notifyOnRemove(Item *itemIn);
 
-private:
+  private:
+    struct Cooldown
+    {
+        uint32_t createTicks;
+        uint32_t expireTicks;
 
-	struct Cooldown 
-	{
-		uint32_t createTicks;
-		uint32_t expireTicks;
+        Cooldown(uint32_t createTicksIn, uint32_t expireTicksIn)
+        {
+            createTicks = createTicksIn;
+            expireTicks = expireTicksIn;
+        }
+    };
 
-		Cooldown(uint32_t createTicksIn, uint32_t expireTicksIn) {
-			createTicks = createTicksIn;
-			expireTicks = expireTicksIn;
-		}
-	};
-
-	std::unordered_map<Item, Cooldown> cooldowns;
+    std::unordered_map<Item, Cooldown> cooldowns;
     uint32_t ticks = 0;
 };

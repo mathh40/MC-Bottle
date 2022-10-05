@@ -1,7 +1,8 @@
 #include "ItemTippedArrow.h"
-#include "ItemStack.h"
+
 #include "../potion/PotionType.h"
 #include "../potion/PotionUtils.h"
+#include "ItemStack.h"
 #include "text/translation/I18n.h"
 
 ItemStack ItemTippedArrow::getDefaultInstance()
@@ -9,20 +10,20 @@ ItemStack ItemTippedArrow::getDefaultInstance()
     return PotionUtils::addPotionToItemStack(ItemArrow::getDefaultInstance(), PotionTypes::POISON);
 }
 
-EntityArrow * ItemTippedArrow::createArrow(World *worldIn, ItemStack stack, EntityLivingBase *shooter)
+EntityArrow *ItemTippedArrow::createArrow(World *worldIn, ItemStack stack, EntityLivingBase *shooter)
 {
-    EntityTippedArrow* entitytippedarrow = new EntityTippedArrow(worldIn, shooter);
+    EntityTippedArrow *entitytippedarrow = new EntityTippedArrow(worldIn, shooter);
     entitytippedarrow->setPotionEffect(stack);
     return entitytippedarrow;
 }
 
-void ItemTippedArrow::getSubItems(const CreativeTabs& tab, std::vector<ItemStack>& items)
+void ItemTippedArrow::getSubItems(const CreativeTabs &tab, std::vector<ItemStack> &items)
 {
-    if (isInCreativeTab(tab)) 
+    if (isInCreativeTab(tab))
     {
-        for(auto& potiontype : PotionType::REGISTRY)
+        for (auto &potiontype : PotionType::REGISTRY)
         {
-            if (!potiontype.second.getEffects().empty()) 
+            if (!potiontype.second.getEffects().empty())
             {
                 items.emplace_back(PotionUtils::addPotionToItemStack(ItemStack(this), potiontype.second));
             }
@@ -30,7 +31,8 @@ void ItemTippedArrow::getSubItems(const CreativeTabs& tab, std::vector<ItemStack
     }
 }
 
-void ItemTippedArrow::addInformation(ItemStack stack, World* worldIn, std::vector<std::string>& tooltip, ITooltipFlag* flagIn)
+void ItemTippedArrow::addInformation(ItemStack stack, World *worldIn, std::vector<std::string> &tooltip,
+                                     ITooltipFlag *flagIn)
 {
     PotionUtils::addPotionTooltip(stack, tooltip, 0.125F);
 }

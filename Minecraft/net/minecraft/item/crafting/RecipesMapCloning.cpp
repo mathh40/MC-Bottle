@@ -2,26 +2,26 @@
 
 bool RecipesMapCloning::matches(InventoryCrafting *inv, World *worldIn)
 {
-    int i = 0;
+    int i               = 0;
     ItemStack itemstack = ItemStack::EMPTY;
 
-    for(int j = 0; j < inv->getSizeInventory(); ++j) 
+    for (int j = 0; j < inv->getSizeInventory(); ++j)
     {
         ItemStack itemstack1 = inv->getStackInSlot(j);
-        if (!itemstack1.isEmpty()) 
+        if (!itemstack1.isEmpty())
         {
-            if (itemstack1.getItem() == Items::FILLED_MAP) 
+            if (itemstack1.getItem() == Items::FILLED_MAP)
             {
-                if (!itemstack.isEmpty()) 
+                if (!itemstack.isEmpty())
                 {
                     return false;
                 }
 
                 itemstack = itemstack1;
             }
-            else 
+            else
             {
-                if (itemstack1.getItem() != Items::MAP) 
+                if (itemstack1.getItem() != Items::MAP)
                 {
                     return false;
                 }
@@ -36,26 +36,26 @@ bool RecipesMapCloning::matches(InventoryCrafting *inv, World *worldIn)
 
 ItemStack RecipesMapCloning::getCraftingResult(InventoryCrafting *inv)
 {
-    int i = 0;
+    int i               = 0;
     ItemStack itemstack = ItemStack::EMPTY;
 
-    for(int j = 0; j < inv->getSizeInventory(); ++j) 
+    for (int j = 0; j < inv->getSizeInventory(); ++j)
     {
         ItemStack itemstack1 = inv->getStackInSlot(j);
-        if (!itemstack1.isEmpty()) 
+        if (!itemstack1.isEmpty())
         {
-            if (itemstack1.getItem() == Items::FILLED_MAP) 
+            if (itemstack1.getItem() == Items::FILLED_MAP)
             {
-                if (!itemstack.isEmpty()) 
+                if (!itemstack.isEmpty())
                 {
                     return ItemStack::EMPTY;
                 }
 
                 itemstack = itemstack1;
             }
-            else 
+            else
             {
-                if (itemstack1.getItem() != Items::MAP) 
+                if (itemstack1.getItem() != Items::MAP)
                 {
                     return ItemStack::EMPTY;
                 }
@@ -65,22 +65,22 @@ ItemStack RecipesMapCloning::getCraftingResult(InventoryCrafting *inv)
         }
     }
 
-    if (!itemstack.isEmpty() && i >= 1) 
+    if (!itemstack.isEmpty() && i >= 1)
     {
         ItemStack itemstack2 = ItemStack(Items::FILLED_MAP, i + 1, itemstack.getMetadata());
-        if (itemstack.hasDisplayName()) 
+        if (itemstack.hasDisplayName())
         {
             itemstack2.setStackDisplayName(itemstack.getDisplayName());
         }
 
-        if (itemstack.hasTagCompound()) 
+        if (itemstack.hasTagCompound())
         {
             itemstack2.setTagCompound(itemstack.getTagCompound());
         }
 
         return itemstack2;
     }
-    else 
+    else
     {
         return ItemStack::EMPTY;
     }
@@ -95,10 +95,10 @@ std::vector<ItemStack> RecipesMapCloning::getRemainingItems(InventoryCrafting *i
 {
     std::vector<ItemStack> nonnulllist(inv->getSizeInventory(), ItemStack::EMPTY);
 
-    for(int i = 0; i < nonnulllist.size(); ++i) 
+    for (int i = 0; i < nonnulllist.size(); ++i)
     {
         ItemStack itemstack = inv->getStackInSlot(i);
-        if (itemstack.getItem()->hasContainerItem()) 
+        if (itemstack.getItem()->hasContainerItem())
         {
             nonnulllist[i] = ItemStack(itemstack.getItem()->getContainerItem());
         }

@@ -1,8 +1,9 @@
 #pragma once
 #include "../util/SoundEvent.h"
 
-class SoundType {
-public:
+class SoundType
+{
+  public:
     float volume;
     float pitch;
     static SoundType WOOD;
@@ -27,7 +28,8 @@ public:
     SoundEvent &getPlaceSound();
     SoundEvent &getHitSound();
     SoundEvent &getFallSound();
-private:
+
+  private:
     SoundEvent breakSound;
     SoundEvent stepSound;
     SoundEvent placeSound;

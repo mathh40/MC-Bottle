@@ -1,71 +1,73 @@
 #include "WorldSummary.h"
+
 #include "WorldInfo.h"
 #include "text/translation/I18n.h"
 
 WorldSummary::WorldSummary(WorldInfo info, std::string fileNameIn, std::string displayNameIn, int64_t sizeOnDiskIn,
                            bool requiresConversionIn)
-	:fileName(fileNameIn), displayName(displayNameIn), lastTimePlayed(info.getLastTimePlayed()), sizeOnDisk(sizeOnDiskIn)
-	 , gameType(info.getGameType()), brequiresConversion(requiresConversionIn), hardcore(info.isHardcoreModeEnabled())
-	 , cheatsEnabled(info.areCommandsAllowed()), versionName(info.getVersionName()), versionId(info.getVersionId()), versionSnapshot(info.isVersionSnapshot())
+    : fileName(fileNameIn), displayName(displayNameIn), lastTimePlayed(info.getLastTimePlayed()),
+      sizeOnDisk(sizeOnDiskIn), gameType(info.getGameType()), brequiresConversion(requiresConversionIn),
+      hardcore(info.isHardcoreModeEnabled()), cheatsEnabled(info.areCommandsAllowed()),
+      versionName(info.getVersionName()), versionId(info.getVersionId()), versionSnapshot(info.isVersionSnapshot())
 {
 }
 
 std::string WorldSummary::getFileName() const
 {
-	return fileName;
+    return fileName;
 }
 
 std::string WorldSummary::getDisplayName() const
 {
-	return displayName;
+    return displayName;
 }
 
 int64_t WorldSummary::getSizeOnDisk() const
 {
-	return sizeOnDisk;
+    return sizeOnDisk;
 }
 
 bool WorldSummary::requiresConversion() const
 {
-	return brequiresConversion;
+    return brequiresConversion;
 }
 
 int64_t WorldSummary::getLastTimePlayed() const
 {
-	return lastTimePlayed;
+    return lastTimePlayed;
 }
 
 GameType WorldSummary::getEnumGameType() const
 {
-	return gameType;
+    return gameType;
 }
 
 bool WorldSummary::isHardcoreModeEnabled() const
 {
-	return hardcore;
+    return hardcore;
 }
 
 bool WorldSummary::getCheatsEnabled() const
 {
-	return cheatsEnabled;
+    return cheatsEnabled;
 }
 
 std::string WorldSummary::getVersionName() const
 {
-	return versionName.empty() ? I18n::translateToLocal("selectWorld.versionUnknown") : versionName;
+    return versionName.empty() ? I18n::translateToLocal("selectWorld.versionUnknown") : versionName;
 }
 
 bool WorldSummary::markVersionInList() const
 {
-	return askToOpenWorld();
+    return askToOpenWorld();
 }
 
 bool WorldSummary::askToOpenWorld() const
 {
-	return versionId > 1343;
+    return versionId > 1343;
 }
 
-bool operator<(const WorldSummary& lhs, const WorldSummary& rhs)
+bool operator<(const WorldSummary &lhs, const WorldSummary &rhs)
 {
-	return lhs.getLastTimePlayed() < rhs.getLastTimePlayed();
+    return lhs.getLastTimePlayed() < rhs.getLastTimePlayed();
 }

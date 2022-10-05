@@ -1,3 +1,3 @@
-class INpc :public IAnimals
+class INpc : public IAnimals
 {
 };

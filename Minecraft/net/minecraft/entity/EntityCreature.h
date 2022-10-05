@@ -1,9 +1,10 @@
 #pragma once
 #include "EntityLiving.h"
 
-class EntityCreature :public EntityLiving {
-public:
-    EntityCreature(World* worldIn);
+class EntityCreature : public EntityLiving
+{
+  public:
+    EntityCreature(World *worldIn);
     virtual float getBlockPathWeight(BlockPos pos);
     bool getCanSpawnHere() override;
     bool hasPath() const;
@@ -18,14 +19,13 @@ public:
     static xg::Guid FLEEING_SPEED_MODIFIER_UUID = xg::Guid("E199AD21-BA8A-4C53-8D13-6182D5C69D3A");
     static AttributeModifier FLEEING_SPEED_MODIFIER;
 
-protected:
+  protected:
     void updateLeashedState() override;
     double followLeashSpeed();
     void onLeashDistance(float p_142017_1_);
 
-private:
+  private:
     BlockPos homePosition;
     float maximumHomeDistance;
     float restoreWaterCost;
 };
-

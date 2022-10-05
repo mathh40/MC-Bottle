@@ -4,22 +4,24 @@
 class EntityItemFrame;
 class CompassProperty
 {
-public:
+  public:
     float apply(ItemStack stack, World *worldIn, EntityLivingBase *entityIn);
-private:
+
+  private:
     double rotation;
     double rota;
     long lastUpdateTick;
     double wobble(World *worldIn, double p_185093_2_);
-    double getFrameRotation(EntityItemFrame* p_185094_1_);
+    double getFrameRotation(EntityItemFrame *p_185094_1_);
     double getSpawnToAngle(World *p_185092_1_, Entity *p_185092_2_);
 };
 
-class ItemCompass :public Item
+class ItemCompass : public Item
 {
-public:
+  public:
     ItemCompass();
     virtual ~ItemCompass() = default;
-private:
+
+  private:
     CompassProperty property;
 };

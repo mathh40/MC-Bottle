@@ -16,38 +16,44 @@ SoundType SoundType::LADDER();
 SoundType SoundType::ANVIL();
 SoundType SoundType::SLIME();
 
-
 SoundType::SoundType(float volumeIn, float pitchIn, SoundEvent &breakSoundIn, SoundEvent &stepSoundIn,
-                     SoundEvent &placeSoundIn, SoundEvent &hitSoundIn, SoundEvent &fallSoundIn) :
-    volume(volumeIn), pitch(pitchIn), breakSound(breakSoundIn), stepSound(stepSoundIn)
-    , placeSound(placeSoundIn), hitSound(hitSoundIn), fallSound(fallSoundIn) {
-
+                     SoundEvent &placeSoundIn, SoundEvent &hitSoundIn, SoundEvent &fallSoundIn)
+    : volume(volumeIn), pitch(pitchIn), breakSound(breakSoundIn), stepSound(stepSoundIn), placeSound(placeSoundIn),
+      hitSound(hitSoundIn), fallSound(fallSoundIn)
+{
 }
 
-float SoundType::getVolume() const {
+float SoundType::getVolume() const
+{
     return volume;
 }
 
-float SoundType::getPitch() const {
+float SoundType::getPitch() const
+{
     return pitch;
 }
 
-SoundEvent &SoundType::getBreakSound() {
+SoundEvent &SoundType::getBreakSound()
+{
     return breakSound;
 }
 
-SoundEvent &SoundType::getStepSound() {
+SoundEvent &SoundType::getStepSound()
+{
     return stepSound;
 }
 
-SoundEvent &SoundType::getPlaceSound() {
+SoundEvent &SoundType::getPlaceSound()
+{
     return placeSound;
 }
 
-SoundEvent &SoundType::getHitSound() {
+SoundEvent &SoundType::getHitSound()
+{
     return hitSound;
 }
 
-SoundEvent &SoundType::getFallSound() {
+SoundEvent &SoundType::getFallSound()
+{
     return fallSound;
 }

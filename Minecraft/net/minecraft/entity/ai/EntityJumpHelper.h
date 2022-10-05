@@ -1,12 +1,14 @@
 class EntityLiving;
 class EntityJumpHelper
 {
-public:
-    explicit EntityJumpHelper(EntityLiving* entityIn);
+  public:
+    explicit EntityJumpHelper(EntityLiving *entityIn);
     void setJumping();
     void doJump();
-protected:
+
+  protected:
     bool isJumping;
-private:
-    EntityLiving* entity;
+
+  private:
+    EntityLiving *entity;
 };

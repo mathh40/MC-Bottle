@@ -3,7 +3,7 @@
 #include "ItemStack.h"
 
 ItemAppleGold::ItemAppleGold(int32_t amount, float saturation, bool isWolfFood)
-    :ItemFood(amount, saturation, isWolfFood)
+    : ItemFood(amount, saturation, isWolfFood)
 {
     setHasSubtypes(true);
 }
@@ -20,16 +20,16 @@ EnumRarity ItemAppleGold::getRarity(ItemStack stack)
 
 void ItemAppleGold::onFoodEaten(ItemStack stack, World *worldIn, EntityPlayer *player)
 {
-    if (!worldIn->isRemote) 
+    if (!worldIn->isRemote)
     {
-        if (stack.getMetadata() > 0) 
+        if (stack.getMetadata() > 0)
         {
             player->addPotionEffect(PotionEffect(MobEffects::REGENERATION, 400, 1));
             player->addPotionEffect(PotionEffect(MobEffects::RESISTANCE, 6000, 0));
             player->addPotionEffect(PotionEffect(MobEffects::FIRE_RESISTANCE, 6000, 0));
             player->addPotionEffect(PotionEffect(MobEffects::ABSORPTION, 2400, 3));
         }
-        else 
+        else
         {
             player->addPotionEffect(PotionEffect(MobEffects::REGENERATION, 100, 1));
             player->addPotionEffect(PotionEffect(MobEffects::ABSORPTION, 2400, 0));
@@ -37,9 +37,9 @@ void ItemAppleGold::onFoodEaten(ItemStack stack, World *worldIn, EntityPlayer *p
     }
 }
 
-void ItemAppleGold::getSubItems(const CreativeTabs& tab, std::vector<ItemStack>& items)
+void ItemAppleGold::getSubItems(const CreativeTabs &tab, std::vector<ItemStack> &items)
 {
-    if (isInCreativeTab(tab)) 
+    if (isInCreativeTab(tab))
     {
         items.push_back(ItemStack(this));
         items.push_back(ItemStack(this, 1, 1));

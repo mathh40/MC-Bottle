@@ -1,7 +1,7 @@
 #include "EntityAIZombieAttack.h"
 
 EntityAIZombieAttack::EntityAIZombieAttack(EntityZombie *zombieIn, double speedIn, bool longMemoryIn)
-    :EntityAIAttackMelee(zombieIn, speedIn, longMemoryIn),zombie(zombieIn)
+    : EntityAIAttackMelee(zombieIn, speedIn, longMemoryIn), zombie(zombieIn)
 {
 }
 
@@ -21,11 +21,11 @@ void EntityAIZombieAttack::updateTask()
 {
     EntityAIAttackMelee::updateTask();
     ++raiseArmTicks;
-    if (raiseArmTicks >= 5 && attackTick < 10) 
+    if (raiseArmTicks >= 5 && attackTick < 10)
     {
         zombie->setArmsRaised(true);
     }
-    else 
+    else
     {
         zombie->setArmsRaised(false);
     }

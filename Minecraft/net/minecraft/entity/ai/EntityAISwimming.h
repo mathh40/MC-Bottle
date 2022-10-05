@@ -3,12 +3,13 @@
 
 class EntityLiving;
 
-class EntityAISwimming :public EntityAIBase
+class EntityAISwimming : public EntityAIBase
 {
-public:
-    explicit EntityAISwimming(EntityLiving* entityIn);
+  public:
+    explicit EntityAISwimming(EntityLiving *entityIn);
     bool shouldExecute() override;
     void updateTask() override;
-private:
-    EntityLiving* entity;
+
+  private:
+    EntityLiving *entity;
 };

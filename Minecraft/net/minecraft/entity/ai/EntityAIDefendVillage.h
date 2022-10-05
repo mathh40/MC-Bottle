@@ -2,13 +2,14 @@
 #include "EntityAITarget.h"
 
 class EntityIronGolem;
-class EntityAIDefendVillage :public EntityAITarget
+class EntityAIDefendVillage : public EntityAITarget
 {
-public:
-    explicit EntityAIDefendVillage(EntityIronGolem* ironGolemIn);
+  public:
+    explicit EntityAIDefendVillage(EntityIronGolem *ironGolemIn);
     bool shouldExecute() override;
     void startExecuting() override;
-private:
-    EntityIronGolem* irongolem;
-    EntityLivingBase* villageAgressorTarget;
+
+  private:
+    EntityIronGolem *irongolem;
+    EntityLivingBase *villageAgressorTarget;
 };

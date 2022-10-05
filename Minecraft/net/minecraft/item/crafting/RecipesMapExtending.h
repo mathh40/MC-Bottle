@@ -5,11 +5,12 @@ class MapData;
 
 class RecipesMapExtending : public ShapedRecipes
 {
-public:
+  public:
     RecipesMapExtending();
-    bool matches(InventoryCrafting* inv, World* worldIn) override;
-    ItemStack getCraftingResult(InventoryCrafting* inv) override;
+    bool matches(InventoryCrafting *inv, World *worldIn) override;
+    ItemStack getCraftingResult(InventoryCrafting *inv) override;
     bool isDynamic() override;
-private:
+
+  private:
     bool isExplorationMap(MapData p_190934_1_);
 };

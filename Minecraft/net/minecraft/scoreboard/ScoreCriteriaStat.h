@@ -2,10 +2,11 @@
 #include "../stats/StatBase.h"
 #include "ScoreCriteria.h"
 
-class ScoreCriteriaStat :public ScoreCriteria
+class ScoreCriteriaStat : public ScoreCriteria
 {
-public:
-   ScoreCriteriaStat(const StatBase& statIn);
-private:
-   StatBase stat;
+  public:
+    ScoreCriteriaStat(const StatBase &statIn);
+
+  private:
+    StatBase stat;
 };

@@ -1,9 +1,9 @@
 #pragma once
 #include "Biome.h"
 
-class BiomeOcean :public Biome
+class BiomeOcean : public Biome
 {
-public:
-	BiomeOcean(BiomeProperties properties);
-	TempCategory getTempCategory() override;
+  public:
+    BiomeOcean(BiomeProperties properties);
+    TempCategory getTempCategory() override;
 };

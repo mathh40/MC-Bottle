@@ -3,11 +3,13 @@
 
 class IBlockSource;
 
-class ItemMinecart :public Item
+class ItemMinecart : public Item
 {
-public:
+  public:
     ItemMinecart(EntityMinecart::Type typeIn);
-    EnumActionResult onItemUse(EntityPlayer* player, World* worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) override;
-private:
+    EnumActionResult onItemUse(EntityPlayer *player, World *worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+                               float hitX, float hitY, float hitZ) override;
+
+  private:
     EntityMinecart::Type minecartType;
 };

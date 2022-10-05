@@ -6,6 +6,7 @@
 #define FIFO_CACHE_POLICY_HPP
 
 #include "cache_policy.hpp"
+
 #include <list>
 #include <unordered_map>
 
@@ -31,13 +32,12 @@ namespace caches
  * An so on, the next candidate will be `B`, then `C`, etc.
  * \tparam Key Type of a key a policy works with
  */
-template <typename Key>
-class FIFOCachePolicy : public ICachePolicy<Key>
+template <typename Key> class FIFOCachePolicy : public ICachePolicy<Key>
 {
   public:
     using fifo_iterator = typename std::list<Key>::const_iterator;
 
-    FIFOCachePolicy() = default;
+    FIFOCachePolicy()  = default;
     ~FIFOCachePolicy() = default;
 
     void Insert(const Key &key) override

@@ -1,9 +1,10 @@
 #pragma once
 #include "EntityMob.h"
 
-class EntityBlaze :public EntityMob {
-public:
-    EntityBlaze(World* worldIn);
+class EntityBlaze : public EntityMob
+{
+  public:
+    EntityBlaze(World *worldIn);
     static void registerFixesBlaze(DataFixer fixer);
     int32_t getBrightnessForRender() override;
     float getBrightness() override;
@@ -12,8 +13,7 @@ public:
     bool isCharged();
     void setOnFire(bool onFire);
 
-
-protected:
+  protected:
     void initEntityAI() override;
     void applyEntityAttributes() override;
     void entityInit() override;
@@ -25,8 +25,7 @@ protected:
     std::optional<ResourceLocation> getLootTable() override;
     bool isValidLightLevel() override;
 
-
-private:
+  private:
     float heightOffset = 0.5F;
     int32_t heightOffsetUpdateTime;
     static DataParameter ON_FIRE;

@@ -3,7 +3,7 @@
 
 class ICriterionInstance
 {
-public:
-  virtual ~ICriterionInstance() = default;
-  virtual ResourceLocation& getId() const;
+  public:
+    virtual ~ICriterionInstance() = default;
+    virtual ResourceLocation &getId() const;
 };

@@ -3,10 +3,12 @@
 
 constexpr std::string_view MaxString = "SkullAndRoses";
 
-class EntityPainting :public EntityHanging {
-public:
-    class EnumArt {
-    public:
+class EntityPainting : public EntityHanging
+{
+  public:
+    class EnumArt
+    {
+      public:
         static EntityPainting::EnumArt KEBAB;
         static EntityPainting::EnumArt AZTEC;
         static EntityPainting::EnumArt ALBAN;
@@ -36,7 +38,7 @@ public:
 
         EnumArt(std::string_view titleIn, int32_t width, int32_t height, int32_t textureU, int32_t textureV);
 
-         static std::vector<EnumArt*> values();
+        static std::vector<EnumArt *> values();
 
         static constexpr int32_t MAX_NAME_LENGTH = MaxString.size();
         std::string_view title;
@@ -45,25 +47,25 @@ public:
         int32_t offsetX;
         int32_t offsetY;
 
-    private:
-        static std::vector<EnumArt*> valu;
+      private:
+        static std::vector<EnumArt *> valu;
     };
 
-    EntityPainting(World* worldIn);
-    EntityPainting(World* worldIn, BlockPos pos, EnumFacing facing);
-    EntityPainting(World* worldIn, BlockPos pos, EnumFacing facing, std::string_view title);
+    EntityPainting(World *worldIn);
+    EntityPainting(World *worldIn, BlockPos pos, EnumFacing facing);
+    EntityPainting(World *worldIn, BlockPos pos, EnumFacing facing, std::string_view title);
 
-    void writeEntityToNBT(NBTTagCompound* compound) override;
-    void readEntityFromNBT(NBTTagCompound* compound) override;
+    void writeEntityToNBT(NBTTagCompound *compound) override;
+    void readEntityFromNBT(NBTTagCompound *compound) override;
     int32_t getWidthPixels() override;
     int32_t getHeightPixels() override;
-    void onBroken(Entity* brokenEntity) override;
+    void onBroken(Entity *brokenEntity) override;
     void playPlaceSound() override;
     void setLocationAndAngles(double x, double y, double z, float yaw, float pitch) override;
-    void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int32_t posRotationIncrements, bool teleport) override;
+    void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
+                                      int32_t posRotationIncrements, bool teleport) override;
 
+    EntityPainting::EnumArt *art = nullptr;
 
-    EntityPainting::EnumArt* art = nullptr;
-private:
-
+  private:
 };

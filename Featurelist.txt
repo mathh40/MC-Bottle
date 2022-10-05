@@ -3,7 +3,7 @@ Features to work on:
 
 |-High
  |Create Server Base compatible to the latest 1.12.2 Java/Win10 Client
- 
+
 |-Normal
  |Create an Json based Config System
  |Basic Dos Protection
@@ -21,14 +21,14 @@ Features to work on:
   |Level based Permission System
   |Ingame Command: /ping - Make 4 Ping Tests against the Server Print the Output (Add Spam Protection)
   |Console Command: ping - Read out the past Pings of a Client, calculate the Delta and Print (do not make new pings)
- 
+
 |-Low
  |Server Setting: /help does only show commands the Player has access to (maybe make an plugin out of that?)
  |Anti Wallhack - Hide all Ores that are not touching 0(air)
  |Automatic Updater with restart
  |Support for Spigot Plugins
  |Forgemod Modloader Support
- 
+
  |-Very Low
   |Generate new Chunks near existing Chunks automatically when the Server contains less then 4 Players and the CPU Usage is below 50% (Option in the Config how much Chunks to generate per Tick (0 = Off))(Autostop when the Amount of total Chunks reaches X)
   |Make Worlds run on multiple Servers so the load can be split. A good start is this project, we can integrate or adapt it > https://github.com/nckk-mc/mimc

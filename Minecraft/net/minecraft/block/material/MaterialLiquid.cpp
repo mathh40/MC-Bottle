@@ -1,18 +1,22 @@
 #include "MaterialLiquid.h"
 
-MaterialLiquid::MaterialLiquid(MapColor color) : Material(color) {
+MaterialLiquid::MaterialLiquid(MapColor color) : Material(color)
+{
     Material::setReplaceable();
     setNoPushMobility();
 }
 
-bool MaterialLiquid::isLiquid() {
+bool MaterialLiquid::isLiquid()
+{
     return true;
 }
 
-bool MaterialLiquid::blocksMovement() {
+bool MaterialLiquid::blocksMovement()
+{
     return false;
 }
 
-bool MaterialLiquid::isSolid() {
+bool MaterialLiquid::isSolid()
+{
     return false;
 }

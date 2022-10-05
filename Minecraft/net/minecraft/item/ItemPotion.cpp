@@ -1,12 +1,11 @@
 #include "ItemPotion.h"
 
-
-#include "ItemStack.h"
-#include "Util.h"
 #include "../potion/PotionEffect.h"
 #include "../potion/PotionUtils.h"
 #include "../stats/StatList.h"
 #include "../world/World.h"
+#include "ItemStack.h"
+#include "Util.h"
 #include "text/translation/I18n.h"
 
 ItemPotion::ItemPotion()
@@ -22,45 +21,47 @@ ItemStack ItemPotion::getDefaultInstance()
 
 ItemStack ItemPotion::onItemUseFinish(ItemStack stack, World *worldIn, EntityLivingBase *entityLiving)
 {
-    EntityPlayer* entityplayer = Util::instanceof< EntityPlayer>(entityLiving) ? (EntityPlayer*)entityLiving : nullptr;
-    if (entityplayer == nullptr || !entityplayer->capabilities.isCreativeMode) 
+    EntityPlayer *entityplayer = Util:: instanceof
+        <EntityPlayer>(entityLiving) ? (EntityPlayer *)entityLiving : nullptr;
+    if (entityplayer == nullptr || !entityplayer->capabilities.isCreativeMode)
     {
         stack.shrink(1);
     }
 
-    if (Util::instanceof <EntityPlayerMP>(entityplayer)) 
+    if (Util:: instanceof <EntityPlayerMP>(entityplayer))
     {
-        CriteriaTriggers::CONSUME_ITEM.trigger((EntityPlayerMP*)entityplayer, stack);
+        CriteriaTriggers::CONSUME_ITEM.trigger((EntityPlayerMP *)entityplayer, stack);
     }
 
-    if (!worldIn->isRemote) 
+    if (!worldIn->isRemote)
     {
-        for(auto& potioneffect : PotionUtils::getEffectsFromStack(stack))
+        for (auto &potioneffect : PotionUtils::getEffectsFromStack(stack))
         {
-            if (potioneffect.getPotion().isInstant()) 
+            if (potioneffect.getPotion().isInstant())
             {
-                potioneffect.getPotion().affectEntity(entityplayer, entityplayer, entityLiving, potioneffect.getAmplifier(), 1.0);
+                potioneffect.getPotion().affectEntity(entityplayer, entityplayer, entityLiving,
+                                                      potioneffect.getAmplifier(), 1.0);
             }
-            else 
+            else
             {
                 entityLiving->addPotionEffect(new PotionEffect(potioneffect));
             }
         }
     }
 
-    if (entityplayer != nullptr) 
+    if (entityplayer != nullptr)
     {
         entityplayer->addStat(StatList::getObjectUseStats(this));
     }
 
-    if (entityplayer == nullptr || !entityplayer->capabilities.isCreativeMode) 
+    if (entityplayer == nullptr || !entityplayer->capabilities.isCreativeMode)
     {
-        if (stack.isEmpty()) 
+        if (stack.isEmpty())
         {
             return ItemStack(Items::GLASS_BOTTLE);
         }
 
-        if (entityplayer != nullptr) 
+        if (entityplayer != nullptr)
         {
             entityplayer->inventory.addItemStackToInventory(ItemStack(Items::GLASS_BOTTLE));
         }
@@ -90,7 +91,8 @@ std::string ItemPotion::getItemStackDisplayName(ItemStack stack) const
     return EnumAction::DRINK;
 }
 
-void ItemPotion::addInformation(ItemStack stack, World* worldIn, std::vector<std::string>& tooltip, ITooltipFlag* flagIn)
+void ItemPotion::addInformation(ItemStack stack, World *worldIn, std::vector<std::string> &tooltip,
+                                ITooltipFlag *flagIn)
 {
     PotionUtils::addPotionTooltip(stack, tooltip, 1.0F);
 }
@@ -100,13 +102,13 @@ bool ItemPotion::hasEffect(ItemStack stack)
     return Item::hasEffect(stack) || !PotionUtils::getEffectsFromStack(stack).isEmpty();
 }
 
-void ItemPotion::getSubItems(const CreativeTabs& tab, std::vector<ItemStack>& items)
+void ItemPotion::getSubItems(const CreativeTabs &tab, std::vector<ItemStack> &items)
 {
-    if (isInCreativeTab(tab)) 
+    if (isInCreativeTab(tab))
     {
-        for(auto& potiontype : PotionType::REGISTRY)
+        for (auto &potiontype : PotionType::REGISTRY)
         {
-            if (potiontype != PotionTypes::EMPTY) 
+            if (potiontype != PotionTypes::EMPTY)
             {
                 items.emplace_back(PotionUtils::addPotionToItemStack(ItemStack(this), potiontype));
             }

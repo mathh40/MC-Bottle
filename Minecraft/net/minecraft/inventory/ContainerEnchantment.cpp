@@ -1,14 +1,13 @@
 #include "ContainerEnchantment.h"
 
-
+#include "../item/EnumDyeColor.h"
+#include "../item/ItemEnchantedBook.h"
+#include "../stats/StatList.h"
 #include "IContainerListener.h"
 #include "IInventory.h"
 #include "SoundCategory.h"
 #include "Util.h"
 #include "World.h"
-#include "../item/EnumDyeColor.h"
-#include "../item/ItemEnchantedBook.h"
-#include "../stats/StatList.h"
 
 class InventoryBasic
 {
@@ -26,8 +25,8 @@ class InventoryBasic
 
 class EnchantSlot : public Slot
 {
-public:
-    EnchantSlot(IInventory* inventoryIn, int32_t index, int32_t xPosition, int32_t yPosition);
+  public:
+    EnchantSlot(IInventory *inventoryIn, int32_t index, int32_t xPosition, int32_t yPosition);
 
     bool isItemValid(ItemStack stack) override
     {
@@ -42,8 +41,8 @@ public:
 
 class TributSlot : public Slot
 {
-public:
-    TributSlot(IInventory* inventoryIn, int32_t index, int32_t xPosition, int32_t yPosition);
+  public:
+    TributSlot(IInventory *inventoryIn, int32_t index, int32_t xPosition, int32_t yPosition);
 
     bool isItemValid(ItemStack stack)
     {
@@ -51,39 +50,38 @@ public:
     }
 };
 
-
 EnchantSlot::EnchantSlot(IInventory *inventoryIn, int32_t index, int32_t xPosition, int32_t yPosition)
-    :Slot(inventoryIn,index,xPosition,yPosition)
+    : Slot(inventoryIn, index, xPosition, yPosition)
 {
 }
 
 TributSlot::TributSlot(IInventory *inventoryIn, int32_t index, int32_t xPosition, int32_t yPosition)
-    :Slot(inventoryIn,index,xPosition,yPosition)
+    : Slot(inventoryIn, index, xPosition, yPosition)
 {
 }
 
 ContainerEnchantment::ContainerEnchantment(InventoryPlayer *playerInv, World *worldIn)
-    :ContainerEnchantment(playerInv, worldIn, BlockPos::ORIGIN)
+    : ContainerEnchantment(playerInv, worldIn, BlockPos::ORIGIN)
 {
 }
 
 ContainerEnchantment::ContainerEnchantment(InventoryPlayer *playerInv, World *worldIn, BlockPos pos)
-    :rand(),enchantLevels(3,0),enchantClue({-1, -1, -1}),worldClue({-1, -1, -1})
-    ,world(worldIn),position(pos),xpSeed(playerInv->player->getXPSeed())
+    : rand(), enchantLevels(3, 0), enchantClue({-1, -1, -1}), worldClue({-1, -1, -1}), world(worldIn), position(pos),
+      xpSeed(playerInv->player->getXPSeed())
 {
     tableInventory = new InventoryBasic("Enchant", true, 2);
     addSlotToContainer(EnchantSlot(tableInventory, 0, 15, 47));
     addSlotToContainer(Slot(tableInventory, 1, 35, 47));
 
-    for(auto k = 0; k < 3; ++k) 
+    for (auto k = 0; k < 3; ++k)
     {
-        for(auto j = 0; j < 9; ++j) 
+        for (auto j = 0; j < 9; ++j)
         {
             addSlotToContainer(Slot(playerInv, j + k * 9 + 9, 8 + j * 18, 84 + k * 18));
         }
     }
 
-    for(auto k = 0; k < 9; ++k) 
+    for (auto k = 0; k < 9; ++k)
     {
         addSlotToContainer(Slot(playerInv, k, 8 + k * 18, 142));
     }
@@ -99,32 +97,32 @@ void ContainerEnchantment::detectAndSendChanges()
 {
     Container::detectAndSendChanges();
 
-    for(auto i = 0; i < listeners.size(); ++i) 
+    for (auto i = 0; i < listeners.size(); ++i)
     {
-        IContainerListener* icontainerlistener = listeners[i];
+        IContainerListener *icontainerlistener = listeners[i];
         broadcastData(icontainerlistener);
     }
 }
 
 void ContainerEnchantment::updateProgressBar(int32_t id, int32_t data)
 {
-    if (id >= 0 && id <= 2) 
+    if (id >= 0 && id <= 2)
     {
         enchantLevels[id] = data;
     }
-    else if (id == 3) 
+    else if (id == 3)
     {
         xpSeed = data;
     }
-    else if (id >= 4 && id <= 6) 
+    else if (id >= 4 && id <= 6)
     {
         enchantClue[id - 4] = data;
     }
-    else if (id >= 7 && id <= 9) 
+    else if (id >= 7 && id <= 9)
     {
         worldClue[id - 7] = data;
     }
-    else 
+    else
     {
         Container::updateProgressBar(id, data);
     }
@@ -132,49 +130,50 @@ void ContainerEnchantment::updateProgressBar(int32_t id, int32_t data)
 
 void ContainerEnchantment::onCraftMatrixChanged(IInventory *inventoryIn)
 {
-    if (inventoryIn == tableInventory) 
+    if (inventoryIn == tableInventory)
     {
         ItemStack itemstack = inventoryIn->getStackInSlot(0);
-        if (!itemstack.isEmpty() && itemstack.isItemEnchantable()) 
+        if (!itemstack.isEmpty() && itemstack.isItemEnchantable())
         {
-            if (!world->isRemote) 
+            if (!world->isRemote)
             {
                 auto l = 0;
 
-                for(auto j = -1; j <= 1; ++j) 
+                for (auto j = -1; j <= 1; ++j)
                 {
-                    for(auto k = -1; k <= 1; ++k) 
+                    for (auto k = -1; k <= 1; ++k)
                     {
-                        if ((j != 0 || k != 0) && world->isAirBlock(position.add(k, 0, j)) && world->isAirBlock(position.add(k, 1, j))) 
+                        if ((j != 0 || k != 0) && world->isAirBlock(position.add(k, 0, j)) &&
+                            world->isAirBlock(position.add(k, 1, j)))
                         {
-                            if (world->getBlockState(position.add(k * 2, 0, j * 2)).getBlock() == Blocks::BOOKSHELF) 
+                            if (world->getBlockState(position.add(k * 2, 0, j * 2)).getBlock() == Blocks::BOOKSHELF)
                             {
                                 ++l;
                             }
 
-                            if (world->getBlockState(position.add(k * 2, 1, j * 2)).getBlock() == Blocks::BOOKSHELF) 
+                            if (world->getBlockState(position.add(k * 2, 1, j * 2)).getBlock() == Blocks::BOOKSHELF)
                             {
                                 ++l;
                             }
 
-                            if (k != 0 && j != 0) 
+                            if (k != 0 && j != 0)
                             {
-                                if (world->getBlockState(position.add(k * 2, 0, j)).getBlock() == Blocks::BOOKSHELF) 
+                                if (world->getBlockState(position.add(k * 2, 0, j)).getBlock() == Blocks::BOOKSHELF)
                                 {
                                     ++l;
                                 }
 
-                                if (world->getBlockState(position.add(k * 2, 1, j)).getBlock() == Blocks::BOOKSHELF) 
+                                if (world->getBlockState(position.add(k * 2, 1, j)).getBlock() == Blocks::BOOKSHELF)
                                 {
                                     ++l;
                                 }
 
-                                if (world->getBlockState(position.add(k, 0, j * 2)).getBlock() == Blocks::BOOKSHELF) 
+                                if (world->getBlockState(position.add(k, 0, j * 2)).getBlock() == Blocks::BOOKSHELF)
                                 {
                                     ++l;
                                 }
 
-                                if (world->getBlockState(position.add(k, 1, j * 2)).getBlock() == Blocks::BOOKSHELF) 
+                                if (world->getBlockState(position.add(k, 1, j * 2)).getBlock() == Blocks::BOOKSHELF)
                                 {
                                     ++l;
                                 }
@@ -185,27 +184,27 @@ void ContainerEnchantment::onCraftMatrixChanged(IInventory *inventoryIn)
 
                 rand.seed(xpSeed);
 
-                for(auto j = 0; j < 3; ++j) 
+                for (auto j = 0; j < 3; ++j)
                 {
                     enchantLevels[j] = EnchantmentHelper::calcItemStackEnchantability(rand, j, l, itemstack);
-                    enchantClue[j] = -1;
-                    worldClue[j] = -1;
-                    if (enchantLevels[j] < j + 1) 
+                    enchantClue[j]   = -1;
+                    worldClue[j]     = -1;
+                    if (enchantLevels[j] < j + 1)
                     {
                         enchantLevels[j] = 0;
                     }
                 }
 
-                for(auto j = 0; j < 3; ++j) 
+                for (auto j = 0; j < 3; ++j)
                 {
-                    if (enchantLevels[j] > 0) 
+                    if (enchantLevels[j] > 0)
                     {
                         auto list = getEnchantmentList(itemstack, j, enchantLevels[j]);
-                        if (!list.empty()) 
+                        if (!list.empty())
                         {
                             EnchantmentData enchantmentdata = list.get(rand(list.size()));
                             enchantClue[j] = Enchantment::getEnchantmentID(enchantmentdata.enchantment);
-                            worldClue[j] = enchantmentdata.enchantmentLevel;
+                            worldClue[j]   = enchantmentdata.enchantmentLevel;
                         }
                     }
                 }
@@ -213,13 +212,13 @@ void ContainerEnchantment::onCraftMatrixChanged(IInventory *inventoryIn)
                 setectAndSendChanges();
             }
         }
-        else 
+        else
         {
-            for(auto l = 0; l < 3; ++l) 
+            for (auto l = 0; l < 3; ++l)
             {
                 enchantLevels[l] = 0;
-                enchantClue[l] = -1;
-                worldClue[l] = -1;
+                enchantClue[l]   = -1;
+                worldClue[l]     = -1;
             }
         }
     }
@@ -227,64 +226,67 @@ void ContainerEnchantment::onCraftMatrixChanged(IInventory *inventoryIn)
 
 bool ContainerEnchantment::enchantItem(EntityPlayer *playerIn, int32_t id)
 {
-    ItemStack itemstack = tableInventory->getStackInSlot(0);
+    ItemStack itemstack  = tableInventory->getStackInSlot(0);
     ItemStack itemstack1 = tableInventory->getStackInSlot(1);
-    int32_t i = id + 1;
-    if ((itemstack1.isEmpty() || itemstack1.getCount() < i) && !playerIn->capabilities.isCreativeMode) 
+    int32_t i            = id + 1;
+    if ((itemstack1.isEmpty() || itemstack1.getCount() < i) && !playerIn->capabilities.isCreativeMode)
     {
         return false;
     }
-    else if (enchantLevels[id] <= 0 || itemstack.isEmpty() || (playerIn->experienceLevel < i || playerIn->experienceLevel < enchantLevels[id]) && !playerIn->capabilities.isCreativeMode) 
+    else if (enchantLevels[id] <= 0 || itemstack.isEmpty() ||
+             (playerIn->experienceLevel < i || playerIn->experienceLevel < enchantLevels[id]) &&
+                 !playerIn->capabilities.isCreativeMode)
     {
         return false;
     }
-    else 
+    else
     {
-        if (!world->isRemote) 
+        if (!world->isRemote)
         {
             List list = getEnchantmentList(itemstack, id, enchantLevels[id]);
-            if (!list.isEmpty()) 
+            if (!list.isEmpty())
             {
                 playerIn->onEnchant(itemstack, i);
                 bool flag = itemstack.getItem() == Items::BOOK;
-                if (flag) 
+                if (flag)
                 {
                     itemstack = ItemStack(Items::ENCHANTED_BOOK);
                     tableInventory->setInventorySlotContents(0, itemstack);
                 }
 
-                for(auto j = 0; j < list.size(); ++j) 
+                for (auto j = 0; j < list.size(); ++j)
                 {
                     EnchantmentData enchantmentdata = list[j];
-                    if (flag) 
+                    if (flag)
                     {
                         ItemEnchantedBook::addEnchantment(itemstack, enchantmentdata);
                     }
-                    else 
+                    else
                     {
                         itemstack.addEnchantment(enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
                     }
                 }
 
-                if (!playerIn->capabilities.isCreativeMode) 
+                if (!playerIn->capabilities.isCreativeMode)
                 {
                     itemstack1.shrink(i);
-                    if (itemstack1.isEmpty()) 
+                    if (itemstack1.isEmpty())
                     {
                         tableInventory->setInventorySlotContents(1, ItemStack::EMPTY);
                     }
                 }
 
                 playerIn->addStat(StatList::ITEM_ENCHANTED);
-                if (Util::instanceof< EntityPlayerMP>(playerIn)) 
+                if (Util:: instanceof <EntityPlayerMP>(playerIn))
                 {
-                    CriteriaTriggers::ENCHANTED_ITEM.trigger((EntityPlayerMP*)playerIn, itemstack, i);
+                    CriteriaTriggers::ENCHANTED_ITEM.trigger((EntityPlayerMP *)playerIn, itemstack, i);
                 }
 
                 tableInventory->markDirty();
                 xpSeed = playerIn->getXPSeed();
                 onCraftMatrixChanged(tableInventory);
-                world->playSound(nullptr, position, SoundEvents::BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory::BLOCKS, 1.0F, world->rand.nextFloat() * 0.1F + 0.9F);
+                world->playSound(nullptr, position, SoundEvents::BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory::BLOCKS,
+                                 1.0F, world->rand.nextFloat() * 0.1F + 0.9F);
             }
         }
 
@@ -301,7 +303,7 @@ int32_t ContainerEnchantment::getLapisAmount() const
 void ContainerEnchantment::onContainerClosed(EntityPlayer *playerIn)
 {
     Container::onContainerClosed(playerIn);
-    if (!world->isRemote) 
+    if (!world->isRemote)
     {
         clearContainer(playerIn, playerIn->world, tableInventory);
     }
@@ -309,11 +311,11 @@ void ContainerEnchantment::onContainerClosed(EntityPlayer *playerIn)
 
 bool ContainerEnchantment::canInteractWith(EntityPlayer *playerIn)
 {
-    if (world->getBlockState(position)->getBlock() != Blocks::ENCHANTING_TABLE) 
+    if (world->getBlockState(position)->getBlock() != Blocks::ENCHANTING_TABLE)
     {
         return false;
     }
-    else 
+    else
     {
         return playerIn->getDistanceSq(position.getx() + 0.5, position.gety() + 0.5, position.getz() + 0.5) <= 64.0;
     }
@@ -322,61 +324,62 @@ bool ContainerEnchantment::canInteractWith(EntityPlayer *playerIn)
 ItemStack ContainerEnchantment::transferStackInSlot(EntityPlayer *playerIn, int32_t index)
 {
     ItemStack itemstack = ItemStack::EMPTY;
-    auto slot = inventorySlots[index];
-    if (slot.has_value() && slot->getHasStack()) 
+    auto slot           = inventorySlots[index];
+    if (slot.has_value() && slot->getHasStack())
     {
         ItemStack itemstack1 = slot->getStack();
-        itemstack = itemstack1.copy();
-        if (index == 0) 
+        itemstack            = itemstack1.copy();
+        if (index == 0)
         {
-            if (!mergeItemStack(itemstack1, 2, 38, true)) 
+            if (!mergeItemStack(itemstack1, 2, 38, true))
             {
                 return ItemStack::EMPTY;
             }
         }
-        else if (index == 1) 
+        else if (index == 1)
         {
-            if (!mergeItemStack(itemstack1, 2, 38, true)) 
+            if (!mergeItemStack(itemstack1, 2, 38, true))
             {
                 return ItemStack::EMPTY;
             }
         }
-        else if (itemstack1.getItem() == Items::DYE && EnumDyeColor::byDyeDamage(itemstack1.getMetadata()) == EnumDyeColor::BLUE) 
+        else if (itemstack1.getItem() == Items::DYE &&
+                 EnumDyeColor::byDyeDamage(itemstack1.getMetadata()) == EnumDyeColor::BLUE)
         {
-            if (!mergeItemStack(itemstack1, 1, 2, true)) 
+            if (!mergeItemStack(itemstack1, 1, 2, true))
             {
                 return ItemStack::EMPTY;
             }
         }
-        else 
+        else
         {
-            if (inventorySlots[0]->getHasStack() || !inventorySlots[0]->isItemValid(itemstack1)) 
+            if (inventorySlots[0]->getHasStack() || !inventorySlots[0]->isItemValid(itemstack1))
             {
                 return ItemStack::EMPTY;
             }
 
-            if (itemstack1.hasTagCompound() && itemstack1.getCount() == 1) 
+            if (itemstack1.hasTagCompound() && itemstack1.getCount() == 1)
             {
                 inventorySlots[0]->putStack(itemstack1.copy());
                 itemstack1.setCount(0);
             }
-            else if (!itemstack1.isEmpty()) 
+            else if (!itemstack1.isEmpty())
             {
                 inventorySlots[0]->putStack(ItemStack(itemstack1.getItem(), 1, itemstack1.getMetadata()));
                 itemstack1.shrink(1);
             }
         }
 
-        if (itemstack1.isEmpty()) 
+        if (itemstack1.isEmpty())
         {
             slot->putStack(ItemStack::EMPTY);
         }
-        else 
+        else
         {
             slot->onSlotChanged();
         }
 
-        if (itemstack1.getCount() == itemstack.getCount()) 
+        if (itemstack1.getCount() == itemstack.getCount())
         {
             return ItemStack::EMPTY;
         }
@@ -405,7 +408,7 @@ std::vector<> ContainerEnchantment::getEnchantmentList(ItemStack stack, int32_t 
 {
     rand.seed(xpSeed + enchantSlot);
     std::vector<> list = EnchantmentHelper::buildEnchantmentList(rand, stack, level, false);
-    if (stack.getItem() == Items::BOOK && list.size() > 1) 
+    if (stack.getItem() == Items::BOOK && list.size() > 1)
     {
         list.remove(rand(list.size()));
     }

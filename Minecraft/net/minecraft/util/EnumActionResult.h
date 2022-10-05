@@ -2,7 +2,7 @@
 
 enum class EnumActionResult
 {
-	SUCCESS,
-	PASS,
-	FAIL
+    SUCCESS,
+    PASS,
+    FAIL
 };

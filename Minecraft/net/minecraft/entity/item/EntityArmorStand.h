@@ -3,20 +3,21 @@
 #include "math/Rotations.h"
 
 class DataParameter;
-class EntityArmorStand :public EntityLivingBase {
-public:
-    EntityArmorStand(World* worldIn);
-    EntityArmorStand(World* worldIn, double posX, double posY, double posZ);
+class EntityArmorStand : public EntityLivingBase
+{
+  public:
+    EntityArmorStand(World *worldIn);
+    EntityArmorStand(World *worldIn, double posX, double posY, double posZ);
     bool isServerWorld();
-    std::vector<ItemStack>& getHeldEquipment() override;
-    std::vector<ItemStack>& getArmorInventoryList() override;
+    std::vector<ItemStack> &getHeldEquipment() override;
+    std::vector<ItemStack> &getArmorInventoryList() override;
     ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) override;
     void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) override;
     bool replaceItemInInventory(int32_t inventorySlot, ItemStack itemStackIn) override;
-    void writeEntityToNBT(NBTTagCompound* compound) override;
-    void readEntityFromNBT(NBTTagCompound* compound) override;
+    void writeEntityToNBT(NBTTagCompound *compound) override;
+    void readEntityFromNBT(NBTTagCompound *compound) override;
     bool canBePushed() override;
-    EnumActionResult applyPlayerInteraction(EntityPlayer* player, Vec3d vec, EnumHand hand) override;
+    EnumActionResult applyPlayerInteraction(EntityPlayer *player, Vec3d vec, EnumHand hand) override;
     bool attackEntityFrom(DamageSource::DamageSource source, float amount) override;
     void handleStatusUpdate(std::byte id) override;
     bool isInRangeToRenderDist(double distance) override;
@@ -49,11 +50,10 @@ public:
     Rotations getRightLegRotation() const;
     bool canBeCollidedWith() override;
     EnumHandSide getPrimaryHand() override;
-    void onStruckByLightning(EntityLightningBolt* lightningBolt) override;
+    void onStruckByLightning(EntityLightningBolt *lightningBolt) override;
     bool canBeHitWithPotion() override;
     void notifyDataManagerChange(DataParameter key) override;
     bool attackable() override;
-
 
     static void registerFixesArmorStand(DataFixer fixer);
 
@@ -65,10 +65,11 @@ public:
     static const DataParameter LEFT_LEG_ROTATION;
     static const DataParameter RIGHT_LEG_ROTATION;
     int64_t punchCooldown;
-protected:
+
+  protected:
     void setSize(float width, float height) override;
     void entityInit() override;
-    void collideWithEntity(Entity* entityIn) override;
+    void collideWithEntity(Entity *entityIn) override;
     void collideWithNearbyEntities() override;
     EntityEquipmentSlot getClickedSlot(Vec3d p_190772_1_);
     float updateDistance(float p_110146_1_, float p_110146_2_) override;
@@ -77,13 +78,11 @@ protected:
     SoundEvent getHurtSound(DamageSource::DamageSource damageSourceIn) override;
     SoundEvent getDeathSound() override;
 
-
-
-private:
-    void writePoseToNBT(NBTTagCompound* tagCompound);
+  private:
+    void writePoseToNBT(NBTTagCompound *tagCompound);
     std::unique_ptr<NBTTagCompound> readPoseFromNBT() const;
     bool isDisabled(EntityEquipmentSlot slotIn) const;
-    void swapItem(EntityPlayer* player, EntityEquipmentSlot p_184795_2_, ItemStack p_184795_3_, EnumHand hand);
+    void swapItem(EntityPlayer *player, EntityEquipmentSlot p_184795_2_, ItemStack p_184795_3_, EnumHand hand);
     void playParticles();
     void damageArmorStand(float damage);
     void dropBlock();
@@ -95,9 +94,6 @@ private:
     void setNoBasePlate(bool noBasePlate);
     void setMarker(bool marker);
     static std::byte setBit(std::byte p_184797_1_, uint8_t p_184797_2_, bool p_184797_3_);
-
-
-
 
     std::vector<ItemStack> handItems;
     std::vector<ItemStack> armorItems;

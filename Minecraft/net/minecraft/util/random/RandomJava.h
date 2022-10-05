@@ -1,7 +1,8 @@
 #pragma once
 #include "Random.h"
 
-class RandomJava : public Random {
+class RandomJava : public Random
+{
   public:
     RandomJava();
     RandomJava(uint64_t seed = 0);
@@ -18,12 +19,13 @@ class RandomJava : public Random {
 
   protected:
     uint32_t next(uint32_t bits);
+
   private:
     static uint64_t seedUniquifier();
     static uint64_t initialScramble(uint64_t seed);
 
     uint64_t seed = 0;
     static uint64_t seedUniquifierVal;
-    bool haveNextGaussian = false;
+    bool haveNextGaussian   = false;
     double nextNextGaussian = 0;
 };

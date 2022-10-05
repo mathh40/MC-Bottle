@@ -35,4 +35,3 @@ runs:
         key: ${{ runner.os }}-${{ inputs.compiler }}-${{ inputs.build_type }}-${{ hashFiles('./conanfile.txt')}}-${{ inputs.generator }}-${{ inputs.developer_mode }}-${{ hashFiles('**/CMakeLists.txt') }}-${{ hashFiles('./vcpkg.json')}}
         restore-keys: |
           ${{ runner.os }}-${{ inputs.compiler }}-${{ inputs.build_type }}-${{ hashFiles('./conanfile.txt') }}
-

@@ -1,11 +1,12 @@
 #pragma once
 #include "StatBase.h"
 
-class StatBasic :public StatBase
+class StatBasic : public StatBase
 {
-public:
-	StatBasic(std::string_view statIdIn, ITextComponent* statNameIn, IStatType* typeIn);
-	StatBasic(std::string_view statIdIn, ITextComponent* statNameIn);
-	StatBase& registerStat() override;
-private:
+  public:
+    StatBasic(std::string_view statIdIn, ITextComponent *statNameIn, IStatType *typeIn);
+    StatBasic(std::string_view statIdIn, ITextComponent *statNameIn);
+    StatBase &registerStat() override;
+
+  private:
 };

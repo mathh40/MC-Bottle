@@ -1,9 +1,9 @@
 #pragma once
 #include "Item.h"
 
-class ItemEnderPearl :public Item
+class ItemEnderPearl : public Item
 {
-public:
+  public:
     ItemEnderPearl();
-    ActionResult onItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand handIn) override;
+    ActionResult onItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand handIn) override;
 };

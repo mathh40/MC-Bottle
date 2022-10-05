@@ -1,15 +1,15 @@
 #pragma once
 #include <stdexcept>
 
-class MinecraftError :public std::exception
+class MinecraftError : public std::exception
 {
 
-public:
+  public:
+    explicit MinecraftError(const char *msg);
+    explicit MinecraftError(std::string msg);
+    char const *what() const override;
+    ~MinecraftError();
 
-	explicit MinecraftError(const char* msg);
-	explicit MinecraftError(std::string msg);
-	char const* what() const override;
-	~MinecraftError();
-private:
-	std::string msg_;
+  private:
+    std::string msg_;
 };

@@ -2,6 +2,6 @@
 
 enum class EnumHand
 {
-	MAIN_HAND,
-	OFF_HAND
+    MAIN_HAND,
+    OFF_HAND
 };

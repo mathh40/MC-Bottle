@@ -1,16 +1,17 @@
 #pragma once
-#include "PhaseBase.h"
 #include "../../../../pathfinding/Path.h"
+#include "PhaseBase.h"
 
-class PhaseLandingApproach :public PhaseBase {
-public:
-    PhaseLandingApproach(EntityDragon* dragonIn);
-    PhaseList* getType() override;
+class PhaseLandingApproach : public PhaseBase
+{
+  public:
+    PhaseLandingApproach(EntityDragon *dragonIn);
+    PhaseList *getType() override;
     void initPhase() override;
     void doLocalUpdate() override;
     std::optional<Vec3d> getTargetLocation() override;
 
-private:
+  private:
     void findNewTarget();
     void navigateToNextPathNode();
 

@@ -1,20 +1,21 @@
 #pragma once
-#include "IMob.h"
 #include "../EntityCreature.h"
+#include "IMob.h"
 
-class EntityMob :public EntityCreature , public IMob {
-public:
-    EntityMob(World* worldIn);
+class EntityMob : public EntityCreature, public IMob
+{
+  public:
+    EntityMob(World *worldIn);
     SoundCategory getSoundCategory() override;
     void onLivingUpdate() override;
     void onUpdate() override;
     bool attackEntityFrom(DamageSource::DamageSource source, float amount) override;
-    bool attackEntityAsMob(Entity* entityIn) override;
+    bool attackEntityAsMob(Entity *entityIn) override;
     float getBlockPathWeight(BlockPos pos) override;
     bool getCanSpawnHere() override;
-    bool isPreventingPlayerRest(EntityPlayer* playerIn);
+    bool isPreventingPlayerRest(EntityPlayer *playerIn);
 
-protected:
+  protected:
     virtual bool isValidLightLevel();
     void applyEntityAttributes() override;
     bool canDropLoot() override;
@@ -25,5 +26,5 @@ protected:
     SoundEvent getDeathSound() override;
     SoundEvent getFallSound(int32_t heightIn) override;
 
-private:
+  private:
 };

@@ -1,9 +1,8 @@
 #include "ItemBucketMilk.h"
 
-
+#include "../stats/StatList.h"
 #include "ItemStack.h"
 #include "Util.h"
-#include "../stats/StatList.h"
 
 ItemBucketMilk::ItemBucketMilk()
 {
@@ -13,19 +12,19 @@ ItemBucketMilk::ItemBucketMilk()
 
 ItemStack ItemBucketMilk::onItemUseFinish(ItemStack stack, World *worldIn, EntityLivingBase *entityLiving)
 {
-    if (Util::instanceof<EntityPlayerMP>(entityLiving)) 
+    if (Util:: instanceof <EntityPlayerMP>(entityLiving))
     {
-        EntityPlayerMP* entityplayermp = (EntityPlayerMP*)entityLiving;
+        EntityPlayerMP *entityplayermp = (EntityPlayerMP *)entityLiving;
         CriteriaTriggers::CONSUME_ITEM::trigger(entityplayermp, stack);
         entityplayermp->addStat(StatList::getObjectUseStats(this));
     }
 
-    if (Util::instanceof<EntityPlayer>(entityLiving) && !((EntityPlayer*)entityLiving)->capabilities.isCreativeMode) 
+    if (Util:: instanceof <EntityPlayer>(entityLiving) && !((EntityPlayer *)entityLiving)->capabilities.isCreativeMode)
     {
         stack.shrink(1);
     }
 
-    if (!worldIn->isRemote) 
+    if (!worldIn->isRemote)
     {
         entityLiving->clearActivePotions();
     }

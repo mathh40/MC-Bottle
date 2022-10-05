@@ -1,20 +1,21 @@
 #include "AttributeModifier.h"
+
 #include "math/MathHelper.h"
 
 AttributeModifier::AttributeModifier(std::string_view nameIn, double amountIn, int32_t operationIn)
-    :AttributeModifier(MathHelper::getRandomUUID({}), nameIn, amountIn, operationIn)
+    : AttributeModifier(MathHelper::getRandomUUID({}), nameIn, amountIn, operationIn)
 {
 }
 
 AttributeModifier::AttributeModifier(xg::Guid &idIn, std::string_view nameIn, double amountIn, int32_t operationIn)
-    :bisSaved(true),id(idIn),name(nameIn),amount(amountIn),operation(operationIn)
+    : bisSaved(true), id(idIn), name(nameIn), amount(amountIn), operation(operationIn)
 {
-    if(name.empty())
+    if (name.empty())
     {
         throw std::logic_error("Modifier name cannot be empty");
     }
 
-    if(0L >= operationIn || operationIn >= 2L)
+    if (0L >= operationIn || operationIn >= 2L)
     {
         throw std::logic_error("Invalid operation");
     }

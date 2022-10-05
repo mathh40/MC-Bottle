@@ -1,57 +1,63 @@
 #pragma once
-#include "IMob.h"
 #include "../EntityFlying.h"
+#include "IMob.h"
 #include "ai/EntityAIBase.h"
 
-class EntityGhast :public EntityFlying, public IMob {
-public:
-    class GhastMoveHelper :public EntityMoveHelper {
+class EntityGhast : public EntityFlying, public IMob
+{
+  public:
+    class GhastMoveHelper : public EntityMoveHelper
+    {
 
-    public:
+      public:
         explicit GhastMoveHelper(EntityGhast *ghast);
         void onUpdateMoveHelper() override;
 
-    private:
+      private:
         bool isNotColliding(double x, double y, double z, double p_179926_7_) const;
-        EntityGhast* parentEntity;
+        EntityGhast *parentEntity;
         int32_t courseChangeCooldown;
-   };
+    };
 
-    class AIRandomFly :public EntityAIBase {
-    private:
-        EntityGhast* parentEntity;
+    class AIRandomFly : public EntityAIBase
+    {
+      private:
+        EntityGhast *parentEntity;
 
-    public:
+      public:
         AIRandomFly(EntityGhast *ghast);
         bool shouldExecute() override;
         bool shouldContinueExecuting() override;
         void startExecuting() override;
-   };
+    };
 
-    class AILookAround :public EntityAIBase {
-     private:
-       EntityGhast* parentEntity;
+    class AILookAround : public EntityAIBase
+    {
+      private:
+        EntityGhast *parentEntity;
 
       public:
-       AILookAround(EntityGhast *ghast);
-       bool shouldExecute() override;
-       void updateTask() override;
-   };
+        AILookAround(EntityGhast *ghast);
+        bool shouldExecute() override;
+        void updateTask() override;
+    };
 
-    class AIFireballAttack :public EntityAIBase {
-     private:
-       EntityGhast* parentEntity;
-    public:
+    class AIFireballAttack : public EntityAIBase
+    {
+      private:
+        EntityGhast *parentEntity;
+
+      public:
         int32_t attackTimer;
 
-       AIFireballAttack(EntityGhast *ghast);
-       bool shouldExecute() override;
-       void startExecuting() override;
-       void resetTask() override;
-       void updateTask() override;
-   };
+        AIFireballAttack(EntityGhast *ghast);
+        bool shouldExecute() override;
+        void startExecuting() override;
+        void resetTask() override;
+        void updateTask() override;
+    };
 
-    EntityGhast(World* worldIn);
+    EntityGhast(World *worldIn);
     bool isAttacking();
     void setAttacking(bool attacking);
     int32_t getFireballStrength() const;
@@ -65,7 +71,7 @@ public:
     void readEntityFromNBT(NBTTagCompound *compound) override;
     float getEyeHeight() const override;
 
-protected:
+  protected:
     void initEntityAI() override;
     void entityInit() override;
     void applyEntityAttributes() override;
@@ -75,7 +81,7 @@ protected:
     std::optional<ResourceLocation> getLootTable() override;
     float getSoundVolume() override;
 
-private:
+  private:
     static DataParameter ATTACKING;
     int32_t explosionStrength = 1;
 };

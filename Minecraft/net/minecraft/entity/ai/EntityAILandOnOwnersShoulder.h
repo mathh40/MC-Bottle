@@ -3,17 +3,17 @@
 
 class EntityPlayer;
 
-class EntityAILandOnOwnersShoulder :public EntityAIBase
+class EntityAILandOnOwnersShoulder : public EntityAIBase
 {
-public:
-    EntityAILandOnOwnersShoulder(EntityShoulderRiding* entityIn);
+  public:
+    EntityAILandOnOwnersShoulder(EntityShoulderRiding *entityIn);
     bool shouldExecute() override;
     bool isInterruptible() override;
     void startExecuting() override;
     void updateTask() override;
 
-private:
-    EntityShoulderRiding* entity;
-    EntityPlayer* owner;
+  private:
+    EntityShoulderRiding *entity;
+    EntityPlayer *owner;
     bool isSittingOnShoulder;
 };

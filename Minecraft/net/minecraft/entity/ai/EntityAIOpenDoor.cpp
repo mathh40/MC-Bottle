@@ -1,9 +1,8 @@
 #include "EntityAIOpenDoor.h"
 
 EntityAIOpenDoor::EntityAIOpenDoor(EntityLiving *entitylivingIn, bool shouldClose)
-    :EntityAIDoorInteract(entitylivingIn),entity(entitylivingIn),closeDoor(shouldClose)
+    : EntityAIDoorInteract(entitylivingIn), entity(entitylivingIn), closeDoor(shouldClose)
 {
-
 }
 
 bool EntityAIOpenDoor::shouldContinueExecuting()
@@ -19,7 +18,7 @@ void EntityAIOpenDoor::startExecuting()
 
 void EntityAIOpenDoor::resetTask()
 {
-    if (closeDoor) 
+    if (closeDoor)
     {
         doorBlock->toggleDoor(entity->world, doorPosition, false);
     }

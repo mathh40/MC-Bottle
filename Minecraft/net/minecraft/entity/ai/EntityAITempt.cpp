@@ -1,23 +1,24 @@
 #include "EntityAITempt.h"
 
-#include <utility>
-
-
-#include "Util.h"
 #include "../../item/ItemStack.h"
 #include "../../pathfinding/PathNavigateGround.h"
+#include "Util.h"
 
-EntityAITempt::EntityAITempt(EntityCreature* temptedEntityIn, double speedIn, Item *temptItemIn,
+#include <utility>
+
+EntityAITempt::EntityAITempt(EntityCreature *temptedEntityIn, double speedIn, Item *temptItemIn,
                              bool scaredByPlayerMovementIn)
-        :EntityAITempt(temptedEntityIn, speedIn, scaredByPlayerMovementIn, {temptItemIn})
+    : EntityAITempt(temptedEntityIn, speedIn, scaredByPlayerMovementIn, {temptItemIn})
 {
 }
 
-EntityAITempt::EntityAITempt(EntityCreature* temptedEntityIn, double speedIn, bool scaredByPlayerMovementIn, const std::unordered_set<Item*>& temptItemIn)
-    :temptedEntity(temptedEntityIn),speed(speedIn),temptItem(temptItemIn),scaredByPlayerMovement(scaredByPlayerMovementIn)
+EntityAITempt::EntityAITempt(EntityCreature *temptedEntityIn, double speedIn, bool scaredByPlayerMovementIn,
+                             const std::unordered_set<Item *> &temptItemIn)
+    : temptedEntity(temptedEntityIn), speed(speedIn), temptItem(temptItemIn),
+      scaredByPlayerMovement(scaredByPlayerMovementIn)
 {
     setMutexBits(3);
-    if (!(Util::instanceof<PathNavigateGround>(temptedEntityIn->getNavigator() ))) 
+    if (!(Util:: instanceof <PathNavigateGround>(temptedEntityIn->getNavigator())))
     {
         throw std::logic_error("Unsupported mob type for TemptGoal");
     }
@@ -25,42 +26,44 @@ EntityAITempt::EntityAITempt(EntityCreature* temptedEntityIn, double speedIn, bo
 
 bool EntityAITempt::shouldExecute()
 {
-    if (delayTemptCounter > 0) 
+    if (delayTemptCounter > 0)
     {
         --delayTemptCounter;
         return false;
     }
-    else 
+    else
     {
         temptingPlayer = temptedEntity->world.getClosestPlayerToEntity(temptedEntity, 10.0);
-        if (temptingPlayer == nullptr) 
+        if (temptingPlayer == nullptr)
         {
             return false;
         }
-        else 
+        else
         {
-            return isTempting(temptingPlayer->getHeldItemMainhand()) || isTempting(temptingPlayer->getHeldItemOffhand());
+            return isTempting(temptingPlayer->getHeldItemMainhand()) ||
+                   isTempting(temptingPlayer->getHeldItemOffhand());
         }
     }
 }
 
 bool EntityAITempt::shouldContinueExecuting()
 {
-    if (scaredByPlayerMovement) 
+    if (scaredByPlayerMovement)
     {
-        if (temptedEntity->getDistanceSq(temptingPlayer) < 36.0) 
+        if (temptedEntity->getDistanceSq(temptingPlayer) < 36.0)
         {
-            if (temptingPlayer->getDistanceSq(targetX, targetY, targetZ) > 0.010000000000000002) 
+            if (temptingPlayer->getDistanceSq(targetX, targetY, targetZ) > 0.010000000000000002)
             {
                 return false;
             }
 
-            if (MathHelper::abs((double)temptingPlayer->rotationPitch - pitch) > 5.0 || MathHelper::abs((double)temptingPlayer->rotationYaw - yaw) > 5.0) 
+            if (MathHelper::abs((double)temptingPlayer->rotationPitch - pitch) > 5.0 ||
+                MathHelper::abs((double)temptingPlayer->rotationYaw - yaw) > 5.0)
             {
                 return false;
             }
         }
-        else 
+        else
         {
             targetX = temptingPlayer->posX;
             targetY = temptingPlayer->posY;
@@ -68,7 +71,7 @@ bool EntityAITempt::shouldContinueExecuting()
         }
 
         pitch = (double)temptingPlayer->rotationPitch;
-        yaw = (double)temptingPlayer->rotationYaw;
+        yaw   = (double)temptingPlayer->rotationYaw;
     }
 
     return shouldExecute();
@@ -76,9 +79,9 @@ bool EntityAITempt::shouldContinueExecuting()
 
 void EntityAITempt::startExecuting()
 {
-    targetX = temptingPlayer->posX;
-    targetY = temptingPlayer->posY;
-    targetZ = temptingPlayer->posZ;
+    targetX    = temptingPlayer->posX;
+    targetY    = temptingPlayer->posY;
+    targetZ    = temptingPlayer->posZ;
     bisRunning = true;
 }
 
@@ -87,17 +90,19 @@ void EntityAITempt::resetTask()
     temptingPlayer = nullptr;
     temptedEntity->getNavigator().clearPath();
     delayTemptCounter = 100;
-    bisRunning = false;
+    bisRunning        = false;
 }
 
 void EntityAITempt::updateTask()
 {
-    temptedEntity->getLookHelper().setLookPositionWithEntity(temptingPlayer, (float)(temptedEntity->getHorizontalFaceSpeed() + 20), (float)temptedEntity->getVerticalFaceSpeed());
-    if (temptedEntity->getDistanceSq(temptingPlayer) < 6.25) 
+    temptedEntity->getLookHelper().setLookPositionWithEntity(temptingPlayer,
+                                                             (float)(temptedEntity->getHorizontalFaceSpeed() + 20),
+                                                             (float)temptedEntity->getVerticalFaceSpeed());
+    if (temptedEntity->getDistanceSq(temptingPlayer) < 6.25)
     {
         temptedEntity->getNavigator().clearPath();
     }
-    else 
+    else
     {
         temptedEntity->getNavigator().tryMoveToEntityLiving(temptingPlayer, speed);
     }

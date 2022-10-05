@@ -1,7 +1,7 @@
 #include "ShapelessRecipes.h"
 
 ShapelessRecipes::ShapelessRecipes(std::string_view group, ItemStack output, const std::vector<Ingredient> &ingredients)
-    :group(group),recipeOutput(output),recipeItems(ingredients)
+    : group(group), recipeOutput(output), recipeItems(ingredients)
 {
 }
 
@@ -24,10 +24,10 @@ std::vector<ItemStack> ShapelessRecipes::getRemainingItems(InventoryCrafting *in
 {
     std::vector<ItemStack> nonnulllist(inv->getSizeInventory(), ItemStack::EMPTY);
 
-    for(auto i = 0; i < nonnulllist.size(); ++i) 
+    for (auto i = 0; i < nonnulllist.size(); ++i)
     {
         ItemStack itemstack = inv->getStackInSlot(i);
-        if (itemstack.getItem()->hasContainerItem()) 
+        if (itemstack.getItem()->hasContainerItem())
         {
             nonnulllist[i] = ItemStack(itemstack.getItem()->getContainerItem());
         }
@@ -40,18 +40,18 @@ bool ShapelessRecipes::matches(InventoryCrafting *inv, World *worldIn)
 {
     auto list = recipeItems;
 
-    for(auto i = 0; i < inv->getHeight(); ++i) 
+    for (auto i = 0; i < inv->getHeight(); ++i)
     {
-        for(auto j = 0; j < inv->getWidth(); ++j) 
+        for (auto j = 0; j < inv->getWidth(); ++j)
         {
             ItemStack itemstack = inv->getStackInRowAndColumn(j, i);
-            if (!itemstack.isEmpty()) 
+            if (!itemstack.isEmpty())
             {
                 bool flag = false;
 
-                for(auto& ingredient : list)
+                for (auto &ingredient : list)
                 {
-                    if (ingredient == itemstack) 
+                    if (ingredient == itemstack)
                     {
                         flag = true;
                         list.remove(ingredient);
@@ -59,7 +59,7 @@ bool ShapelessRecipes::matches(InventoryCrafting *inv, World *worldIn)
                     }
                 }
 
-                if (!flag) 
+                if (!flag)
                 {
                     return false;
                 }
@@ -84,10 +84,10 @@ std::vector<Ingredient> deserializeIngredients(nlohmann::json arrays)
 {
     std::vector<Ingredient> nonnulllist;
 
-    for(auto i = 0; i < arrays.size(); ++i) 
+    for (auto i = 0; i < arrays.size(); ++i)
     {
         Ingredient ingredient = deserializeIngredient(arrays[i]);
-        if (ingredient != Ingredient::EMPTY) 
+        if (ingredient != Ingredient::EMPTY)
         {
             nonnulllist.emplace_back(ingredient);
         }

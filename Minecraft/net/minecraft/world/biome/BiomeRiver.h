@@ -1,9 +1,10 @@
 #pragma once
 #include "Biome.h"
 
-class BiomeRiver :public Biome
+class BiomeRiver : public Biome
 {
-public:
-	BiomeRiver(BiomeProperties properties);
-private:
+  public:
+    BiomeRiver(BiomeProperties properties);
+
+  private:
 };

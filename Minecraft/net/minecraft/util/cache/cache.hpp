@@ -24,14 +24,13 @@ namespace caches
  * \tparam Value Type of a value stored in the cache
  * \tparam Policy Type of a policy to be used with the cache
  */
-template <typename Key, typename Value, template <typename> class Policy = NoCachePolicy>
-class fixed_sized_cache
+template <typename Key, typename Value, template <typename> class Policy = NoCachePolicy> class fixed_sized_cache
 {
   public:
-    using iterator = typename std::unordered_map<Key, Value>::iterator;
-    using const_iterator = typename std::unordered_map<Key, Value>::const_iterator;
+    using iterator        = typename std::unordered_map<Key, Value>::iterator;
+    using const_iterator  = typename std::unordered_map<Key, Value>::const_iterator;
     using operation_guard = typename std::lock_guard<std::mutex>;
-    using Callback = typename std::function<void(const Key &key, const Value &value)>;
+    using Callback        = typename std::function<void(const Key &key, const Value &value)>;
 
     /**
      * \brief Fixed sized cache constructor
@@ -41,8 +40,7 @@ class fixed_sized_cache
      * \param[in] OnErase Callback function to be called when cache's element get erased
      */
     explicit fixed_sized_cache(
-        size_t max_size, const Policy<Key> policy = Policy<Key>{},
-        Callback OnErase = [](const Key &, const Value &) {})
+        size_t max_size, const Policy<Key> policy = Policy<Key>{}, Callback OnErase = [](const Key &, const Value &) {})
         : cache_policy{policy}, max_cache_size{max_size}, OnEraseCallback{OnErase}
     {
         if (max_cache_size == 0)
@@ -172,8 +170,7 @@ class fixed_sized_cache
     {
         operation_guard lock{safe_op};
 
-        std::for_each(begin(), end(),
-                      [&](const std::pair<const Key, Value> &el) { cache_policy.Erase(el.first); });
+        std::for_each(begin(), end(), [&](const std::pair<const Key, Value> &el) { cache_policy.Erase(el.first); });
         cache_items_map.clear();
     }
 

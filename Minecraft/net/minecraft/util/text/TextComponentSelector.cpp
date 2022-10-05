@@ -1,22 +1,20 @@
 #include "TextComponentSelector.h"
 
-TextComponentSelector::TextComponentSelector(std::string selectorIn)
-	:selector(selectorIn)
+TextComponentSelector::TextComponentSelector(std::string selectorIn) : selector(selectorIn)
 {
-
 }
 
 std::string TextComponentSelector::getSelector()
 {
-	return selector;
+    return selector;
 }
 
 std::string TextComponentSelector::getUnformattedText() const
 {
-	return selector;
+    return selector;
 }
 
 std::string TextComponentSelector::toString() const
 {
-	return "SelectorComponent{pattern='" + selector + '\'' + ", siblings=" + siblings + ", style=" + getStyle() + '}';
+    return "SelectorComponent{pattern='" + selector + '\'' + ", siblings=" + siblings + ", style=" + getStyle() + '}';
 }

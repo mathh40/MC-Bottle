@@ -52,41 +52,41 @@ StatBase StatList::CHEST_OPENED;
 StatBase StatList::SLEEP_IN_BED;
 StatBase StatList::OPEN_SHULKER_BOX;
 
-StatBase* StatList::getBlockStats(Block* blockIn)
+StatBase *StatList::getBlockStats(Block *blockIn)
 {
-	return BLOCKS_STATS[Block::getIdFromBlock(blockIn)];
+    return BLOCKS_STATS[Block::getIdFromBlock(blockIn)];
 }
 
-StatBase* StatList::getCraftStats(Item* itemIn)
+StatBase *StatList::getCraftStats(Item *itemIn)
 {
-	return CRAFTS_STATS[Item::getIdFromItem(itemIn)];
+    return CRAFTS_STATS[Item::getIdFromItem(itemIn)];
 }
 
-StatBase* StatList::getObjectUseStats(Item* itemIn)
+StatBase *StatList::getObjectUseStats(Item *itemIn)
 {
-	return OBJECT_USE_STATS[Item::getIdFromItem(itemIn)];
+    return OBJECT_USE_STATS[Item::getIdFromItem(itemIn)];
 }
 
-StatBase* StatList::getObjectBreakStats(Item* itemIn)
+StatBase *StatList::getObjectBreakStats(Item *itemIn)
 {
-	return OBJECT_BREAK_STATS[Item::getIdFromItem(itemIn)];
+    return OBJECT_BREAK_STATS[Item::getIdFromItem(itemIn)];
 }
 
-StatBase* StatList::getObjectsPickedUpStats(Item* itemIn)
+StatBase *StatList::getObjectsPickedUpStats(Item *itemIn)
 {
-	return OBJECTS_PICKED_UP_STATS[Item::getIdFromItem(itemIn)];
+    return OBJECTS_PICKED_UP_STATS[Item::getIdFromItem(itemIn)];
 }
 
-StatBase* StatList::getDroppedObjectStats(Item* itemIn)
+StatBase *StatList::getDroppedObjectStats(Item *itemIn)
 {
-	return OBJECTS_DROPPED_STATS[Item::getIdFromItem(itemIn)];
+    return OBJECTS_DROPPED_STATS[Item::getIdFromItem(itemIn)];
 }
 
 void StatList::init()
 {
-	initMiningStats();
-	initStats();
-	initItemDepleteStats();
-	initCraftableStats();
-	initPickedUpAndDroppedStats();
+    initMiningStats();
+    initStats();
+    initItemDepleteStats();
+    initCraftableStats();
+    initPickedUpAndDroppedStats();
 }

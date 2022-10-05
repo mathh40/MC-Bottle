@@ -1,15 +1,16 @@
 #pragma once
-#include "EntityMob.h"
 #include "../ai/EntityAIWander.h"
+#include "EntityMob.h"
 
-class EntityGuardian :public EntityMob {
-public:
-    EntityGuardian(World* worldIn);
+class EntityGuardian : public EntityMob
+{
+  public:
+    EntityGuardian(World *worldIn);
     static void registerFixesGuardian(DataFixer fixer);
     bool isMoving();
     int32_t getAttackDuration() const;
     bool hasTargetedEntity();
-    EntityLivingBase* getTargetedEntity();
+    EntityLivingBase *getTargetedEntity();
     void notifyDataManagerChange(DataParameter key) override;
     int32_t getTalkInterval() override;
     float getEyeHeight() const override;
@@ -24,40 +25,41 @@ public:
     int32_t getVerticalFaceSpeed() override;
     void travel(float strafe, float vertical, float forward) override;
 
-    class GuardianMoveHelper :public EntityMoveHelper {
-      EntityGuardian* entityGuardian;
+    class GuardianMoveHelper : public EntityMoveHelper
+    {
+        EntityGuardian *entityGuardian;
 
-public:
-      GuardianMoveHelper(EntityGuardian *guardian);
+      public:
+        GuardianMoveHelper(EntityGuardian *guardian);
 
-      void onUpdateMoveHelper() override;
-   };
+        void onUpdateMoveHelper() override;
+    };
 
-    class AIGuardianAttack :public EntityAIBase
-{
-    private:
-    EntityGuardian* guardian;
-      int32_t tickCounter;
-      bool isElder;
+    class AIGuardianAttack : public EntityAIBase
+    {
+      private:
+        EntityGuardian *guardian;
+        int32_t tickCounter;
+        bool isElder;
 
-    public:
-    AIGuardianAttack(EntityGuardian *guardian);
+      public:
+        AIGuardianAttack(EntityGuardian *guardian);
 
-    bool shouldExecute() override;
+        bool shouldExecute() override;
 
-    bool shouldContinueExecuting() override;
+        bool shouldContinueExecuting() override;
 
-    void startExecuting() override;
+        void startExecuting() override;
 
-    void resetTask() override;
+        void resetTask() override;
 
-    void updateTask() override;
-   };
+        void updateTask() override;
+    };
 
-protected:
+  protected:
     void initEntityAI() override;
     void applyEntityAttributes() override;
-    PathNavigate* createNavigator(World* worldIn) override;
+    PathNavigate *createNavigator(World *worldIn) override;
     void entityInit() override;
     SoundEvent getAmbientSound() override;
     SoundEvent getHurtSound(DamageSource::DamageSource damageSourceIn) override;
@@ -67,22 +69,20 @@ protected:
     std::optional<ResourceLocation> getLootTable() override;
     bool isValidLightLevel() override;
 
-
-
-    float clientSideTailAnimation = 0.0f;
-    float clientSideTailAnimationO = 0.0f;
+    float clientSideTailAnimation      = 0.0f;
+    float clientSideTailAnimationO     = 0.0f;
     float clientSideTailAnimationSpeed = 0.0f;
-    float clientSideSpikesAnimation = 0.0f;
-    float clientSideSpikesAnimationO = 0.0f;
-    EntityAIWander* wander;
-private:
+    float clientSideSpikesAnimation    = 0.0f;
+    float clientSideSpikesAnimationO   = 0.0f;
+    EntityAIWander *wander;
+
+  private:
     void setMoving(bool moving);
     void setTargetedEntity(int32_t entityId);
 
     static DataParameter MOVING;
     static DataParameter TARGET_ENTITY;
-    EntityLivingBase* targetedEntity;
+    EntityLivingBase *targetedEntity;
     int32_t clientSideAttackTime;
     bool clientSideTouchedGround;
-    
 };

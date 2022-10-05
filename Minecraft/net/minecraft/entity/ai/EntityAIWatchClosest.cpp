@@ -3,38 +3,41 @@
 #include "../../inventory/ContainerPlayer.h"
 
 EntityAIWatchClosest::EntityAIWatchClosest(EntityLiving *entityIn, std::type_index watchTargetClass, float maxDistance)
-    :EntityAIWatchClosest(entityIn,watchTargetClass,maxDistance,0.02F)
+    : EntityAIWatchClosest(entityIn, watchTargetClass, maxDistance, 0.02F)
 {
-    
 }
 
 EntityAIWatchClosest::EntityAIWatchClosest(EntityLiving *entityIn, std::type_index watchTargetClass, float maxDistance,
-    float chanceIn)
-        :entity(entityIn),watchedClass(watchTargetClass),maxDistance(maxDistance),chance(chanceIn)
+                                           float chanceIn)
+    : entity(entityIn), watchedClass(watchTargetClass), maxDistance(maxDistance), chance(chanceIn)
 {
     setMutexBits(2);
 }
 
 bool EntityAIWatchClosest::shouldExecute()
 {
-    if (entity->getRNG().nextFloat() >= chance) 
+    if (entity->getRNG().nextFloat() >= chance)
     {
         return false;
     }
-    else 
+    else
     {
-        if (entity->getAttackTarget() != nullptr) 
+        if (entity->getAttackTarget() != nullptr)
         {
             closestEntity = entity->getAttackTarget();
         }
 
-        if (watchedClass == typeid(EntityPlayer)) 
+        if (watchedClass == typeid(EntityPlayer))
         {
-            closestEntity = entity->world.getClosestPlayer(entity->posX, entity->posY, entity->posZ, (double)maxDistance, Predicates.and(EntitySelectors.NOT_SPECTATING, EntitySelectors.notRiding(entity)));
+            closestEntity = entity->world.getClosestPlayer(
+                entity->posX, entity->posY, entity->posZ, (double)maxDistance,
+                Predicates.and (EntitySelectors.NOT_SPECTATING, EntitySelectors.notRiding(entity)));
         }
-        else 
+        else
         {
-            closestEntity = entity->world.findNearestEntityWithinAABB(watchedClass, entity->getEntityBoundingBox().grow((double)maxDistance, 3.0, (double)maxDistance), entity);
+            closestEntity = entity->world.findNearestEntityWithinAABB(
+                watchedClass, entity->getEntityBoundingBox().grow((double)maxDistance, 3.0, (double)maxDistance),
+                entity);
         }
 
         return closestEntity != nullptr;
@@ -43,15 +46,15 @@ bool EntityAIWatchClosest::shouldExecute()
 
 bool EntityAIWatchClosest::shouldContinueExecuting()
 {
-    if (!closestEntity->isEntityAlive()) 
+    if (!closestEntity->isEntityAlive())
     {
         return false;
     }
-    else if (entity->getDistanceSq(closestEntity) > (double)(maxDistance * maxDistance)) 
+    else if (entity->getDistanceSq(closestEntity) > (double)(maxDistance * maxDistance))
     {
         return false;
     }
-    else 
+    else
     {
         return lookTime > 0;
     }
@@ -69,6 +72,8 @@ void EntityAIWatchClosest::resetTask()
 
 void EntityAIWatchClosest::updateTask()
 {
-    entity->getLookHelper().setLookPosition(closestEntity.posX, closestEntity.posY + (double)closestEntity.getEyeHeight(), closestEntity.posZ, (float)entity->getHorizontalFaceSpeed(), (float)entity->getVerticalFaceSpeed());
+    entity->getLookHelper().setLookPosition(
+        closestEntity.posX, closestEntity.posY + (double)closestEntity.getEyeHeight(), closestEntity.posZ,
+        (float)entity->getHorizontalFaceSpeed(), (float)entity->getVerticalFaceSpeed());
     --lookTime;
 }

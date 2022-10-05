@@ -5,13 +5,13 @@ class Entity;
 class EntityLiving;
 class EntitySenses
 {
-public:
-    explicit EntitySenses(EntityLiving* entityIn);
+  public:
+    explicit EntitySenses(EntityLiving *entityIn);
     void clearSensingCache();
-    bool canSee(Entity* entityIn);
+    bool canSee(Entity *entityIn);
 
-private:
-    EntityLiving* entity;
-    std::vector<EntityLiving*> seenEntities;
-    std::vector<EntityLiving*> unseenEntities;
+  private:
+    EntityLiving *entity;
+    std::vector<EntityLiving *> seenEntities;
+    std::vector<EntityLiving *> unseenEntities;
 };

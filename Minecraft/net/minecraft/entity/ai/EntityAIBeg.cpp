@@ -1,10 +1,10 @@
 #include "EntityAIBeg.h"
 
-#include "EnumHand.h"
 #include "../../item/ItemStack.h"
+#include "EnumHand.h"
 
 EntityAIBeg::EntityAIBeg(EntityWolf *wolf, float minDistance)
-    :wolf(wolf),world(wolf->world),minPlayerDistance(minDistance)
+    : wolf(wolf), world(wolf->world), minPlayerDistance(minDistance)
 {
     setMutexBits(2);
 }
@@ -17,15 +17,15 @@ bool EntityAIBeg::shouldExecute()
 
 bool EntityAIBeg::shouldContinueExecuting()
 {
-    if (!player->isEntityAlive()) 
+    if (!player->isEntityAlive())
     {
         return false;
     }
-    else if (wolf->getDistanceSq(player) > minPlayerDistance * minPlayerDistance) 
+    else if (wolf->getDistanceSq(player) > minPlayerDistance * minPlayerDistance)
     {
         return false;
     }
-    else 
+    else
     {
         return timeoutCounter > 0 && hasTemptationItemInHand(player);
     }
@@ -45,21 +45,22 @@ void EntityAIBeg::resetTask()
 
 void EntityAIBeg::updateTask()
 {
-    wolf->getLookHelper().setLookPosition(player->posX, player->posY + player->getEyeHeight(), player->posZ, 10.0F, wolf->getVerticalFaceSpeed());
+    wolf->getLookHelper().setLookPosition(player->posX, player->posY + player->getEyeHeight(), player->posZ, 10.0F,
+                                          wolf->getVerticalFaceSpeed());
     --timeoutCounter;
 }
 
 bool EntityAIBeg::hasTemptationItemInHand(EntityPlayer *player)
 {
-    for(auto& enumhand : {EnumHand::MAIN_HAND,EnumHand::OFF_HAND})
+    for (auto &enumhand : {EnumHand::MAIN_HAND, EnumHand::OFF_HAND})
     {
         ItemStack itemstack = player->getHeldItem(enumhand);
-        if (wolf->isTamed() && itemstack.getItem() == Items::BONE) 
+        if (wolf->isTamed() && itemstack.getItem() == Items::BONE)
         {
             return true;
         }
 
-        if (wolf->isBreedingItem(itemstack)) 
+        if (wolf->isBreedingItem(itemstack))
         {
             return true;
         }

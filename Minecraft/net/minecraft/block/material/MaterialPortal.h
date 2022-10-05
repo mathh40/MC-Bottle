@@ -1,9 +1,9 @@
 #pragma once
 #include "Material.h"
 
-class MaterialPortal :public Material
+class MaterialPortal : public Material
 {
-public:
+  public:
     MaterialPortal(MapColor color);
 
     bool isSolid() override;

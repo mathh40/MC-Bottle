@@ -6,11 +6,10 @@ ToolMaterial ToolMaterial::IRON(2, 250, 6.0F, 2.0F, 14);
 ToolMaterial ToolMaterial::DIAMOND(3, 1561, 8.0F, 3.0F, 10);
 ToolMaterial ToolMaterial::GOLD(0, 32, 12.0F, 0.0F, 22);
 
-
 ToolMaterial::ToolMaterial(int32_t harvestLevel, int32_t maxUses, float efficiency, float damageVsEntity,
-    int32_t enchantability)
-        :harvestLevel(harvestLevel),maxUses(maxUses),efficiency(efficiency)
-        ,attackDamage(damageVsEntity),enchantability(enchantability)
+                           int32_t enchantability)
+    : harvestLevel(harvestLevel), maxUses(maxUses), efficiency(efficiency), attackDamage(damageVsEntity),
+      enchantability(enchantability)
 {
 }
 
@@ -39,25 +38,25 @@ int32_t ToolMaterial::getEnchantability() const
     return enchantability;
 }
 
-Item * ToolMaterial::getRepairItem()
+Item *ToolMaterial::getRepairItem()
 {
-    if (this == WOOD) 
+    if (this == WOOD)
     {
         return Item::getItemFromBlock(Blocks::PLANKS);
     }
-    else if (this == STONE) 
+    else if (this == STONE)
     {
         return Item::getItemFromBlock(Blocks::COBBLESTONE);
     }
-    else if (this == GOLD) 
+    else if (this == GOLD)
     {
         return Items::GOLD_INGOT;
     }
-    else if (this == IRON) 
+    else if (this == IRON)
     {
         return Items::IRON_INGOT;
     }
-    else 
+    else
     {
         return this == DIAMOND ? Items::DIAMOND : nullptr;
     }

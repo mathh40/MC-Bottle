@@ -1,13 +1,12 @@
 #include "ItemKnowledgeBook.h"
 
-
-#include "ItemStack.h"
 #include "../stats/RecipeBook.h"
 #include "../stats/StatList.h"
 #include "../world/World.h"
+#include "ItemStack.h"
 #include "spdlog/spdlog-inl.h"
 
- std::shared_ptr<spdlog::logger>ItemKnowledgeBook::LOGGER = spdlog::get("Minecraft")->clone("ItemKnowledgeBook");
+std::shared_ptr<spdlog::logger> ItemKnowledgeBook::LOGGER = spdlog::get("Minecraft")->clone("ItemKnowledgeBook");
 
 ItemKnowledgeBook::ItemKnowledgeBook()
 {
@@ -16,24 +15,24 @@ ItemKnowledgeBook::ItemKnowledgeBook()
 
 ActionResult ItemKnowledgeBook::onItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand handIn)
 {
-    ItemStack itemstack = playerIn->getHeldItem(handIn);
-    NBTTagCompound* nbttagcompound = itemstack.getTagCompound();
-    if (!playerIn->capabilities.isCreativeMode) 
+    ItemStack itemstack            = playerIn->getHeldItem(handIn);
+    NBTTagCompound *nbttagcompound = itemstack.getTagCompound();
+    if (!playerIn->capabilities.isCreativeMode)
     {
         playerIn->setHeldItem(handIn, ItemStack::EMPTY);
     }
 
-    if (nbttagcompound != nullptr && nbttagcompound->hasKey("Recipes", 9)) 
+    if (nbttagcompound != nullptr && nbttagcompound->hasKey("Recipes", 9))
     {
-        if (!worldIn->isRemote) 
+        if (!worldIn->isRemote)
         {
-            NBTTagList* nbttaglist = nbttagcompound->getTagList("Recipes", 8);
-            std::vector<IRecipe*> list;
-            for(int i = 0; i < nbttaglist->tagCount(); ++i) 
+            NBTTagList *nbttaglist = nbttagcompound->getTagList("Recipes", 8);
+            std::vector<IRecipe *> list;
+            for (int i = 0; i < nbttaglist->tagCount(); ++i)
             {
-                auto s = nbttaglist->getStringTagAt(i);
-                IRecipe* irecipe = CraftingManager::getRecipe(ResourceLocation(s));
-                if (irecipe == nullptr) 
+                auto s           = nbttaglist->getStringTagAt(i);
+                IRecipe *irecipe = CraftingManager::getRecipe(ResourceLocation(s));
+                if (irecipe == nullptr)
                 {
                     LOGGER->error("Invalid recipe: " + s);
                     return ActionResult(EnumActionResult::FAIL, itemstack);
@@ -48,10 +47,10 @@ ActionResult ItemKnowledgeBook::onItemRightClick(World *worldIn, EntityPlayer *p
 
         return ActionResult(EnumActionResult::SUCCESS, itemstack);
     }
-    else 
+    else
     {
         LOGGER->error("Tag not valid: " + nbttagcompound);
         return ActionResult(EnumActionResult::FAIL, itemstack);
     }
-   }
+}
 }

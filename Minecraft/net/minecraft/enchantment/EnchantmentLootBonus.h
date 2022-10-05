@@ -1,8 +1,9 @@
 #pragma once
 #include "Enchantment.h"
 
-class EnchantmentLootBonus :public Enchantment {
-public:
+class EnchantmentLootBonus : public Enchantment
+{
+  public:
     EnchantmentLootBonus(Enchantment::Rarity rarityIn, EnumEnchantmentType typeIn,
                          std::span<const EntityEquipmentSlot> slots);
     int32_t getMinEnchantability(int32_t enchantmentLevel) const override;

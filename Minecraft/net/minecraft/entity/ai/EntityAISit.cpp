@@ -2,36 +2,37 @@
 
 class EntityLivingBase;
 
-EntityAISit::EntityAISit(EntityTameable *entityIn)
-    :tameable(entityIn)
+EntityAISit::EntityAISit(EntityTameable *entityIn) : tameable(entityIn)
 {
     setMutexBits(5);
 }
 
 bool EntityAISit::shouldExecute()
 {
-    if (!tameable->isTamed()) 
+    if (!tameable->isTamed())
     {
         return false;
     }
-    else if (tameable->isInWater()) 
+    else if (tameable->isInWater())
     {
         return false;
     }
-    else if (!tameable->onGround) 
+    else if (!tameable->onGround)
     {
         return false;
     }
-    else 
+    else
     {
-        EntityLivingBase* entitylivingbase = tameable->getOwner();
-        if (entitylivingbase == nullptr) 
+        EntityLivingBase *entitylivingbase = tameable->getOwner();
+        if (entitylivingbase == nullptr)
         {
             return true;
         }
-        else 
+        else
         {
-            return tameable->getDistanceSq(entitylivingbase) < 144.0 && entitylivingbase->getRevengeTarget() != nullptr ? false : isSitting;
+            return tameable->getDistanceSq(entitylivingbase) < 144.0 && entitylivingbase->getRevengeTarget() != nullptr
+                       ? false
+                       : isSitting;
         }
     }
 }

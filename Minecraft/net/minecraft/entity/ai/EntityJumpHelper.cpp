@@ -1,7 +1,6 @@
 #include "EntityJumpHelper.h"
 
-EntityJumpHelper::EntityJumpHelper(EntityLiving *entityIn)
-    :entity(entityIn)
+EntityJumpHelper::EntityJumpHelper(EntityLiving *entityIn) : entity(entityIn)
 {
 }
 

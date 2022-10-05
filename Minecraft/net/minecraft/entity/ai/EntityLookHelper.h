@@ -2,9 +2,9 @@ class Entity;
 class EntityLiving;
 class EntityLookHelper
 {
-public:
-    explicit EntityLookHelper(EntityLiving* entitylivingIn);
-    void setLookPositionWithEntity(Entity* entityIn, float deltaYaw, float deltaPitch);
+  public:
+    explicit EntityLookHelper(EntityLiving *entitylivingIn);
+    void setLookPositionWithEntity(Entity *entityIn, float deltaYaw, float deltaPitch);
     void setLookPosition(double x, double y, double z, float deltaYaw, float deltaPitch);
     void onUpdateLook();
     bool getIsLooking() const;
@@ -12,11 +12,10 @@ public:
     double getLookPosY() const;
     double getLookPosZ() const;
 
-private:
-
+  private:
     float updateRotation(float p_75652_1_, float p_75652_2_, float p_75652_3_) const;
 
-    EntityLiving* entity;
+    EntityLiving *entity;
     float deltaLookYaw;
     float deltaLookPitch;
     bool isLooking;

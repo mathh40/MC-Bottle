@@ -1,11 +1,11 @@
 #pragma once
-#include <cstdint>
-
 #include "Item.h"
+
+#include <cstdint>
 
 class ToolMaterial
 {
-public:
+  public:
     static ToolMaterial WOOD;
     static ToolMaterial STONE;
     static ToolMaterial IRON;
@@ -18,9 +18,10 @@ public:
     float getAttackDamage() const;
     int32_t getHarvestLevel() const;
     int32_t getEnchantability() const;
-    Item* getRepairItem();
+    Item *getRepairItem();
     std::string toString() const;
-private:
+
+  private:
     int32_t harvestLevel;
     int32_t maxUses;
     float efficiency;

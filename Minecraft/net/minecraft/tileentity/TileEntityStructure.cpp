@@ -1,4 +1,5 @@
 #include "TileEntityStructure.h"
+
 #include "../world/WorldServer.h"
 #include "../world/gen/structure/StructureBoundingBox.h"
 #include "../world/gen/structure/StructureComponentTemplate.h"
@@ -6,16 +7,20 @@
 #include "StringUtils.h"
 #include "text/TextComponentTranslation.h"
 
-
 TileEntityStructure::Mode SAVE("save", 0);
 TileEntityStructure::Mode LOAD("load", 1);
 TileEntityStructure::Mode CORNER("corner", 2);
 TileEntityStructure::Mode DATA("data", 3);
 
+std::string TileEntityStructure::Mode::getName() const
+{
+    return modeName;
+}
 
-std::string TileEntityStructure::Mode::getName() const { return modeName; }
-
-int32_t TileEntityStructure::Mode::getModeId() const { return modeId; }
+int32_t TileEntityStructure::Mode::getModeId() const
+{
+    return modeId;
+}
 
 TileEntityStructure::Mode *TileEntityStructure::Mode::getById(int32_t id)
 {
@@ -27,9 +32,9 @@ TileEntityStructure::Mode::Mode(std::string modeNameIn, int32_t modeIdIn) : mode
     MODES.push_back(this);
 }
 
-TileEntityStructure::TileEntityStructure() :
-    size(BlockPos::ORIGIN), mirror(Mirror::NONE), rotation(Rotation::NONE), mode(TileEntityStructure::Mode::DATA),
-    ignoreEntities(true), showBoundingBox(true), integrity(1.0F)
+TileEntityStructure::TileEntityStructure()
+    : size(BlockPos::ORIGIN), mirror(Mirror::NONE), rotation(Rotation::NONE), mode(TileEntityStructure::Mode::DATA),
+      ignoreEntities(true), showBoundingBox(true), integrity(1.0F)
 {
 }
 
@@ -61,16 +66,16 @@ void TileEntityStructure::readFromNBT(NBTTagCompound *compound)
 {
     TileEntity::readFromNBT(compound);
     setName(compound->getString("name"));
-    author = compound->getString("author");
+    author   = compound->getString("author");
     metadata = compound->getString("metadata");
-    auto i = MathHelper::clamp(compound->getInteger("posX"), -32, 32);
-    auto j = MathHelper::clamp(compound->getInteger("posY"), -32, 32);
-    auto k = MathHelper::clamp(compound->getInteger("posZ"), -32, 32);
+    auto i   = MathHelper::clamp(compound->getInteger("posX"), -32, 32);
+    auto j   = MathHelper::clamp(compound->getInteger("posY"), -32, 32);
+    auto k   = MathHelper::clamp(compound->getInteger("posZ"), -32, 32);
     position = BlockPos(i, j, k);
-    auto l = MathHelper::clamp(compound->getInteger("sizeX"), 0, 32);
-    auto i1 = MathHelper::clamp(compound->getInteger("sizeY"), 0, 32);
-    auto j1 = MathHelper::clamp(compound->getInteger("sizeZ"), 0, 32);
-    size = BlockPos(l, i1, j1);
+    auto l   = MathHelper::clamp(compound->getInteger("sizeX"), 0, 32);
+    auto i1  = MathHelper::clamp(compound->getInteger("sizeY"), 0, 32);
+    auto j1  = MathHelper::clamp(compound->getInteger("sizeZ"), 0, 32);
+    size     = BlockPos(l, i1, j1);
 
     try
     {
@@ -99,9 +104,9 @@ void TileEntityStructure::readFromNBT(NBTTagCompound *compound)
         mode = TileEntityStructure::Mode::DATA;
     }
 
-    ignoreEntities = compound->getBoolean("ignoreEntities");
-    powered = compound->getBoolean("powered");
-    showAir = compound->getBoolean("showair");
+    ignoreEntities  = compound->getBoolean("ignoreEntities");
+    powered         = compound->getBoolean("powered");
+    showAir         = compound->getBoolean("showair");
     showBoundingBox = compound->getBoolean("showboundingbox");
     if (compound->hasKey("integrity"))
     {
@@ -121,7 +126,10 @@ std::optional<SPacketUpdateTileEntity> TileEntityStructure::getUpdatePacket()
     return SPacketUpdateTileEntity(pos, 7, getUpdateTag());
 }
 
-NBTTagCompound *TileEntityStructure::getUpdateTag() { return writeToNBT(new NBTTagCompound()); }
+NBTTagCompound *TileEntityStructure::getUpdateTag()
+{
+    return writeToNBT(new NBTTagCompound());
+}
 
 bool TileEntityStructure::usedBy(EntityPlayer *player)
 {
@@ -140,11 +148,14 @@ bool TileEntityStructure::usedBy(EntityPlayer *player)
     }
 }
 
-std::string TileEntityStructure::getName() const { return name; }
+std::string TileEntityStructure::getName() const
+{
+    return name;
+}
 
 void TileEntityStructure::setName(std::string_view nameIn)
 {
-    auto s = nameIn;
+    auto s    = nameIn;
     auto var3 = ChatAllowedCharacters::ILLEGAL_STRUCTURE_CHARACTERS;
     auto var4 = var3.size();
 
@@ -165,31 +176,64 @@ void TileEntityStructure::createdBy(EntityLivingBase *p_189720_1_)
     }
 }
 
-BlockPos TileEntityStructure::getPosition() const { return position; }
+BlockPos TileEntityStructure::getPosition() const
+{
+    return position;
+}
 
-void TileEntityStructure::setPosition(BlockPos posIn) { position = posIn; }
+void TileEntityStructure::setPosition(BlockPos posIn)
+{
+    position = posIn;
+}
 
-BlockPos TileEntityStructure::getStructureSize() const { return size; }
+BlockPos TileEntityStructure::getStructureSize() const
+{
+    return size;
+}
 
-void TileEntityStructure::setSize(BlockPos sizeIn) { size = sizeIn; }
+void TileEntityStructure::setSize(BlockPos sizeIn)
+{
+    size = sizeIn;
+}
 
-Mirror TileEntityStructure::getMirror() const { return mirror; }
+Mirror TileEntityStructure::getMirror() const
+{
+    return mirror;
+}
 
-void TileEntityStructure::setMirror(Mirror mirrorIn) { mirror = mirrorIn; }
+void TileEntityStructure::setMirror(Mirror mirrorIn)
+{
+    mirror = mirrorIn;
+}
 
-Rotation TileEntityStructure::getRotation() const { return rotation; }
+Rotation TileEntityStructure::getRotation() const
+{
+    return rotation;
+}
 
-void TileEntityStructure::setRotation(Rotation rotationIn) { rotation = rotationIn; }
+void TileEntityStructure::setRotation(Rotation rotationIn)
+{
+    rotation = rotationIn;
+}
 
-std::string TileEntityStructure::getMetadata() const { return metadata; }
+std::string TileEntityStructure::getMetadata() const
+{
+    return metadata;
+}
 
-void TileEntityStructure::setMetadata(std::string metadataIn) { metadata = metadataIn; }
+void TileEntityStructure::setMetadata(std::string metadataIn)
+{
+    metadata = metadataIn;
+}
 
-TileEntityStructure::Mode TileEntityStructure::getMode() { return mode; }
+TileEntityStructure::Mode TileEntityStructure::getMode()
+{
+    return mode;
+}
 
 void TileEntityStructure::setMode(TileEntityStructure::Mode modeIn)
 {
-    mode = modeIn;
+    mode                     = modeIn;
     IBlockState *iblockstate = world->getBlockState(getPos());
     if (iblockstate->getBlock() == Blocks::STRUCTURE_BLOCK)
     {
@@ -217,17 +261,35 @@ void TileEntityStructure::nextMode() const
     }
 }
 
-bool TileEntityStructure::ignoresEntities() const { return ignoreEntities; }
+bool TileEntityStructure::ignoresEntities() const
+{
+    return ignoreEntities;
+}
 
-void TileEntityStructure::setIgnoresEntities(bool ignoreEntitiesIn) { ignoreEntities = ignoreEntitiesIn; }
+void TileEntityStructure::setIgnoresEntities(bool ignoreEntitiesIn)
+{
+    ignoreEntities = ignoreEntitiesIn;
+}
 
-float TileEntityStructure::getIntegrity() const { return integrity; }
+float TileEntityStructure::getIntegrity() const
+{
+    return integrity;
+}
 
-void TileEntityStructure::setIntegrity(float integrityIn) { integrity = integrityIn; }
+void TileEntityStructure::setIntegrity(float integrityIn)
+{
+    integrity = integrityIn;
+}
 
-int64_t TileEntityStructure::getSeed() const { return seed; }
+int64_t TileEntityStructure::getSeed() const
+{
+    return seed;
+}
 
-void TileEntityStructure::setSeed(int64_t seedIn) { seed = seedIn; }
+void TileEntityStructure::setSeed(int64_t seedIn)
+{
+    seed = seedIn;
+}
 
 bool TileEntityStructure::detectSize()
 {
@@ -237,11 +299,11 @@ bool TileEntityStructure::detectSize()
     }
     else
     {
-        BlockPos blockpos = getPos();
+        BlockPos blockpos  = getPos();
         BlockPos blockpos1 = BlockPos(blockpos.getx() - 80, 0, blockpos.getz() - 80);
         BlockPos blockpos2 = BlockPos(blockpos.getx() + 80, 255, blockpos.getz() + 80);
-        auto list = getNearbyCornerBlocks(blockpos1, blockpos2);
-        auto list1 = filterRelatedCornerBlocks(list);
+        auto list          = getNearbyCornerBlocks(blockpos1, blockpos2);
+        auto list1         = filterRelatedCornerBlocks(list);
         if (list1.size() < 1)
         {
             return false;
@@ -256,9 +318,9 @@ bool TileEntityStructure::detectSize()
                 position = BlockPos(structureboundingbox.minX - blockpos.getx() + 1,
                                     structureboundingbox.minY - blockpos.gety() + 1,
                                     structureboundingbox.minZ - blockpos.getz() + 1);
-                size = BlockPos(structureboundingbox.maxX() - structureboundingbox.minX - 1,
-                                structureboundingbox.maxY - structureboundingbox.minY - 1,
-                                structureboundingbox.maxZ - structureboundingbox.minZ - 1);
+                size     = BlockPos(structureboundingbox.maxX() - structureboundingbox.minX - 1,
+                                    structureboundingbox.maxY - structureboundingbox.minY - 1,
+                                    structureboundingbox.maxZ - structureboundingbox.minZ - 1);
                 markDirty();
                 IBlockState *iblockstate = world->getBlockState(blockpos);
                 world->notifyBlockUpdate(blockpos, iblockstate, iblockstate, 3);
@@ -276,7 +338,7 @@ void TileEntityStructure::updateBlockState()
 {
     if (world != nullptr)
     {
-        BlockPos blockpos = getPos();
+        BlockPos blockpos        = getPos();
         IBlockState *iblockstate = world->getBlockState(blockpos);
         if (iblockstate->getBlock() == Blocks::STRUCTURE_BLOCK)
         {
@@ -285,8 +347,8 @@ void TileEntityStructure::updateBlockState()
     }
 }
 
-std::vector<TileEntityStructure *>
-TileEntityStructure::filterRelatedCornerBlocks(std::vector<TileEntityStructure *> p_184415_1_)
+std::vector<TileEntityStructure *> TileEntityStructure::filterRelatedCornerBlocks(
+    std::vector<TileEntityStructure *> p_184415_1_)
 {
     std::vector<TileEntityStructure *> temp;
     std::copy_if(p_184415_1_.begin(), p_184415_1_.end(), std::back_inserter(temp),
@@ -305,7 +367,7 @@ std::vector<TileEntityStructure *> TileEntityStructure::getNearbyCornerBlocks(Bl
     while (var4.hasNext())
     {
         MutableBlockPos blockpos$mutableblockpos = (MutableBlockPos)var4.next();
-        IBlockState *iblockstate = world->getBlockState(blockpos$mutableblockpos);
+        IBlockState *iblockstate                 = world->getBlockState(blockpos$mutableblockpos);
         if (iblockstate->getBlock() == Blocks::STRUCTURE_BLOCK)
         {
             TileEntity *tileentity = world->getTileEntity(blockpos$mutableblockpos);
@@ -325,7 +387,7 @@ StructureBoundingBox TileEntityStructure::calculateEnclosingBoundingBox(BlockPos
     StructureBoundingBox structureboundingbox;
     if (p_184416_2_.size() > 1)
     {
-        BlockPos blockpos = p_184416_2_[0]->getPos();
+        BlockPos blockpos    = p_184416_2_[0]->getPos();
         structureboundingbox = StructureBoundingBox(blockpos, blockpos);
     }
     else
@@ -371,11 +433,11 @@ bool TileEntityStructure::save(boolean writeToDisk)
 {
     if (mode == TileEntityStructure::Mode::SAVE && !world->isRemote && !StringUtils::isNullOrEmpty(name))
     {
-        BlockPos blockpos = getPos().add(position);
-        WorldServer *worldserver = (WorldServer *)world;
+        BlockPos blockpos                = getPos().add(position);
+        WorldServer *worldserver         = (WorldServer *)world;
         MinecraftServer *minecraftserver = world->getMinecraftServer();
-        TemplateManager templatemanager = worldserver->getStructureTemplateManager();
-        Template template = templatemanager.getTemplate(minecraftserver, ResourceLocation(name));
+        TemplateManager templatemanager  = worldserver->getStructureTemplateManager();
+        Template template                = templatemanager.getTemplate(minecraftserver, ResourceLocation(name));
         template.takeBlocksFromWorld(world, blockpos, size, !ignoreEntities, Blocks::STRUCTURE_VOID);
         template.setAuthor(author);
         return !writeToDisk || templatemanager.writeTemplate(minecraftserver, ResourceLocation(name));
@@ -390,12 +452,12 @@ bool TileEntityStructure::load(bool requireMatchingSize)
 {
     if (mode == TileEntityStructure::Mode::LOAD && !world->isRemote && !StringUtils::isNullOrEmpty(name))
     {
-        BlockPos blockpos = getPos();
-        BlockPos blockpos1 = blockpos.add(position);
-        WorldServer *worldserver = (WorldServer *)world;
+        BlockPos blockpos               = getPos();
+        BlockPos blockpos1              = blockpos.add(position);
+        WorldServer *worldserver        = (WorldServer *)world;
         MinecraftServer minecraftserver = world->getMinecraftServer();
         TemplateManager templatemanager = worldserver->getStructureTemplateManager();
-        Template template = templatemanager.get(minecraftserver, ResourceLocation(name));
+        Template template               = templatemanager.get(minecraftserver, ResourceLocation(name));
         if (template == nullptr)
         {
             return false;
@@ -408,7 +470,7 @@ bool TileEntityStructure::load(bool requireMatchingSize)
             }
 
             BlockPos blockpos2 = template.getSize();
-            boolean flag = size.equals(blockpos2);
+            boolean flag       = size.equals(blockpos2);
             if (!flag)
             {
                 size = blockpos2;
@@ -453,13 +515,19 @@ void TileEntityStructure::writeCoordinates(ByteBuffer &buf)
     buf.putInt(pos.getz());
 }
 
-bool TileEntityStructure::save() { return save(true); }
+bool TileEntityStructure::save()
+{
+    return save(true);
+}
 
-bool TileEntityStructure::load() { return load(true); }
+bool TileEntityStructure::load()
+{
+    return load(true);
+}
 
 void TileEntityStructure::unloadStructure()
 {
-    WorldServer *worldserver = (WorldServer *)world;
+    WorldServer *worldserver        = (WorldServer *)world;
     TemplateManager templatemanager = worldserver->getStructureTemplateManager();
     templatemanager.remove(ResourceLocation(name));
 }
@@ -468,7 +536,7 @@ bool TileEntityStructure::isStructureLoadable()
 {
     if (mode == TileEntityStructure::Mode::LOAD && !world->isRemote)
     {
-        WorldServer *worldserver = (WorldServer *)world;
+        WorldServer *worldserver        = (WorldServer *)world;
         MinecraftServer minecraftserver = world->getMinecraftServer();
         TemplateManager templatemanager = worldserver.getStructureTemplateManager();
         return templatemanager.get(minecraftserver, ResourceLocation(name)) != nullptr;
@@ -479,17 +547,35 @@ bool TileEntityStructure::isStructureLoadable()
     }
 }
 
-bool TileEntityStructure::isPowered() const { return powered; }
+bool TileEntityStructure::isPowered() const
+{
+    return powered;
+}
 
-void TileEntityStructure::setPowered(bool poweredIn) { powered = poweredIn; }
+void TileEntityStructure::setPowered(bool poweredIn)
+{
+    powered = poweredIn;
+}
 
-bool TileEntityStructure::showsAir() const { return showAir; }
+bool TileEntityStructure::showsAir() const
+{
+    return showAir;
+}
 
-void TileEntityStructure::setShowAir(bool showAirIn) { showAir = showAirIn; }
+void TileEntityStructure::setShowAir(bool showAirIn)
+{
+    showAir = showAirIn;
+}
 
-bool TileEntityStructure::showsBoundingBox() const { return showBoundingBox; }
+bool TileEntityStructure::showsBoundingBox() const
+{
+    return showBoundingBox;
+}
 
-void TileEntityStructure::setShowBoundingBox(bool showBoundingBoxIn) { showBoundingBox = showBoundingBoxIn; }
+void TileEntityStructure::setShowBoundingBox(bool showBoundingBoxIn)
+{
+    showBoundingBox = showBoundingBoxIn;
+}
 
 ITextComponent *TileEntityStructure::getDisplayName()
 {

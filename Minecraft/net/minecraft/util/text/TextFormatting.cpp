@@ -1,9 +1,11 @@
 #include "TextFormatting.h"
+
 #include "../../../../../compile-time-regular-expressions/single-header/ctre.hpp"
+
 #include <StringUtils.h>
 #include <algorithm>
 
-static constexpr auto FORMATTING_CODE_PATTERN = ctll::fixed_string{ R"(§[0-9a-fk-or])"};
+static constexpr auto FORMATTING_CODE_PATTERN = ctll::fixed_string{R"(§[0-9a-fk-or])"};
 
 TextFormatting TextFormatting::BLACK("BLACK", '0', 0);
 TextFormatting TextFormatting::DARK_BLUE("DARK_BLUE", '1', 1);
@@ -28,97 +30,102 @@ TextFormatting TextFormatting::UNDERLINE("UNDERLINE", 'n', true);
 TextFormatting TextFormatting::ITALIC("ITALIC", 'o', true);
 TextFormatting TextFormatting::RESET("RESET", 'r', -1);
 
-
 std::string lowercaseAlpha(std::string p_175745_0_)
 {
-	std::transform(p_175745_0_.begin(), p_175745_0_.end(), p_175745_0_.begin(), ::tolower);
-	return p_175745_0_;
+    std::transform(p_175745_0_.begin(), p_175745_0_.end(), p_175745_0_.begin(), ::tolower);
+    return p_175745_0_;
 }
-
 
 int32_t TextFormatting::getColorIndex() const
 {
-	return colorIndex;
+    return colorIndex;
 }
 
 bool TextFormatting::isFancyStyling() const
 {
-	return fancyStyling;
+    return fancyStyling;
 }
 
 bool TextFormatting::isColor() const
 {
-	return !fancyStyling && *this != RESET;
+    return !fancyStyling && *this != RESET;
 }
 
 std::string TextFormatting::getFriendlyName() const
 {
-	return name;
+    return name;
 }
 
 std::string TextFormatting::toString() const
 {
-	return controlString;
+    return controlString;
 }
 
 std::optional<std::string> TextFormatting::getTextWithoutFormattingCodes(std::optional<std::string> text) const
 {
-    auto temp = ctre::search<FORMATTING_CODE_PATTERN>(text.value());
-    std::string result = "";
+    auto temp           = ctre::search<FORMATTING_CODE_PATTERN>(text.value());
+    std::string result  = "";
     std::string replace = temp.str();
-    StringUtils::replaceFirstOccurrence(result,replace,"");
+    StringUtils::replaceFirstOccurrence(result, replace, "");
 
-	return text.has_value() ? std::optional<std::string>(result) : std::nullopt;
+    return text.has_value() ? std::optional<std::string>(result) : std::nullopt;
 }
 
 std::optional<TextFormatting> TextFormatting::getValueByName(std::optional<std::string> friendlyName)
 {
-	return friendlyName.has_value() ? std::optional<TextFormatting>(*NAME_MAPPING[lowercaseAlpha(friendlyName.value())]) : std::nullopt;
+    return friendlyName.has_value() ? std::optional<TextFormatting>(*NAME_MAPPING[lowercaseAlpha(friendlyName.value())])
+                                    : std::nullopt;
 }
 
 std::optional<TextFormatting> TextFormatting::fromColorIndex(int32_t index)
 {
-	if (index < 0) {
-		return RESET;
-	}
-	else {
-		for(auto *textformatting : format)
-		{
-			if (textformatting->getColorIndex() == index) {
-				return *textformatting;
-			}
-		}
+    if (index < 0)
+    {
+        return RESET;
+    }
+    else
+    {
+        for (auto *textformatting : format)
+        {
+            if (textformatting->getColorIndex() == index)
+            {
+                return *textformatting;
+            }
+        }
 
-		return std::nullopt;
-	}
+        return std::nullopt;
+    }
 }
 
 std::vector<std::string> TextFormatting::getValidValues(bool isColor, bool isFancyStyling)
 {
-	std::vector<std::string> list;
-	for (auto *textformatting : format) {
-		if ((!textformatting->isColor() || isColor) && (!textformatting->isFancyStyling() || isFancyStyling)) {
-			list.push_back(textformatting->getFriendlyName());
-		}
-	}
+    std::vector<std::string> list;
+    for (auto *textformatting : format)
+    {
+        if ((!textformatting->isColor() || isColor) && (!textformatting->isFancyStyling() || isFancyStyling))
+        {
+            list.push_back(textformatting->getFriendlyName());
+        }
+    }
 
-	return list;
+    return list;
 }
 
 TextFormatting::TextFormatting(std::string formattingName, char formattingCodeIn, int32_t colorIndex)
-	:TextFormatting(formattingName, formattingCodeIn, false, colorIndex)
+    : TextFormatting(formattingName, formattingCodeIn, false, colorIndex)
 {
-
 }
 
 TextFormatting::TextFormatting(std::string formattingName, char formattingCodeIn, bool fancyStylingIn)
-	: TextFormatting(formattingName, formattingCodeIn, fancyStylingIn, -1)
+    : TextFormatting(formattingName, formattingCodeIn, fancyStylingIn, -1)
 {
 }
 
-TextFormatting::TextFormatting(std::string formattingName, char formattingCodeIn, bool fancyStylingIn, int32_t colorIndex)
-	: name(formattingName), formattingCode(formattingCodeIn), fancyStyling(fancyStylingIn), colorIndex(colorIndex), controlString("\u00A7")
+TextFormatting::TextFormatting(std::string formattingName, char formattingCodeIn, bool fancyStylingIn,
+                               int32_t colorIndex)
+    : name(formattingName), formattingCode(formattingCodeIn), fancyStyling(fancyStylingIn), colorIndex(colorIndex),
+      controlString("\u00A7")
 {
-	format.push_back(this);
-	NAME_MAPPING.emplace(name, this);
+    format.push_back(this);
+    NAME_MAPPING.emplace(name, this);
 }

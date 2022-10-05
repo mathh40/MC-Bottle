@@ -3,13 +3,13 @@
 
 class BlockMatcher
 {
-public:
-  static BlockMatcher forBlock(Block *blockType);
+  public:
+    static BlockMatcher forBlock(Block *blockType);
 
-  bool operator()(IBlockState *p_apply_1_) const;
+    bool operator()(IBlockState *p_apply_1_) const;
 
-private:
-  BlockMatcher(Block *blockType);
+  private:
+    BlockMatcher(Block *blockType);
 
-  Block *block;
+    Block *block;
 };

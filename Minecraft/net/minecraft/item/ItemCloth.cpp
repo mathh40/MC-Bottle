@@ -1,11 +1,9 @@
 #include "ItemCloth.h"
 
-
 #include "EnumDyeColor.h"
 #include "ItemStack.h"
 
-ItemCloth::ItemCloth(Block *block)
-    :ItemBlock(block)
+ItemCloth::ItemCloth(Block *block) : ItemBlock(block)
 {
     setMaxDamage(0);
     setHasSubtypes(true);

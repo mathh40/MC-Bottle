@@ -1,14 +1,15 @@
 #pragma once
 #include "EntityGuardian.h"
 
-class EntityElderGuardian :public EntityGuardian {
-public:
-    EntityElderGuardian(World* worldIn);
+class EntityElderGuardian : public EntityGuardian
+{
+  public:
+    EntityElderGuardian(World *worldIn);
     static void registerFixesElderGuardian(DataFixer fixer);
     int32_t getAttackDuration();
     void setGhost();
 
-protected:
+  protected:
     void applyEntityAttributes() override;
     std::optional<ResourceLocation> getLootTable() override;
     SoundEvent getAmbientSound() override;
@@ -17,5 +18,5 @@ protected:
     SoundEvent getFlopSound() override;
     void updateAITasks() override;
 
-private:
+  private:
 };

@@ -1,12 +1,13 @@
 #include "InventoryMerchant.h"
 
-#include "ItemStackHelper.h"
 #include "../village/MerchantRecipeList.h"
+#include "ItemStackHelper.h"
 #include "text/TextComponentString.h"
 #include "text/TextComponentTranslation.h"
 
 InventoryMerchant::InventoryMerchant(EntityPlayer *thePlayerIn, IMerchant *theMerchantIn)
-    :slots(3, ItemStack::EMPTY),player(thePlayerIn),merchant(theMerchantIn),currentRecipe(ItemStack::EMPTY,ItemStack::EMPTY)
+    : slots(3, ItemStack::EMPTY), player(thePlayerIn), merchant(theMerchantIn),
+      currentRecipe(ItemStack::EMPTY, ItemStack::EMPTY)
 {
 }
 
@@ -17,13 +18,13 @@ int32_t InventoryMerchant::getSizeInventory() const
 
 bool InventoryMerchant::isEmpty()
 {
-    if(slots.empty())
+    if (slots.empty())
     {
         return true;
     }
 
     bool isEmpty = true;
-    for(auto itemstack : slots)
+    for (auto itemstack : slots)
     {
         isEmpty = itemstack.isEmpty();
     }
@@ -38,14 +39,14 @@ ItemStack InventoryMerchant::getStackInSlot(int32_t index)
 ItemStack InventoryMerchant::decrStackSize(int32_t index, int32_t count)
 {
     const ItemStack itemstack = slots[index];
-    if (index == 2 && !itemstack.isEmpty()) 
+    if (index == 2 && !itemstack.isEmpty())
     {
         return ItemStackHelper::getAndSplit(slots, index, itemstack.getCount());
     }
-    else 
+    else
     {
         const ItemStack itemstack1 = ItemStackHelper::getAndSplit(slots, index, count);
-        if (!itemstack1.isEmpty() && inventoryResetNeededOnSlotChange(index)) 
+        if (!itemstack1.isEmpty() && inventoryResetNeededOnSlotChange(index))
         {
             resetRecipeAndSlots();
         }
@@ -62,12 +63,12 @@ ItemStack InventoryMerchant::removeStackFromSlot(int32_t index)
 void InventoryMerchant::setInventorySlotContents(int32_t index, ItemStack stack)
 {
     slots[index] = stack;
-    if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()) 
+    if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit())
     {
         stack.setCount(getInventoryStackLimit());
     }
 
-    if (inventoryResetNeededOnSlotChange(index)) 
+    if (inventoryResetNeededOnSlotChange(index))
     {
         resetRecipeAndSlots();
     }
@@ -85,7 +86,8 @@ bool InventoryMerchant::hasCustomName() const
 
 std::unique_ptr<ITextComponent> InventoryMerchant::getDisplayName() const
 {
-    return (ITextComponent)(hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getName(), new Object[0]));
+    return (ITextComponent)(hasCustomName() ? new TextComponentString(getName())
+                                            : new TextComponentTranslation(getName(), new Object[0]));
 }
 
 int32_t InventoryMerchant::getInventoryStackLimit() const
@@ -118,42 +120,44 @@ void InventoryMerchant::markDirty()
 
 void InventoryMerchant::resetRecipeAndSlots()
 {
-    ItemStack itemstack = slots[0];
+    ItemStack itemstack  = slots[0];
     ItemStack itemstack1 = slots[1];
-    if (itemstack.isEmpty()) 
+    if (itemstack.isEmpty())
     {
-        itemstack = itemstack1;
+        itemstack  = itemstack1;
         itemstack1 = ItemStack::EMPTY;
     }
 
-    if (itemstack.isEmpty()) 
+    if (itemstack.isEmpty())
     {
         setInventorySlotContents(2, ItemStack::EMPTY);
     }
-    else {
+    else
+    {
         MerchantRecipeList merchantrecipelist = merchant->getRecipes(player);
-        if (merchantrecipelist != nullptr) 
+        if (merchantrecipelist != nullptr)
         {
-            MerchantRecipe merchantrecipe = merchantrecipelist.canRecipeBeUsed(itemstack, itemstack1, this.currentRecipeIndex);
-            if (merchantrecipe != nullptr && !merchantrecipe.isRecipeDisabled()) 
+            MerchantRecipe merchantrecipe =
+                merchantrecipelist.canRecipeBeUsed(itemstack, itemstack1, this.currentRecipeIndex);
+            if (merchantrecipe != nullptr && !merchantrecipe.isRecipeDisabled())
             {
                 currentRecipe = merchantrecipe;
                 setInventorySlotContents(2, merchantrecipe.getItemToSell().copy());
             }
-            else if (!itemstack1.isEmpty()) 
+            else if (!itemstack1.isEmpty())
             {
                 merchantrecipe = merchantrecipelist.canRecipeBeUsed(itemstack1, itemstack, this.currentRecipeIndex);
-                if (merchantrecipe != nullptr && !merchantrecipe.isRecipeDisabled()) 
+                if (merchantrecipe != nullptr && !merchantrecipe.isRecipeDisabled())
                 {
                     currentRecipe = merchantrecipe;
                     setInventorySlotContents(2, merchantrecipe.getItemToSell().copy());
                 }
-                else 
+                else
                 {
                     setInventorySlotContents(2, ItemStack::EMPTY);
                 }
             }
-            else 
+            else
             {
                 setInventorySlotContents(2, ItemStack::EMPTY);
             }

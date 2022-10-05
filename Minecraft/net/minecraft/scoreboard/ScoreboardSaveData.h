@@ -4,29 +4,28 @@
 
 class NBTTagList;
 
-class ScoreboardSaveData :public WorldSavedData
+class ScoreboardSaveData : public WorldSavedData
 {
-public:
-   ScoreboardSaveData();
-   explicit ScoreboardSaveData(std::string_view name);
-   void setScoreboard(Scoreboard* scoreboardIn);
-   void readFromNBT(NBTTagCompound* nbt) override;
-   NBTTagCompound* writeToNBT(NBTTagCompound* compound) override;
+  public:
+    ScoreboardSaveData();
+    explicit ScoreboardSaveData(std::string_view name);
+    void setScoreboard(Scoreboard *scoreboardIn);
+    void readFromNBT(NBTTagCompound *nbt) override;
+    NBTTagCompound *writeToNBT(NBTTagCompound *compound) override;
 
+  protected:
+    void readTeams(NBTTagList *tagList);
+    void loadTeamPlayers(ScorePlayerTeam playerTeam, NBTTagList *tagList);
+    void readDisplayConfig(NBTTagCompound *compound);
+    void readObjectives(NBTTagList *nbt);
+    void readScores(NBTTagList *nbt);
+    NBTTagList *teamsToNbt();
+    void fillInDisplaySlots(NBTTagCompound *compound);
+    NBTTagList *objectivesToNbt();
+    NBTTagList *scoresToNbt();
 
-protected:
-   void readTeams(NBTTagList* tagList);
-   void loadTeamPlayers(ScorePlayerTeam playerTeam, NBTTagList* tagList);
-   void readDisplayConfig(NBTTagCompound* compound);
-   void readObjectives(NBTTagList* nbt);
-   void readScores(NBTTagList* nbt);
-   NBTTagList* teamsToNbt();
-   void fillInDisplaySlots(NBTTagCompound* compound);
-   NBTTagList* objectivesToNbt();
-   NBTTagList* scoresToNbt();
-
-private:
-   static std::shared_ptr<spdlog::logger> LOGGER;
-   Scoreboard* scoreboard;
-   std::shared_ptr<NBTTagCompound> delayedInitNbt;
+  private:
+    static std::shared_ptr<spdlog::logger> LOGGER;
+    Scoreboard *scoreboard;
+    std::shared_ptr<NBTTagCompound> delayedInitNbt;
 };

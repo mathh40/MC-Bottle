@@ -2,42 +2,41 @@
 
 class EntityPlayer;
 
-EntityAITradePlayer::EntityAITradePlayer(EntityVillager *villagerIn)
-    :villager(villagerIn)
+EntityAITradePlayer::EntityAITradePlayer(EntityVillager *villagerIn) : villager(villagerIn)
 {
     setMutexBits(5);
 }
 
 bool EntityAITradePlayer::shouldExecute()
 {
-    if (!villager->isEntityAlive()) 
+    if (!villager->isEntityAlive())
     {
         return false;
     }
-    else if (villager->isInWater()) 
+    else if (villager->isInWater())
     {
         return false;
     }
-    else if (!villager->onGround) 
+    else if (!villager->onGround)
     {
         return false;
     }
-    else if (villager->velocityChanged) 
+    else if (villager->velocityChanged)
     {
         return false;
     }
-    else 
+    else
     {
-        EntityPlayer* entityplayer = villager->getCustomer();
-        if (entityplayer == nullptr) 
+        EntityPlayer *entityplayer = villager->getCustomer();
+        if (entityplayer == nullptr)
         {
             return false;
         }
-        else if (villager->getDistanceSq(entityplayer) > 16.0) 
+        else if (villager->getDistanceSq(entityplayer) > 16.0)
         {
             return false;
         }
-        else 
+        else
         {
             return entityplayer->openContainer != nullptr;
         }

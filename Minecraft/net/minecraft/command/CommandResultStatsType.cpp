@@ -1,7 +1,6 @@
 #include "CommandResultStatsType.h"
 
-CommandResultStatsType::CommandResultStatsType(int32_t id, std::string_view name)
-    :typeID(id),typeName(name)
+CommandResultStatsType::CommandResultStatsType(int32_t id, std::string_view name) : typeID(id), typeName(name)
 {
     value.emplace_back(this);
 }
@@ -21,7 +20,7 @@ std::vector<std::string> CommandResultStatsType::getTypeNames()
     std::vector<std::string> astring(value.size());
     int32_t i = 0;
 
-    for(auto commandresultstats$type : values())
+    for (auto commandresultstats$type : values())
     {
         astring[i++] = commandresultstats$type->getTypeName();
     }
@@ -34,10 +33,10 @@ std::vector<CommandResultStatsType *> CommandResultStatsType::values()
     return value;
 }
 
-CommandResultStatsType* CommandResultStatsType::getTypeByName(std::string_view name)
+CommandResultStatsType *CommandResultStatsType::getTypeByName(std::string_view name)
 {
-    const auto ite = std::ranges::find_if(value,[&](CommandResultStatsType* s){return s->getTypeName() == name;});
-    if (ite != value.end()) 
+    const auto ite = std::ranges::find_if(value, [&](CommandResultStatsType *s) { return s->getTypeName() == name; });
+    if (ite != value.end())
     {
         return *ite;
     }

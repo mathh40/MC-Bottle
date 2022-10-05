@@ -2,9 +2,9 @@
 #include "Item.h"
 
 class Packet;
-class ItemMapBase :public Item
+class ItemMapBase : public Item
 {
-public:
+  public:
     bool isMap() override;
-    Packet* createMapDataPacket(ItemStack stack, World* worldIn, EntityPlayer* player);
+    Packet *createMapDataPacket(ItemStack stack, World *worldIn, EntityPlayer *player);
 };

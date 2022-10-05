@@ -1,11 +1,11 @@
 struct Timer
 {
-	int elapsedTicks;
-	float renderPartialTicks;
-	float elapsedPartialTicks;
-	long lastSyncSysClock;
-	float tickLength;
+    int elapsedTicks;
+    float renderPartialTicks;
+    float elapsedPartialTicks;
+    long lastSyncSysClock;
+    float tickLength;
 
-	Timer(float tps);
-	void updateTimer();
+    Timer(float tps);
+    void updateTimer();
 };

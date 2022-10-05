@@ -3,10 +3,8 @@
 #include "../../inventory/EntityEquipmentSlot.h"
 #include "../../pathfinding/PathNavigateGround.h"
 
-EntityAIRestrictSun::EntityAIRestrictSun(EntityCreature *creature)
-    :entity(creature)
+EntityAIRestrictSun::EntityAIRestrictSun(EntityCreature *creature) : entity(creature)
 {
-
 }
 
 bool EntityAIRestrictSun::shouldExecute()

@@ -1,9 +1,9 @@
 #pragma once
 #include "Material.h"
 
-class MaterialLiquid :public Material
+class MaterialLiquid : public Material
 {
-public:
+  public:
     MaterialLiquid(MapColor color);
     bool isLiquid() override;
     bool blocksMovement() override;

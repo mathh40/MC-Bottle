@@ -1,30 +1,30 @@
 #pragma once
+#include "../../../../../spdlog/include/spdlog/logger.h"
+#include "EntityAIBase.h"
+
 #include <functional>
 #include <memory>
 #include <typeindex>
 
-#include "EntityAIBase.h"
-#include "../../../../../spdlog/include/spdlog/logger.h"
-
 class EntityLivingBase;
 class EntityLiving;
-class EntityAIFindEntityNearest :public EntityAIBase
+class EntityAIFindEntityNearest : public EntityAIBase
 {
-public:
-    EntityAIFindEntityNearest(EntityLiving* mobIn, std::type_index p_i45884_2_);
+  public:
+    EntityAIFindEntityNearest(EntityLiving *mobIn, std::type_index p_i45884_2_);
     bool shouldExecute() override;
     bool shouldContinueExecuting() override;
     void startExecuting() override;
     void resetTask() override;
 
-protected:
+  protected:
     double getFollowRange();
 
-private:
+  private:
     static std::shared_ptr<spdlog::logger> LOGGER;
-    EntityLiving* mob;
-    std::function<bool(EntityLivingBase*)> predicate;
+    EntityLiving *mob;
+    std::function<bool(EntityLivingBase *)> predicate;
     EntityAINearestAttackableTarget::Sorter sorter;
-    EntityLivingBase* target;
+    EntityLivingBase *target;
     std::type_index classToCheck;
 };

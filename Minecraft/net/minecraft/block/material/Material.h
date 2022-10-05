@@ -1,11 +1,12 @@
 #pragma once
-#include "MapColor.h"
 #include "EnumPushReaction.h"
+#include "MapColor.h"
 
-class Material {
-public:
-  virtual ~Material() = default;
-  static Material AIR;
+class Material
+{
+  public:
+    virtual ~Material() = default;
+    static Material AIR;
     static Material GRASS;
     static Material GROUND;
     static Material WOOD;
@@ -57,14 +58,15 @@ public:
 
     friend bool operator==(const Material &lhs, const Material &rhs);
     friend bool operator!=(const Material &lhs, const Material &rhs);
-protected:
+
+  protected:
     Material &setRequiresTool();
     Material &setBurning();
     Material &setNoPushMobility();
     Material &setImmovableMobility();
     Material &setAdventureModeExempt();
 
-private:
+  private:
     bool canBurn;
     bool replaceable;
     bool isTranslucent;

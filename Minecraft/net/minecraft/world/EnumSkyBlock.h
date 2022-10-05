@@ -1,5 +1,5 @@
 enum class EnumSkyBlock
 {
-	SKY = 15,
-	BLOCK = 0
+    SKY   = 15,
+    BLOCK = 0
 };

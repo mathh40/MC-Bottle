@@ -1,28 +1,29 @@
 #pragma once
-#include <typeindex>
-
 #include "EntityAIBase.h"
+
+#include <typeindex>
 
 class EntityLiving;
 class Entity;
 
-class EntityAIWatchClosest :public EntityAIBase
+class EntityAIWatchClosest : public EntityAIBase
 {
-public:
-    EntityAIWatchClosest(EntityLiving* entityIn, std::type_index watchTargetClass, float maxDistance);
-    EntityAIWatchClosest(EntityLiving* entityIn, std::type_index watchTargetClass, float maxDistance, float chanceIn);
+  public:
+    EntityAIWatchClosest(EntityLiving *entityIn, std::type_index watchTargetClass, float maxDistance);
+    EntityAIWatchClosest(EntityLiving *entityIn, std::type_index watchTargetClass, float maxDistance, float chanceIn);
     bool shouldExecute() override;
     bool shouldContinueExecuting() override;
     void startExecuting() override;
     void resetTask() override;
     void updateTask() override;
 
-protected:
-    EntityLiving* entity;
-    Entity* closestEntity;
+  protected:
+    EntityLiving *entity;
+    Entity *closestEntity;
     float maxDistance;
     std::type_index watchedClass;
-private:
+
+  private:
     int lookTime;
     float chance;
 };

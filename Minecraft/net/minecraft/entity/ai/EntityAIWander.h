@@ -4,11 +4,11 @@
 
 class EntityCreature;
 
-class EntityAIWander :public EntityAIBase
+class EntityAIWander : public EntityAIBase
 {
-public:
-    EntityAIWander(EntityCreature* creatureIn, double speedIn);
-    EntityAIWander(EntityCreature* creatureIn, double speedIn, int32_t chance);
+  public:
+    EntityAIWander(EntityCreature *creatureIn, double speedIn);
+    EntityAIWander(EntityCreature *creatureIn, double speedIn, int32_t chance);
 
     bool shouldExecute() override;
     bool shouldContinueExecuting() override;
@@ -16,10 +16,10 @@ public:
     void makeUpdate();
     void setExecutionChance(int32_t newchance);
 
-protected:
+  protected:
     virtual std::optional<Vec3d> getPosition();
 
-    EntityCreature* entity;
+    EntityCreature *entity;
     double x;
     double y;
     double z;

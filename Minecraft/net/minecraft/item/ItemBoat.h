@@ -1,11 +1,12 @@
 #pragma once
 #include "Item.h"
 
-class ItemBoat :public Item
+class ItemBoat : public Item
 {
-public:
+  public:
     explicit ItemBoat(EntityBoat::Type typeIn);
-    ActionResult onItemRightClick(World* worldIn, EntityPlayer* playerIn, EnumHand handIn) override;
-private:
+    ActionResult onItemRightClick(World *worldIn, EntityPlayer *playerIn, EnumHand handIn) override;
+
+  private:
     EntityBoat::Type type;
 };

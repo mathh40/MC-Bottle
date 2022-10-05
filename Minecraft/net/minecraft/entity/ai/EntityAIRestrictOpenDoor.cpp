@@ -1,12 +1,12 @@
 #include "EntityAIRestrictOpenDoor.h"
-#include "Util.h"
+
 #include "../../pathfinding/PathNavigateGround.h"
 #include "../../village/Village.h"
+#include "Util.h"
 
-EntityAIRestrictOpenDoor::EntityAIRestrictOpenDoor(EntityCreature *creatureIn)
-    :entity(creatureIn)
+EntityAIRestrictOpenDoor::EntityAIRestrictOpenDoor(EntityCreature *creatureIn) : entity(creatureIn)
 {
-    if (!Util::instanceof<PathNavigateGround>(creatureIn->getNavigator())) 
+    if (!Util:: instanceof <PathNavigateGround>(creatureIn->getNavigator()))
     {
         throw std::logic_error("Unsupported mob type for RestrictOpenDoorGoal");
     }
@@ -14,26 +14,26 @@ EntityAIRestrictOpenDoor::EntityAIRestrictOpenDoor(EntityCreature *creatureIn)
 
 bool EntityAIRestrictOpenDoor::shouldExecute()
 {
-    if (entity->world.isDaytime()) 
+    if (entity->world.isDaytime())
     {
         return false;
     }
-    else 
+    else
     {
         BlockPos blockpos(entity);
         Village village = entity->world->getVillageCollection().getNearestVillage(blockpos, 16);
-        if (village == nullptr) 
+        if (village == nullptr)
         {
             return false;
         }
-        else 
+        else
         {
             frontDoor = village.getNearestDoor(blockpos);
-            if (!frontDoor) 
+            if (!frontDoor)
             {
                 return false;
             }
-            else 
+            else
             {
                 return frontDoor->getDistanceToInsideBlockSq(blockpos) < 2.25;
             }
@@ -43,11 +43,11 @@ bool EntityAIRestrictOpenDoor::shouldExecute()
 
 bool EntityAIRestrictOpenDoor::shouldContinueExecuting()
 {
-    if (entity->world.isDaytime()) 
+    if (entity->world.isDaytime())
     {
         return false;
     }
-    else 
+    else
     {
         return !frontDoor->getIsDetachedFromVillageFlag() && frontDoor->isInsideSide(BlockPos(entity));
     }

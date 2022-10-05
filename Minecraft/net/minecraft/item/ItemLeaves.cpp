@@ -2,8 +2,7 @@
 
 #include "ItemStack.h"
 
-ItemLeaves::ItemLeaves(BlockLeaves* block)
-    :ItemBlock(block),leaves(block)
+ItemLeaves::ItemLeaves(BlockLeaves *block) : ItemBlock(block), leaves(block)
 {
     setMaxDamage(0);
     setHasSubtypes(true);

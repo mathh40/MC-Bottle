@@ -3,12 +3,12 @@
 #include "CommandResultStats.h"
 #include "text/TextComponentString.h"
 
-ITextComponent* ICommandSender::getDisplayName()
+ITextComponent *ICommandSender::getDisplayName()
 {
     return new TextComponentString(getName());
 }
 
-void ICommandSender::sendMessage(ITextComponent* component)
+void ICommandSender::sendMessage(ITextComponent *component)
 {
 }
 
@@ -22,16 +22,16 @@ Vec3d ICommandSender::getPositionVector()
     return Vec3d::ZERO;
 }
 
-Entity* ICommandSender::getCommandSenderEntity() 
+Entity *ICommandSender::getCommandSenderEntity()
 {
     return nullptr;
 }
 
-bool ICommandSender::sendCommandFeedback() 
+bool ICommandSender::sendCommandFeedback()
 {
     return false;
 }
 
-void ICommandSender::setCommandStat(CommandResultStats::Type type, int32_t amount) 
+void ICommandSender::setCommandStat(CommandResultStats::Type type, int32_t amount)
 {
 }

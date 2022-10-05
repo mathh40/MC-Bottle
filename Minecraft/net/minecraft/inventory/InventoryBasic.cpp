@@ -1,19 +1,20 @@
 #include "InventoryBasic.h"
 
 #include "IInventoryChangedListener.h"
-#include "math/MathHelper.h"
 #include "ItemStackHelper.h"
 #include "Util.h"
+#include "math/MathHelper.h"
 #include "text/TextComponentString.h"
 #include "text/TextComponentTranslation.h"
 
 InventoryBasic::InventoryBasic(std::string_view title, bool customName, int32_t slotCount)
-    :inventoryTitle(title),bhasCustomName(customName),slotsCount(slotCount),inventoryContents(slotCount,ItemStack::EMPTY)
+    : inventoryTitle(title), bhasCustomName(customName), slotsCount(slotCount),
+      inventoryContents(slotCount, ItemStack::EMPTY)
 {
 }
 
 InventoryBasic::InventoryBasic(ITextComponent *title, int32_t slotCount)
-    :InventoryBasic(title->getUnformattedText(), true, slotCount)
+    : InventoryBasic(title->getUnformattedText(), true, slotCount)
 {
 }
 
@@ -24,7 +25,7 @@ void InventoryBasic::addInventoryChangeListener(IInventoryChangedListener *liste
 
 void InventoryBasic::removeInventoryChangeListener(IInventoryChangedListener *listener)
 {
-    Util::erase(changeListeners,listener);
+    Util::erase(changeListeners, listener);
 }
 
 ItemStack InventoryBasic::getStackInSlot(int32_t index)
@@ -35,7 +36,7 @@ ItemStack InventoryBasic::getStackInSlot(int32_t index)
 ItemStack InventoryBasic::decrStackSize(int32_t index, int32_t count)
 {
     ItemStack itemstack = ItemStackHelper::getAndSplit(inventoryContents, index, count);
-    if (!itemstack.isEmpty()) 
+    if (!itemstack.isEmpty())
     {
         markDirty();
     }
@@ -47,25 +48,25 @@ ItemStack InventoryBasic::addItem(ItemStack stack)
 {
     ItemStack itemstack = stack.copy();
 
-    for(auto i = 0; i < slotsCount; ++i) 
+    for (auto i = 0; i < slotsCount; ++i)
     {
         ItemStack itemstack1 = getStackInSlot(i);
-        if (itemstack1.isEmpty()) 
+        if (itemstack1.isEmpty())
         {
             setInventorySlotContents(i, itemstack);
             markDirty();
             return ItemStack::EMPTY;
         }
 
-        if (ItemStack::areItemsEqual(itemstack1, itemstack)) 
+        if (ItemStack::areItemsEqual(itemstack1, itemstack))
         {
             auto j = MathHelper::min(getInventoryStackLimit(), itemstack1.getMaxStackSize());
             auto k = MathHelper::min(itemstack.getCount(), j - itemstack1.getCount());
-            if (k > 0) 
+            if (k > 0)
             {
                 itemstack1.grow(k);
                 itemstack.shrink(k);
-                if (itemstack.isEmpty()) 
+                if (itemstack.isEmpty())
                 {
                     markDirty();
                     return ItemStack::EMPTY;
@@ -74,7 +75,7 @@ ItemStack InventoryBasic::addItem(ItemStack stack)
         }
     }
 
-    if (itemstack.getCount() != stack.getCount()) 
+    if (itemstack.getCount() != stack.getCount())
     {
         markDirty();
     }
@@ -85,11 +86,11 @@ ItemStack InventoryBasic::addItem(ItemStack stack)
 ItemStack InventoryBasic::removeStackFromSlot(int32_t index)
 {
     ItemStack itemstack = inventoryContents[index];
-    if (itemstack.isEmpty()) 
+    if (itemstack.isEmpty())
     {
         return ItemStack::EMPTY;
     }
-    else 
+    else
     {
         inventoryContents.emplace_back(index, ItemStack::EMPTY);
         return itemstack;
@@ -99,7 +100,7 @@ ItemStack InventoryBasic::removeStackFromSlot(int32_t index)
 void InventoryBasic::setInventorySlotContents(int32_t index, ItemStack stack)
 {
     inventoryContents.emplace_back(index, stack);
-    if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()) 
+    if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit())
     {
         stack.setCount(getInventoryStackLimit());
     }
@@ -175,16 +176,17 @@ void InventoryBasic::clear()
     inventoryContents.clear();
 }
 
-ITextComponent* InventoryBasic::getDisplayName() const
+ITextComponent *InventoryBasic::getDisplayName() const
 {
-    return (ITextComponent)(hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(getName(), new Object[0]));
+    return (ITextComponent)(hasCustomName() ? new TextComponentString(this.getName())
+                                            : new TextComponentTranslation(getName(), new Object[0]));
 }
 
 void InventoryBasic::markDirty()
 {
-    if (!changeListeners.empty()) 
+    if (!changeListeners.empty())
     {
-        for(auto listener : changeListeners) 
+        for (auto listener : changeListeners)
         {
             listener->onInventoryChanged(this);
         }

@@ -1,10 +1,10 @@
 #pragma once
 #include "EntityAIBase.h"
 class EntityMob;
-class EntityAIAttackRangedBow :public EntityAIBase
+class EntityAIAttackRangedBow : public EntityAIBase
 {
-public:
-    EntityAIAttackRangedBow(EntityMob* mob, double moveSpeedAmpIn, int attackCooldownIn, float maxAttackDistanceIn);
+  public:
+    EntityAIAttackRangedBow(EntityMob *mob, double moveSpeedAmpIn, int attackCooldownIn, float maxAttackDistanceIn);
     void setAttackCooldown(int32_t p_189428_1_);
     bool shouldExecute() override;
     bool shouldContinueExecuting() override;
@@ -12,11 +12,11 @@ public:
     void resetTask() override;
     void updateTask() override;
 
-protected:
+  protected:
     bool isBowInMainhand();
 
-private:
-    EntityMob* entity;
+  private:
+    EntityMob *entity;
     double moveSpeedAmp;
     int32_t attackCooldown;
     float maxAttackDistance;

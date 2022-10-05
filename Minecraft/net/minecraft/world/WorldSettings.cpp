@@ -1,76 +1,77 @@
 #include "WorldSettings.h"
 
-WorldSettings::WorldSettings(int64_t seedIn, GameType& gameType, bool enableMapFeatures, bool hardcoreMode, WorldType& worldTypeIn)
-	:generatorOptions(""), seed(seedIn), gameType(gameType), mapFeaturesEnabled(enableMapFeatures), hardcoreEnabled(hardcoreMode), terrainType(worldTypeIn)
+WorldSettings::WorldSettings(int64_t seedIn, GameType &gameType, bool enableMapFeatures, bool hardcoreMode,
+                             WorldType &worldTypeIn)
+    : generatorOptions(""), seed(seedIn), gameType(gameType), mapFeaturesEnabled(enableMapFeatures),
+      hardcoreEnabled(hardcoreMode), terrainType(worldTypeIn)
 {
-	
 }
 
-WorldSettings::WorldSettings(WorldInfo& info)
-	:WorldSettings(info.getSeed(), info.getGameType(), info.isMapFeaturesEnabled(), info.isHardcoreModeEnabled(), info.getTerrainType())
+WorldSettings::WorldSettings(WorldInfo &info)
+    : WorldSettings(info.getSeed(), info.getGameType(), info.isMapFeaturesEnabled(), info.isHardcoreModeEnabled(),
+                    info.getTerrainType())
 {
-
 }
 
-WorldSettings& WorldSettings::enableBonusChest()
+WorldSettings &WorldSettings::enableBonusChest()
 {
-	bonusChestEnabled = true;
-	return *this;
+    bonusChestEnabled = true;
+    return *this;
 }
 
-WorldSettings& WorldSettings::enableCommands()
+WorldSettings &WorldSettings::enableCommands()
 {
-	commandsAllowed = true;
-	return *this;
+    commandsAllowed = true;
+    return *this;
 }
 
-WorldSettings& WorldSettings::setGeneratorOptions(std::string_view options)
+WorldSettings &WorldSettings::setGeneratorOptions(std::string_view options)
 {
-	generatorOptions = options;
-	return *this;
+    generatorOptions = options;
+    return *this;
 }
 
 bool WorldSettings::isBonusChestEnabled() const
 {
-	return bonusChestEnabled;
+    return bonusChestEnabled;
 }
 
 int64_t WorldSettings::getSeed() const
 {
-	return seed;
+    return seed;
 }
 
-GameType& WorldSettings::getGameType()
+GameType &WorldSettings::getGameType()
 {
-	return gameType;
+    return gameType;
 }
 
 bool WorldSettings::getHardcoreEnabled() const
 {
-	return hardcoreEnabled;
+    return hardcoreEnabled;
 }
 
 bool WorldSettings::isMapFeaturesEnabled() const
 {
-	return mapFeaturesEnabled;
+    return mapFeaturesEnabled;
 }
 
-WorldType& WorldSettings::getTerrainType()
+WorldType &WorldSettings::getTerrainType()
 {
-	return terrainType;
+    return terrainType;
 }
 
 bool WorldSettings::areCommandsAllowed() const
 {
-	return commandsAllowed;
+    return commandsAllowed;
 }
 
 GameType WorldSettings::getGameTypeById(int32_t id)
 {
-	return GameType::getByID(id);
+    return GameType::getByID(id);
 }
 
 std::string WorldSettings::getGeneratorOptions() const
 {
-	return generatorOptions;
+    return generatorOptions;
 }

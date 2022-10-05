@@ -18,14 +18,15 @@ EnumDyeColor EnumDyeColor::RED(14, 1, "red", "red", 11546150, TextFormatting::DA
 EnumDyeColor EnumDyeColor::BLACK(15, 0, "black", "black", 1908001, TextFormatting::BLACK);
 
 EnumDyeColor::EnumDyeColor(int32_t metaIn, int32_t dyeDamageIn, std::string nameIn, std::string unlocalizedNameIn,
-    int32_t colorValueIn, TextFormatting chatColorIn)
-        :meta(metaIn),dyeDamage(dyeDamageIn),name(nameIn),translationKey(unlocalizedNameIn),colorValue(colorValueIn),chatColor(chatColorIn),
-    colorComponentValues({((colorValueIn & 16711680) >> 16) / 255.0F, ((colorValueIn & 0xff00) >> 8) / 255.0F,
-                          ((colorValueIn & 255) >> 0) / 255.0F})
+                           int32_t colorValueIn, TextFormatting chatColorIn)
+    : meta(metaIn), dyeDamage(dyeDamageIn), name(nameIn), translationKey(unlocalizedNameIn), colorValue(colorValueIn),
+      chatColor(chatColorIn),
+      colorComponentValues({((colorValueIn & 16711680) >> 16) / 255.0F, ((colorValueIn & 0xff00) >> 8) / 255.0F,
+                            ((colorValueIn & 255) >> 0) / 255.0F})
 {
     VALUES.emplace_back(this);
-    META_LOOKUP.emplace(meta,this);
-    DYE_DMG_LOOKUP.emplace(dyeDamage,this);
+    META_LOOKUP.emplace(meta, this);
+    DYE_DMG_LOOKUP.emplace(dyeDamage, this);
 }
 
 int32_t EnumDyeColor::getMetadata() const
@@ -58,9 +59,9 @@ std::array<float, 3> EnumDyeColor::getColorComponentValues() const
     return colorComponentValues;
 }
 
-EnumDyeColor* EnumDyeColor::byDyeDamage(int32_t damage)
+EnumDyeColor *EnumDyeColor::byDyeDamage(int32_t damage)
 {
-    if (damage < 0 || damage >= DYE_DMG_LOOKUP.size()) 
+    if (damage < 0 || damage >= DYE_DMG_LOOKUP.size())
     {
         damage = 0;
     }
@@ -68,9 +69,9 @@ EnumDyeColor* EnumDyeColor::byDyeDamage(int32_t damage)
     return DYE_DMG_LOOKUP[damage];
 }
 
-EnumDyeColor* EnumDyeColor::byMetadata(int32_t meta)
+EnumDyeColor *EnumDyeColor::byMetadata(int32_t meta)
 {
-    if (meta < 0 || meta >= META_LOOKUP.size()) 
+    if (meta < 0 || meta >= META_LOOKUP.size())
     {
         meta = 0;
     }
@@ -87,4 +88,3 @@ std::string EnumDyeColor::getName() const
 {
     return name;
 }
-

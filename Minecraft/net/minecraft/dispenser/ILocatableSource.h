@@ -1,5 +1,6 @@
 #pragma once
 #include "ILocation.h"
 
-class ILocatableSource :public ILocation {
+class ILocatableSource : public ILocation
+{
 };

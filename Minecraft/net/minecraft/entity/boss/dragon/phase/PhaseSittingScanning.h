@@ -1,14 +1,14 @@
 #pragma once
 #include "PhaseSittingBase.h"
 
-class PhaseSittingScanning :public PhaseSittingBase {
-public:
-    PhaseSittingScanning(EntityDragon* dragonIn);
+class PhaseSittingScanning : public PhaseSittingBase
+{
+  public:
+    PhaseSittingScanning(EntityDragon *dragonIn);
     void doLocalUpdate() override;
     void initPhase() override;
-    PhaseList* getType() override;
+    PhaseList *getType() override;
 
-
-private:
+  private:
     int32_t scanningTime;
 };

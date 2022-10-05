@@ -1,11 +1,10 @@
 #include "EntityAIMoveTowardsTarget.h"
 
-
 #include "RandomPositionGenerator.h"
 #include "math/Vec3d.h"
 
 EntityAIMoveTowardsTarget::EntityAIMoveTowardsTarget(EntityCreature *creature, double speedIn, float targetMaxDistance)
-    :creature(creature),speed(speedIn),maxTargetDistance(targetMaxDistance)
+    : creature(creature), speed(speedIn), maxTargetDistance(targetMaxDistance)
 {
     setMutexBits(1);
 }
@@ -13,22 +12,23 @@ EntityAIMoveTowardsTarget::EntityAIMoveTowardsTarget(EntityCreature *creature, d
 bool EntityAIMoveTowardsTarget::shouldExecute()
 {
     targetEntity = creature->getAttackTarget();
-    if (targetEntity == nullptr) 
+    if (targetEntity == nullptr)
     {
         return false;
     }
-    else if (targetEntity->getDistanceSq(creature) > (double)(maxTargetDistance * maxTargetDistance)) 
+    else if (targetEntity->getDistanceSq(creature) > (double)(maxTargetDistance * maxTargetDistance))
     {
         return false;
     }
-    else 
+    else
     {
-        auto vec3d = RandomPositionGenerator::findRandomTargetBlockTowards(creature, 16, 7, Vec3d(targetEntity->posX, targetEntity->posY, targetEntity->posZ));
-        if (!vec3d) 
+        auto vec3d = RandomPositionGenerator::findRandomTargetBlockTowards(
+            creature, 16, 7, Vec3d(targetEntity->posX, targetEntity->posY, targetEntity->posZ));
+        if (!vec3d)
         {
             return false;
         }
-        else 
+        else
         {
             movePosX = vec3d->getx();
             movePosY = vec3d->gety();
@@ -40,7 +40,8 @@ bool EntityAIMoveTowardsTarget::shouldExecute()
 
 bool EntityAIMoveTowardsTarget::shouldContinueExecuting()
 {
-    return !creature->getNavigator().noPath() && targetEntity->isEntityAlive() && targetEntity->getDistanceSq(creature) < (double)(maxTargetDistance * maxTargetDistance);
+    return !creature->getNavigator().noPath() && targetEntity->isEntityAlive() &&
+           targetEntity->getDistanceSq(creature) < (double)(maxTargetDistance * maxTargetDistance);
 }
 
 void EntityAIMoveTowardsTarget::resetTask()

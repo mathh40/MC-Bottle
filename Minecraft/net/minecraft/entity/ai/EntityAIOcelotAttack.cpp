@@ -2,20 +2,19 @@
 
 #include "math/MathHelper.h"
 
-EntityAIOcelotAttack::EntityAIOcelotAttack(EntityLiving *theEntityIn)
-    :entity(theEntityIn),world(theEntityIn->world)
+EntityAIOcelotAttack::EntityAIOcelotAttack(EntityLiving *theEntityIn) : entity(theEntityIn), world(theEntityIn->world)
 {
     setMutexBits(3);
 }
 
 bool EntityAIOcelotAttack::shouldExecute()
 {
-    EntityLivingBase* entitylivingbase = entity->getAttackTarget();
-    if (entitylivingbase == nullptr) 
+    EntityLivingBase *entitylivingbase = entity->getAttackTarget();
+    if (entitylivingbase == nullptr)
     {
         return false;
     }
-    else 
+    else
     {
         target = entitylivingbase;
         return true;
@@ -24,15 +23,15 @@ bool EntityAIOcelotAttack::shouldExecute()
 
 bool EntityAIOcelotAttack::shouldContinueExecuting()
 {
-    if (!target->isEntityAlive()) 
+    if (!target->isEntityAlive())
     {
         return false;
     }
-    else if (entity->getDistanceSq(target) > 225.0) 
+    else if (entity->getDistanceSq(target) > 225.0)
     {
         return false;
     }
-    else 
+    else
     {
         return !entity->getNavigator().noPath() || shouldExecute();
     }
@@ -50,18 +49,18 @@ void EntityAIOcelotAttack::updateTask()
     double d0 = (double)(entity->width * 2.0F * entity->width * 2.0F);
     double d1 = entity->getDistanceSq(target->posX, target->getEntityBoundingBox().minY, target->posZ);
     double d2 = 0.8;
-    if (d1 > d0 && d1 < 16.0) 
+    if (d1 > d0 && d1 < 16.0)
     {
         d2 = 1.33;
     }
-    else if (d1 < 225.0) 
+    else if (d1 < 225.0)
     {
         d2 = 0.6;
     }
 
     entity->getNavigator().tryMoveToEntityLiving(target, d2);
     attackCountdown = MathHelper::max(attackCountdown - 1, 0);
-    if (d1 <= d0 && attackCountdown <= 0) 
+    if (d1 <= d0 && attackCountdown <= 0)
     {
         attackCountdown = 20;
         entity->attackEntityAsMob(target);

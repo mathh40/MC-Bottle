@@ -4,17 +4,17 @@
 
 class SoundEvent
 {
-public:
-	static RegistryNamespaced< ResourceLocation, SoundEvent> REGISTRY;
+  public:
+    static RegistryNamespaced<ResourceLocation, SoundEvent> REGISTRY;
 
-	SoundEvent(ResourceLocation soundNameIn);
-	ResourceLocation getSoundName() const;
+    SoundEvent(ResourceLocation soundNameIn);
+    ResourceLocation getSoundName() const;
 
-	void registerSounds();
+    void registerSounds();
 
-private:
-	static int soundEventId;
-	ResourceLocation soundName;
+  private:
+    static int soundEventId;
+    ResourceLocation soundName;
 
-	void registerSound(std::string soundNameIn);
+    void registerSound(std::string soundNameIn);
 };

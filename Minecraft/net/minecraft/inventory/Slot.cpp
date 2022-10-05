@@ -1,18 +1,17 @@
 #include "Slot.h"
 
-
-#include "IInventory.h"
 #include "../item/ItemStack.h"
+#include "IInventory.h"
 
 Slot::Slot(IInventory *inventoryIn, int32_t index, int32_t xPosition, int32_t yPosition)
-    :inventory(inventoryIn),slotIndex(index),xPos(xPosition),yPos(yPosition)
+    : inventory(inventoryIn), slotIndex(index), xPos(xPosition), yPos(yPosition)
 {
 }
 
 void Slot::onSlotChange(ItemStack p_75220_1_, ItemStack p_75220_2_)
 {
     int32_t i = p_75220_2_.getCount() - p_75220_1_.getCount();
-    if (i > 0) 
+    if (i > 0)
     {
         onCrafting(p_75220_2_, i);
     }

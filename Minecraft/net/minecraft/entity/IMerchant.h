@@ -12,11 +12,11 @@ class ITextComponent;
 
 class IMerchant
 {
-    virtual void setCustomer(EntityPlayer* var1) = 0;
+    virtual void setCustomer(EntityPlayer *var1) = 0;
 
-    virtual EntityPlayer* getCustomer() = 0;
+    virtual EntityPlayer *getCustomer() = 0;
 
-    virtual std::optional<MerchantRecipeList> getRecipes(EntityPlayer* var1) = 0;
+    virtual std::optional<MerchantRecipeList> getRecipes(EntityPlayer *var1) = 0;
 
     virtual void setRecipes(MerchantRecipeList var1) = 0;
 
@@ -24,9 +24,9 @@ class IMerchant
 
     virtual void verifySellingItem(ItemStack var1) = 0;
 
-    virtual ITextComponent* getDisplayName() = 0;
+    virtual ITextComponent *getDisplayName() = 0;
 
-    virtual World* getWorld() = 0;
+    virtual World *getWorld() = 0;
 
     virtual BlockPos getPos() = 0;
 };

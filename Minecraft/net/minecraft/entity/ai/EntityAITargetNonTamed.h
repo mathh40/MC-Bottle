@@ -3,11 +3,13 @@
 
 class EntityTameable;
 
-class EntityAITargetNonTamed :public EntityAINearestAttackableTarget
+class EntityAITargetNonTamed : public EntityAINearestAttackableTarget
 {
-public:
-    EntityAITargetNonTamed(EntityTameable* entityIn, std::type_index classTarget, bool checkSight, std::function<bool()> targetSelector);
+  public:
+    EntityAITargetNonTamed(EntityTameable *entityIn, std::type_index classTarget, bool checkSight,
+                           std::function<bool()> targetSelector);
     bool shouldExecute() override;
-private:
-    EntityTameable* tameable;
+
+  private:
+    EntityTameable *tameable;
 };

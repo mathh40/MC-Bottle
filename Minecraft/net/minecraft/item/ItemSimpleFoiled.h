@@ -1,8 +1,8 @@
 #pragma once
 #include "Item.h"
 
-class ItemSimpleFoiled :public Item
+class ItemSimpleFoiled : public Item
 {
-public:
+  public:
     bool hasEffect(ItemStack stack) override;
 };

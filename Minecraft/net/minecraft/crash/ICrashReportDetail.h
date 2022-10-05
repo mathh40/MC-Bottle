@@ -1,8 +1,9 @@
 #pragma once
 #include <string>
 
-class ICrashReportDetail{
-public:
+class ICrashReportDetail
+{
+  public:
     virtual ~ICrashReportDetail() = default;
-    virtual std::string call() = 0;
+    virtual std::string call()    = 0;
 };

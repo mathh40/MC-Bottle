@@ -3,8 +3,8 @@
 
 class EntityAIBase
 {
-public:
-    virtual ~EntityAIBase() = default;
+  public:
+    virtual ~EntityAIBase()      = default;
     virtual bool shouldExecute() = 0;
     virtual bool shouldContinueExecuting();
     virtual bool isInterruptible();
@@ -14,6 +14,6 @@ public:
     void setMutexBits(int32_t mutexBitsIn);
     int32_t getMutexBits() const;
 
-private:
+  private:
     int32_t mutexBits{};
 };

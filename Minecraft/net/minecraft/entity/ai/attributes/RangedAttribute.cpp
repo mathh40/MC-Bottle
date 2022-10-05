@@ -1,22 +1,23 @@
 #include "RangedAttribute.h"
 
-#include <stdexcept>
-
 #include "math/MathHelper.h"
+
+#include <stdexcept>
 
 RangedAttribute::RangedAttribute(IAttribute *parentIn, std::string_view unlocalizedNameIn, double defaultValue,
                                  double minimumValueIn, double maximumValueIn)
-        :BaseAttribute(parentIn, unlocalizedNameIn, defaultValue),minimumValue(minimumValueIn),maximumValue(maximumValueIn)
+    : BaseAttribute(parentIn, unlocalizedNameIn, defaultValue), minimumValue(minimumValueIn),
+      maximumValue(maximumValueIn)
 {
-    if (minimumValueIn > maximumValueIn) 
+    if (minimumValueIn > maximumValueIn)
     {
         throw std::logic_error("Minimum value cannot be bigger than maximum value!");
     }
-    else if (defaultValue < minimumValueIn) 
+    else if (defaultValue < minimumValueIn)
     {
         throw std::logic_error("Default value cannot be lower than minimum value!");
     }
-    else if (defaultValue > maximumValueIn) 
+    else if (defaultValue > maximumValueIn)
     {
         throw std::logic_error("Default value cannot be bigger than maximum value!");
     }

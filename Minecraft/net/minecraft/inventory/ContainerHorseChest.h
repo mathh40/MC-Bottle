@@ -3,9 +3,9 @@
 
 class ITextComponent;
 
-class ContainerHorseChest :private InventoryBasic
+class ContainerHorseChest : private InventoryBasic
 {
-public:
+  public:
     ContainerHorseChest(std::string_view inventoryTitle, int32_t slotCount);
-    ContainerHorseChest(ITextComponent* inventoryTitle, int32_t slotCount);
+    ContainerHorseChest(ITextComponent *inventoryTitle, int32_t slotCount);
 };

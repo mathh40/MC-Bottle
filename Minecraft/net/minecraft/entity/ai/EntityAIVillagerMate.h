@@ -5,23 +5,23 @@
 class World;
 class Village;
 
-class EntityAIVillagerMate :public EntityAIBase
+class EntityAIVillagerMate : public EntityAIBase
 {
-public:
-    explicit EntityAIVillagerMate(EntityVillager* villagerIn);
+  public:
+    explicit EntityAIVillagerMate(EntityVillager *villagerIn);
     bool shouldExecute() override;
     void startExecuting() override;
     void resetTask() override;
     bool shouldContinueExecuting() override;
     void updateTask() override;
 
-private:
+  private:
     bool checkSufficientDoorsPresentForNewVillager() const;
     void giveBirth();
 
-    EntityVillager* villager;
-    EntityVillager* mate;
-    World* world;
+    EntityVillager *villager;
+    EntityVillager *mate;
+    World *world;
     int32_t matingTimeout;
-    Village* village;
+    Village *village;
 };

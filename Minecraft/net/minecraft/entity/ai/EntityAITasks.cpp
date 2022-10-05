@@ -5,7 +5,7 @@
 std::shared_ptr<spdlog::logger> EntityAITasks::LOGGER = spdlog::get("Minecraft")->clone("EntityAITasks");
 
 EntityAITasks::EntityAITaskEntry::EntityAITaskEntry(int32_t priorityIn, EntityAIBase *task)
-    :priority(priorityIn),action(task)
+    : priority(priorityIn), action(task)
 {
 }
 
@@ -14,8 +14,7 @@ bool operator==(const EntityAITasks::EntityAITaskEntry &lhs, const EntityAITasks
     return lhs.action == rhs.action;
 }
 
-EntityAITasks::EntityAITasks(const Profiler &profilerIn)
-    :profiler(profilerIn)
+EntityAITasks::EntityAITasks(const Profiler &profilerIn) : profiler(profilerIn)
 {
 }
 
@@ -28,21 +27,20 @@ void EntityAITasks::removeTask(EntityAIBase *task)
 {
     auto iterator = taskEntries.begin();
 
-    EntityAITasks::EntityAITaskEntry* entityaitasks$entityaitaskentry;
-    EntityAIBase* entityaibase;
-    do 
+    EntityAITasks::EntityAITaskEntry *entityaitasks$entityaitaskentry;
+    EntityAIBase *entityaibase;
+    do
     {
-        if (!iterator == taskEntries.end()) 
+        if (!iterator == taskEntries.end())
         {
             return;
         }
 
-        entityaitasks$entityaitaskentry = (EntityAITasks::EntityAITaskEntry*)iterator.next();
-        entityaibase = entityaitasks$entityaitaskentry->action;
-    }
-    while(entityaibase != task);
+        entityaitasks$entityaitaskentry = (EntityAITasks::EntityAITaskEntry *)iterator.next();
+        entityaibase                    = entityaitasks$entityaitaskentry->action;
+    } while (entityaibase != task);
 
-    if (entityaitasks$entityaitaskentry->isusing) 
+    if (entityaitasks$entityaitaskentry->isusing)
     {
         entityaitasks$entityaitaskentry->isusing = false;
         entityaitasks$entityaitaskentry->action->resetTask();
@@ -56,52 +54,51 @@ void EntityAITasks::onUpdateTasks()
 {
     profiler.startSection("goalSetup");
     Iterator iterator;
-    EntityAITasks::EntityAITaskEntry* entityaitasks$entityaitaskentry;
-    if (tickCount++ % tickRate == 0) 
+    EntityAITasks::EntityAITaskEntry *entityaitasks$entityaitaskentry;
+    if (tickCount++ % tickRate == 0)
     {
         iterator = taskEntries.begin();
 
-    
-        while(true) 
+        while (true)
         {
-            do 
+            do
             {
-                while(true) 
+                while (true)
                 {
-                    if (!iterator.hasNext()) 
+                    if (!iterator.hasNext())
                     {
                         goto label57;
                     }
 
                     entityaitasks$entityaitaskentry = (EntityAITasks.EntityAITaskEntry)iterator.next();
-                    if (entityaitasks$entityaitaskentry->isusing) 
+                    if (entityaitasks$entityaitaskentry->isusing)
                     {
                         break;
                     }
 
-                    if (canUse(entityaitasks$entityaitaskentry) && entityaitasks$entityaitaskentry->action->shouldExecute()) 
+                    if (canUse(entityaitasks$entityaitaskentry) &&
+                        entityaitasks$entityaitaskentry->action->shouldExecute())
                     {
                         entityaitasks$entityaitaskentry->isusing = true;
                         entityaitasks$entityaitaskentry->action->startExecuting();
                         executingTaskEntries.emplace(entityaitasks$entityaitaskentry);
                     }
                 }
-            }
-            while(canUse(entityaitasks$entityaitaskentry) && canContinue(entityaitasks$entityaitaskentry));
+            } while (canUse(entityaitasks$entityaitaskentry) && canContinue(entityaitasks$entityaitaskentry));
 
             entityaitasks$entityaitaskentry->isusing = false;
             entityaitasks$entityaitaskentry->action->resetTask();
             executingTaskEntries.erase(entityaitasks$entityaitaskentry);
         }
     }
-    else 
+    else
     {
         iterator = executingTaskEntries.iterator();
 
-        while(iterator.hasNext()) 
+        while (iterator.hasNext())
         {
             entityaitasks$entityaitaskentry = (EntityAITasks.EntityAITaskEntry)iterator.next();
-            if (!canContinue(entityaitasks$entityaitaskentry)) 
+            if (!canContinue(entityaitasks$entityaitaskentry))
             {
                 entityaitasks$entityaitaskentry->isusing = false;
                 entityaitasks$entityaitaskentry->action->resetTask();
@@ -112,13 +109,14 @@ void EntityAITasks::onUpdateTasks()
 
 label57:
     profiler.endSection();
-    if (!executingTaskEntries.empty()) 
+    if (!executingTaskEntries.empty())
     {
         profiler.startSection("goalTick");
         iterator = executingTaskEntries.iterator();
 
-        while(iterator.hasNext()) {
-            entityaitasks$entityaitaskentry = (EntityAITasks::EntityAITaskEntry*)iterator.next();
+        while (iterator.hasNext())
+        {
+            entityaitasks$entityaitaskentry = (EntityAITasks::EntityAITaskEntry *)iterator.next();
             entityaitasks$entityaitaskentry->action->updateTask();
         }
 
@@ -143,11 +141,11 @@ void EntityAITasks::enableControlFlag(int32_t p_188525_1_)
 
 void EntityAITasks::setControlFlag(int32_t p_188527_1_, bool p_188527_2_)
 {
-    if (p_188527_2_) 
+    if (p_188527_2_)
     {
         enableControlFlag(p_188527_1_);
     }
-    else 
+    else
     {
         disableControlFlag(p_188527_1_);
     }
@@ -160,31 +158,32 @@ bool EntityAITasks::canContinue(EntityAITasks::EntityAITaskEntry *taskEntry)
 
 bool EntityAITasks::canUse(EntityAITasks::EntityAITaskEntry *taskEntry)
 {
-    if (executingTaskEntries.empty()) 
+    if (executingTaskEntries.empty())
     {
         return true;
     }
-    else if (isControlFlagDisabled(taskEntry->action->getMutexBits())) 
+    else if (isControlFlagDisabled(taskEntry->action->getMutexBits()))
     {
         return false;
     }
-    else 
+    else
     {
         Iterator var2 = executingTaskEntries.iterator();
 
-        while(var2.hasNext()) 
+        while (var2.hasNext())
         {
-            EntityAITasks::EntityAITaskEntry* entityaitasks$entityaitaskentry = (EntityAITasks::EntityAITaskEntry*)var2.next();
-            if (entityaitasks$entityaitaskentry != taskEntry) 
+            EntityAITasks::EntityAITaskEntry *entityaitasks$entityaitaskentry =
+                (EntityAITasks::EntityAITaskEntry *)var2.next();
+            if (entityaitasks$entityaitaskentry != taskEntry)
             {
-                if (taskEntry->priority >= entityaitasks$entityaitaskentry.priority) 
+                if (taskEntry->priority >= entityaitasks$entityaitaskentry.priority)
                 {
-                    if (!areTasksCompatible(taskEntry, entityaitasks$entityaitaskentry)) 
+                    if (!areTasksCompatible(taskEntry, entityaitasks$entityaitaskentry))
                     {
                         return false;
                     }
                 }
-                else if (!entityaitasks$entityaitaskentry.action.isInterruptible()) 
+                else if (!entityaitasks$entityaitaskentry.action.isInterruptible())
                 {
                     return false;
                 }
@@ -196,7 +195,7 @@ bool EntityAITasks::canUse(EntityAITasks::EntityAITaskEntry *taskEntry)
 }
 
 bool EntityAITasks::areTasksCompatible(EntityAITasks::EntityAITaskEntry *taskEntry1,
-    EntityAITasks::EntityAITaskEntry *taskEntry2)
+                                       EntityAITasks::EntityAITaskEntry *taskEntry2)
 {
     return (taskEntry1->action->getMutexBits() & taskEntry2->action->getMutexBits()) == 0;
 }

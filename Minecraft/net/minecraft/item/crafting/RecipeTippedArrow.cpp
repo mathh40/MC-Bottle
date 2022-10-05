@@ -1,29 +1,30 @@
 #include "RecipeTippedArrow.h"
+
 #include "../../potion/PotionUtils.h"
 
 bool RecipeTippedArrow::matches(InventoryCrafting *inv, World *worldIn)
 {
-    if (inv->getWidth() == 3 && inv->getHeight() == 3) 
+    if (inv->getWidth() == 3 && inv->getHeight() == 3)
     {
-        for(auto i = 0; i < inv->getWidth(); ++i) 
+        for (auto i = 0; i < inv->getWidth(); ++i)
         {
-            for(auto j = 0; j < inv->getHeight(); ++j) 
+            for (auto j = 0; j < inv->getHeight(); ++j)
             {
                 ItemStack itemstack = inv->getStackInRowAndColumn(i, j);
-                if (itemstack.isEmpty()) 
+                if (itemstack.isEmpty())
                 {
                     return false;
                 }
 
-                Item* item = itemstack.getItem();
-                if (i == 1 && j == 1) 
+                Item *item = itemstack.getItem();
+                if (i == 1 && j == 1)
                 {
-                    if (item != Items::LINGERING_POTION) 
+                    if (item != Items::LINGERING_POTION)
                     {
                         return false;
                     }
                 }
-                else if (item != Items::ARROW) 
+                else if (item != Items::ARROW)
                 {
                     return false;
                 }
@@ -32,7 +33,7 @@ bool RecipeTippedArrow::matches(InventoryCrafting *inv, World *worldIn)
 
         return true;
     }
-    else 
+    else
     {
         return false;
     }
@@ -41,11 +42,11 @@ bool RecipeTippedArrow::matches(InventoryCrafting *inv, World *worldIn)
 ItemStack RecipeTippedArrow::getCraftingResult(InventoryCrafting *inv)
 {
     ItemStack itemstack = inv->getStackInRowAndColumn(1, 1);
-    if (itemstack.getItem() != Items::LINGERING_POTION) 
+    if (itemstack.getItem() != Items::LINGERING_POTION)
     {
         return ItemStack::EMPTY;
     }
-    else 
+    else
     {
         ItemStack itemstack1 = ItemStack(Items::TIPPED_ARROW, 8);
         PotionUtils::addPotionToItemStack(itemstack1, PotionUtils::getPotionFromItem(itemstack));

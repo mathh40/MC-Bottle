@@ -3,13 +3,14 @@
 
 class EntityVillager;
 
-class EntityAIVillagerInteract :public EntityAIWatchClosest2
+class EntityAIVillagerInteract : public EntityAIWatchClosest2
 {
-public:
-    explicit EntityAIVillagerInteract(EntityVillager* villagerIn);
+  public:
+    explicit EntityAIVillagerInteract(EntityVillager *villagerIn);
     void startExecuting() override;
     void updateTask() override;
-private:
+
+  private:
     int32_t interactionDelay;
-    EntityVillager* villager;
+    EntityVillager *villager;
 };

@@ -1,7 +1,7 @@
 #include "ItemAnvilBlock.h"
 
 ItemAnvilBlock::ItemAnvilBlock(Block *block)
-    :ItemMultiTexture(block, block, {"intact", "slightlyDamaged", "veryDamaged"})
+    : ItemMultiTexture(block, block, {"intact", "slightlyDamaged", "veryDamaged"})
 {
 }
 

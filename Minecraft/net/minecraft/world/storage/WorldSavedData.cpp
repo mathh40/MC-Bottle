@@ -1,21 +1,20 @@
 #include "WorldSavedData.h"
 
-WorldSavedData::WorldSavedData(std::string_view name)
-	:mapName(name)
+WorldSavedData::WorldSavedData(std::string_view name) : mapName(name)
 {
 }
 
 void WorldSavedData::markDirty()
 {
-	setDirty(true);
+    setDirty(true);
 }
 
 void WorldSavedData::setDirty(bool isDirty)
 {
-	dirty = isDirty;
+    dirty = isDirty;
 }
 
 bool WorldSavedData::isDirty() const
 {
-	return dirty;
+    return dirty;
 }

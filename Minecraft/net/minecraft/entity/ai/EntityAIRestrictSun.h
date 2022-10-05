@@ -3,14 +3,14 @@
 
 class EntityCreature;
 
-class EntityAIRestrictSun :public EntityAIBase
+class EntityAIRestrictSun : public EntityAIBase
 {
-public:
-    explicit EntityAIRestrictSun(EntityCreature* creature);
+  public:
+    explicit EntityAIRestrictSun(EntityCreature *creature);
     bool shouldExecute() override;
     void startExecuting() override;
     void resetTask() override;
 
-private:
-    EntityCreature* entity;
+  private:
+    EntityCreature *entity;
 };

@@ -2,10 +2,10 @@
 
 struct MouseHelper
 {
-	int deltaX;
-	int deltaY;
+    int deltaX;
+    int deltaY;
 
-	void grabMouseCursor();
-	void ungrabMouseCursor();
-	void mouseXYChange();
+    void grabMouseCursor();
+    void ungrabMouseCursor();
+    void mouseXYChange();
 };

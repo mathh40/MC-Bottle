@@ -1,6 +1,5 @@
 #include "InventoryLargeChest.h"
 
-
 #include "ContainerChest.h"
 #include "LockCode.h"
 #include "text/TextComponentString.h"
@@ -8,13 +7,14 @@
 
 InventoryLargeChest::InventoryLargeChest(std::string_view nameIn, ILockableContainer *upperChestIn,
                                          ILockableContainer *lowerChestIn)
-        :name(nameIn),upperChest(upperChestIn ? upperChestIn : lowerChestIn),lowerChest(lowerChestIn ? lowerChestIn : upperChestIn)
+    : name(nameIn), upperChest(upperChestIn ? upperChestIn : lowerChestIn),
+      lowerChest(lowerChestIn ? lowerChestIn : upperChestIn)
 {
-    if (upperChestIn->isLocked()) 
+    if (upperChestIn->isLocked())
     {
         lowerChestIn->setLockCode(upperChestIn->getLockCode());
     }
-    else if (lowerChestIn->isLocked()) 
+    else if (lowerChestIn->isLocked())
     {
         upperChestIn->setLockCode(lowerChestIn->getLockCode());
     }
@@ -37,11 +37,11 @@ bool InventoryLargeChest::isPartOfLargeChest(IInventory *inventoryIn) const
 
 std::string InventoryLargeChest::getName() const
 {
-    if (upperChest->hasCustomName()) 
+    if (upperChest->hasCustomName())
     {
         return upperChest->getName();
     }
-    else 
+    else
     {
         return lowerChest->hasCustomName() ? lowerChest->getName() : name;
     }
@@ -54,31 +54,37 @@ bool InventoryLargeChest::hasCustomName() const
 
 std::unique_ptr<ITextComponent> InventoryLargeChest::getDisplayName() const
 {
-    return (ITextComponent)(hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getName(), new Object[0]));
+    return (ITextComponent)(hasCustomName() ? new TextComponentString(getName())
+                                            : new TextComponentTranslation(getName(), new Object[0]));
 }
 
 ItemStack InventoryLargeChest::getStackInSlot(int32_t index)
 {
-    return index >= upperChest->getSizeInventory() ? lowerChest->getStackInSlot(index - upperChest->getSizeInventory()) : upperChest->getStackInSlot(index);
+    return index >= upperChest->getSizeInventory() ? lowerChest->getStackInSlot(index - upperChest->getSizeInventory())
+                                                   : upperChest->getStackInSlot(index);
 }
 
 ItemStack InventoryLargeChest::decrStackSize(int32_t index, int32_t count)
 {
-    return index >= upperChest->getSizeInventory() ? lowerChest->decrStackSize(index - upperChest->getSizeInventory(), count) : upperChest->decrStackSize(index, count);
+    return index >= upperChest->getSizeInventory()
+               ? lowerChest->decrStackSize(index - upperChest->getSizeInventory(), count)
+               : upperChest->decrStackSize(index, count);
 }
 
 ItemStack InventoryLargeChest::removeStackFromSlot(int32_t index)
 {
-    return index >= upperChest->getSizeInventory() ? lowerChest->removeStackFromSlot(index - upperChest->getSizeInventory()) : upperChest->removeStackFromSlot(index);
+    return index >= upperChest->getSizeInventory()
+               ? lowerChest->removeStackFromSlot(index - upperChest->getSizeInventory())
+               : upperChest->removeStackFromSlot(index);
 }
 
 void InventoryLargeChest::setInventorySlotContents(int32_t index, ItemStack stack)
 {
-    if (index >= upperChest->getSizeInventory()) 
+    if (index >= upperChest->getSizeInventory())
     {
         lowerChest->setInventorySlotContents(index - upperChest->getSizeInventory(), stack);
     }
-    else 
+    else
     {
         upperChest->setInventorySlotContents(index, stack);
     }
@@ -107,7 +113,7 @@ void InventoryLargeChest::openInventory(EntityPlayer *player)
 }
 
 void InventoryLargeChest::closeInventory(EntityPlayer *player)
-{  
+{
     upperChest->closeInventory(player);
     lowerChest->closeInventory(player);
 }
@@ -124,7 +130,6 @@ int32_t InventoryLargeChest::getField(int32_t id)
 
 void InventoryLargeChest::setField(int32_t id, int32_t value)
 {
-
 }
 
 int32_t InventoryLargeChest::getFieldCount()
@@ -153,7 +158,7 @@ std::string InventoryLargeChest::getGuiID() const
     return upperChest->getGuiID();
 }
 
-Container * InventoryLargeChest::createContainer(InventoryPlayer *playerInventory, EntityPlayer *playerIn)
+Container *InventoryLargeChest::createContainer(InventoryPlayer *playerInventory, EntityPlayer *playerIn)
 {
     return new ContainerChest(playerInventory, this, playerIn);
 }

@@ -2,7 +2,8 @@
 
 #include "../../nbt/NBTTagCompound.h"
 
-void PlayerCapabilities::writeCapabilitiesToNBT(NBTTagCompound *tagCompound) {
+void PlayerCapabilities::writeCapabilitiesToNBT(NBTTagCompound *tagCompound)
+{
     NBTTagCompound *nbttagcompound = new NBTTagCompound();
     nbttagcompound->setBoolean("invulnerable", disableDamage);
     nbttagcompound->setBoolean("flying", isFlying);
@@ -14,36 +15,44 @@ void PlayerCapabilities::writeCapabilitiesToNBT(NBTTagCompound *tagCompound) {
     tagCompound->setTag("abilities", nbttagcompound);
 }
 
-void PlayerCapabilities::readCapabilitiesFromNBT(NBTTagCompound *tagCompound) {
-    if (tagCompound->hasKey("abilities", 10)) {
+void PlayerCapabilities::readCapabilitiesFromNBT(NBTTagCompound *tagCompound)
+{
+    if (tagCompound->hasKey("abilities", 10))
+    {
         NBTTagCompound *nbttagcompound = tagCompound->getCompoundTag("abilities");
-        disableDamage = nbttagcompound->getBoolean("invulnerable");
-        isFlying = nbttagcompound->getBoolean("flying");
-        allowFlying = nbttagcompound->getBoolean("mayfly");
-        isCreativeMode = nbttagcompound->getBoolean("instabuild");
-        if (nbttagcompound->hasKey("flySpeed", 99)) {
-            flySpeed = nbttagcompound->getFloat("flySpeed");
+        disableDamage                  = nbttagcompound->getBoolean("invulnerable");
+        isFlying                       = nbttagcompound->getBoolean("flying");
+        allowFlying                    = nbttagcompound->getBoolean("mayfly");
+        isCreativeMode                 = nbttagcompound->getBoolean("instabuild");
+        if (nbttagcompound->hasKey("flySpeed", 99))
+        {
+            flySpeed  = nbttagcompound->getFloat("flySpeed");
             walkSpeed = nbttagcompound->getFloat("walkSpeed");
         }
 
-        if (nbttagcompound->hasKey("mayBuild", 1)) {
+        if (nbttagcompound->hasKey("mayBuild", 1))
+        {
             allowEdit = nbttagcompound->getBoolean("mayBuild");
         }
     }
 }
 
-float PlayerCapabilities::getFlySpeed() const {
+float PlayerCapabilities::getFlySpeed() const
+{
     return flySpeed;
 }
 
-void PlayerCapabilities::setFlySpeed(float speed) {
+void PlayerCapabilities::setFlySpeed(float speed)
+{
     flySpeed = speed;
 }
 
-float PlayerCapabilities::getWalkSpeed() const {
+float PlayerCapabilities::getWalkSpeed() const
+{
     return walkSpeed;
 }
 
-void PlayerCapabilities::setPlayerWalkSpeed(float speed) {
+void PlayerCapabilities::setPlayerWalkSpeed(float speed)
+{
     walkSpeed = speed;
 }

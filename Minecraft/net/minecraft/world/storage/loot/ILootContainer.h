@@ -1,11 +1,10 @@
 #pragma once
+#include "../../../entity/item/EntityMinecartContainer.h"
 #include "ResourceLocation.h"
-#include "../../../entity/item/EntityMinecartContainer.h"
-#include "../../../entity/item/EntityMinecartContainer.h"
 
-class ILootContainer 
+class ILootContainer
 {
-	public:
-    virtual ~ILootContainer() = default;
+  public:
+    virtual ~ILootContainer()                              = default;
     virtual std::optional<ResourceLocation> getLootTable() = 0;
 };

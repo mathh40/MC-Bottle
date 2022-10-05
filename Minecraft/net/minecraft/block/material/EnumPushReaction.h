@@ -1,5 +1,6 @@
 #pragma once
-enum class EnumPushReaction {
+enum class EnumPushReaction
+{
     NORMAL,
     DESTROY,
     BLOCK,

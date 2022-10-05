@@ -1,24 +1,24 @@
 #include "EntityAIRunAroundLikeCrazy.h"
 
-#include "RandomPositionGenerator.h"
 #include "../Entity.h"
+#include "RandomPositionGenerator.h"
 
 EntityAIRunAroundLikeCrazy::EntityAIRunAroundLikeCrazy(AbstractHorse *horse, double speedIn)
-    :horseHost(horse),speed(speedIn)
+    : horseHost(horse), speed(speedIn)
 {
     setMutexBits(1);
 }
 
 bool EntityAIRunAroundLikeCrazy::shouldExecute()
 {
-    if (!horseHost->isTame() && horseHost->isBeingRidden()) 
+    if (!horseHost->isTame() && horseHost->isBeingRidden())
     {
         auto vec3d = RandomPositionGenerator::findRandomTarget(horseHost, 5, 4);
-        if (!vec3d) 
+        if (!vec3d)
         {
             return false;
         }
-        else 
+        else
         {
             targetX = vec3d->getx();
             targetY = vec3d->gety();
@@ -26,7 +26,7 @@ bool EntityAIRunAroundLikeCrazy::shouldExecute()
             return true;
         }
     }
-    else 
+    else
     {
         return false;
     }
@@ -44,21 +44,21 @@ bool EntityAIRunAroundLikeCrazy::shouldContinueExecuting()
 
 void EntityAIRunAroundLikeCrazy::updateTask()
 {
-    if (!horseHost->isTame() && horseHost->getRNG().nextInt(50) == 0) 
+    if (!horseHost->isTame() && horseHost->getRNG().nextInt(50) == 0)
     {
-        Entity* entity = (Entity*)horseHost->getPassengers().get(0);
-        if (entity == nullptr) 
+        Entity *entity = (Entity *)horseHost->getPassengers().get(0);
+        if (entity == nullptr)
         {
             return;
         }
 
-        if (Util::instanceof<EntityPlayer>(entity)) 
+        if (Util:: instanceof <EntityPlayer>(entity))
         {
             auto i = horseHost->getTemper();
             auto j = horseHost->getMaxTemper();
-            if (j > 0 && horseHost->getRNG().nextInt(j) < i) 
+            if (j > 0 && horseHost->getRNG().nextInt(j) < i)
             {
-                horseHost->setTamedBy((EntityPlayer*)entity);
+                horseHost->setTamedBy((EntityPlayer *)entity);
                 return;
             }
 

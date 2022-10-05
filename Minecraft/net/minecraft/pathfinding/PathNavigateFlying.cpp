@@ -2,9 +2,9 @@
 
 #include "../world/World.h"
 
-PathNavigateFlying::PathNavigateFlying(EntityLiving *entityIn, World *worldIn)
-  :PathNavigate(entityIn, worldIn)
-{}
+PathNavigateFlying::PathNavigateFlying(EntityLiving *entityIn, World *worldIn) : PathNavigate(entityIn, worldIn)
+{
+}
 
 std::optional<Path> PathNavigateFlying::getPathToEntityLiving(Entity *entityIn)
 {
@@ -14,29 +14,31 @@ std::optional<Path> PathNavigateFlying::getPathToEntityLiving(Entity *entityIn)
 void PathNavigateFlying::onUpdateNavigation()
 {
     ++totalTicks;
-    if (tryUpdatePath) 
+    if (tryUpdatePath)
     {
         updatePath();
     }
 
-    if (!noPath()) 
+    if (!noPath())
     {
         Vec3d vec3d1;
-        if (canNavigate()) 
+        if (canNavigate())
         {
             pathFollow();
         }
-        else if (currentPath.has_value() && currentPath->getCurrentPathIndex() < currentPath->getCurrentPathLength()) 
+        else if (currentPath.has_value() && currentPath->getCurrentPathIndex() < currentPath->getCurrentPathLength())
         {
             vec3d1 = currentPath->getVectorFromIndex(entity, currentPath->getCurrentPathIndex());
-            if (MathHelper::floor(entity->posX) == MathHelper::floor(vec3d1.getx()) && MathHelper::floor(entity->posY) == MathHelper::floor(vec3d1.gety()) && MathHelper::floor(entity->posZ) == MathHelper::floor(vec3d1.getz())) 
+            if (MathHelper::floor(entity->posX) == MathHelper::floor(vec3d1.getx()) &&
+                MathHelper::floor(entity->posY) == MathHelper::floor(vec3d1.gety()) &&
+                MathHelper::floor(entity->posZ) == MathHelper::floor(vec3d1.getz()))
             {
                 currentPath->setCurrentPathIndex(currentPath->getCurrentPathIndex() + 1);
             }
         }
 
         debugPathFinding();
-        if (!noPath()) 
+        if (!noPath())
         {
             vec3d1 = currentPath.getPosition(entity);
             entity->getMoveHelper().setMoveTo(vec3d1.x, vec3d1.y, vec3d1.z, this.speed);
@@ -87,7 +89,7 @@ Vec3d PathNavigateFlying::getEntityPosition()
 }
 
 bool PathNavigateFlying::isDirectPathBetweenPoints(const Vec3d &posVec31, const Vec3d &posVec32, int32_t sizeX,
-    int32_t sizeY, int32_t sizeZ)
+                                                   int32_t sizeY, int32_t sizeZ)
 {
     int32_t i = MathHelper::floor(posVec31.getx());
     int32_t j = MathHelper::floor(posVec31.gety());
@@ -96,33 +98,33 @@ bool PathNavigateFlying::isDirectPathBetweenPoints(const Vec3d &posVec31, const 
     double d1 = posVec32.gety() - posVec31.gety();
     double d2 = posVec32.getz() - posVec31.getz();
     double d3 = d0 * d0 + d1 * d1 + d2 * d2;
-    if (d3 < 1.0E-8) 
+    if (d3 < 1.0E-8)
     {
         return false;
     }
-    else 
+    else
     {
         double d4 = 1.0 / MathHelper::sqrt(d3);
         d0 *= d4;
         d1 *= d4;
         d2 *= d4;
-        double d5 = 1.0 / MathHelper::abs(d0);
-        double d6 = 1.0 / MathHelper::abs(d1);
-        double d7 = 1.0 / MathHelper::abs(d2);
-        double d8 = (double)i - posVec31.getx();
-        double d9 = (double)j - posVec31.gety();
+        double d5  = 1.0 / MathHelper::abs(d0);
+        double d6  = 1.0 / MathHelper::abs(d1);
+        double d7  = 1.0 / MathHelper::abs(d2);
+        double d8  = (double)i - posVec31.getx();
+        double d9  = (double)j - posVec31.gety();
         double d10 = (double)k - posVec31.getz();
-        if (d0 >= 0.0) 
+        if (d0 >= 0.0)
         {
             ++d8;
         }
 
-        if (d1 >= 0.0) 
+        if (d1 >= 0.0)
         {
             ++d9;
         }
 
-        if (d2 >= 0.0) 
+        if (d2 >= 0.0)
         {
             ++d10;
         }
@@ -130,7 +132,7 @@ bool PathNavigateFlying::isDirectPathBetweenPoints(const Vec3d &posVec31, const 
         d8 /= d0;
         d9 /= d1;
         d10 /= d2;
-        int32_t l = d0 < 0.0 ? -1 : 1;
+        int32_t l  = d0 < 0.0 ? -1 : 1;
         int32_t i1 = d1 < 0.0 ? -1 : 1;
         int32_t j1 = d2 < 0.0 ? -1 : 1;
         int32_t k1 = MathHelper::floor(posVec32.getx());
@@ -140,23 +142,23 @@ bool PathNavigateFlying::isDirectPathBetweenPoints(const Vec3d &posVec31, const 
         int32_t k2 = l1 - j;
         int32_t l2 = i2 - k;
 
-        while(true) 
+        while (true)
         {
-            while(j2 * l > 0 || k2 * i1 > 0 || l2 * j1 > 0) 
+            while (j2 * l > 0 || k2 * i1 > 0 || l2 * j1 > 0)
             {
-                if (d8 < d10 && d8 <= d9) 
+                if (d8 < d10 && d8 <= d9)
                 {
                     d8 += d5;
                     i += l;
                     j2 = k1 - i;
                 }
-                else if (d9 < d8 && d9 <= d10) 
+                else if (d9 < d8 && d9 <= d10)
                 {
                     d9 += d6;
                     j += i1;
                     k2 = l1 - j;
                 }
-                else 
+                else
                 {
                     d10 += d7;
                     k += j1;

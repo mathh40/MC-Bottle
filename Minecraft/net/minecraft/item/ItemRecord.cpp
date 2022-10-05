@@ -1,18 +1,17 @@
 #include "ItemRecord.h"
 
-
+#include "../stats/StatList.h"
 #include "ItemStack.h"
 #include "World.h"
-#include "../stats/StatList.h"
 #include "text/translation/I18n.h"
 
 EnumActionResult ItemRecord::onItemUse(EntityPlayer *player, World *worldIn, BlockPos pos, EnumHand hand,
                                        EnumFacing facing, float hitX, float hitY, float hitZ)
 {
-    IBlockState* iblockstate = worldIn->getBlockState(pos);
-    if (iblockstate->getBlock() == Blocks.JUKEBOX && !iblockstate->getValue(BlockJukebox::HAS_RECORD)) 
+    IBlockState *iblockstate = worldIn->getBlockState(pos);
+    if (iblockstate->getBlock() == Blocks.JUKEBOX && !iblockstate->getValue(BlockJukebox::HAS_RECORD))
     {
-        if (!worldIn->isRemote) 
+        if (!worldIn->isRemote)
         {
             ItemStack itemstack = player->getHeldItem(hand);
             ((BlockJukebox)Blocks.JUKEBOX).insertRecord(worldIn, pos, iblockstate, itemstack);
@@ -23,21 +22,22 @@ EnumActionResult ItemRecord::onItemUse(EntityPlayer *player, World *worldIn, Blo
 
         return EnumActionResult::SUCCESS;
     }
-    else 
+    else
     {
         return EnumActionResult::PASS;
     }
 }
 
 ItemRecord::ItemRecord(std::string_view recordName, SoundEvent soundIn)
-    :displayName("item.record." + recordName + ".desc"),sound(soundIn)
+    : displayName("item.record." + recordName + ".desc"), sound(soundIn)
 {
     maxStackSize = 1;
     setCreativeTab(CreativeTabs::MISC);
     RECORDS.emplace(sound, this);
 }
 
-void ItemRecord::addInformation(ItemStack stack, World* worldIn, std::vector<std::string>& tooltip, ITooltipFlag* flagIn)
+void ItemRecord::addInformation(ItemStack stack, World *worldIn, std::vector<std::string> &tooltip,
+                                ITooltipFlag *flagIn)
 {
     tooltip.emplace_back(getRecordNameLocal());
 }

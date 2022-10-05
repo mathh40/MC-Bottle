@@ -10,17 +10,17 @@ EntityEquipmentSlot EntityEquipmentSlot::CHEST(EquipmentType::ARMOR, 2, 3, "ches
 EntityEquipmentSlot EntityEquipmentSlot::HEAD(EquipmentType::ARMOR, 3, 4, "head");
 
 EntityEquipmentSlot::EntityEquipmentSlot(EquipmentType slotTypeIn, int32_t indexIn, int32_t slotIndexIn,
-    std::string_view nameIn)
-        :slotType(slotTypeIn),index(indexIn),slotIndex(slotIndexIn),name(nameIn)
+                                         std::string_view nameIn)
+    : slotType(slotTypeIn), index(indexIn), slotIndex(slotIndexIn), name(nameIn)
 {
     value.emplace_back(this);
 }
 
 EntityEquipmentSlot EntityEquipmentSlot::fromString(std::string_view targetName)
 {
-    for(auto& entityequipmentslot : values()) 
+    for (auto &entityequipmentslot : values())
     {
-        if (entityequipmentslot->getName() == targetName) 
+        if (entityequipmentslot->getName() == targetName)
         {
             return *entityequipmentslot;
         }
@@ -49,15 +49,17 @@ std::string EntityEquipmentSlot::getName() const
     return name;
 }
 
-std::vector<EntityEquipmentSlot *> & EntityEquipmentSlot::values()
+std::vector<EntityEquipmentSlot *> &EntityEquipmentSlot::values()
 {
     return value;
 }
 
-auto operator==(const EntityEquipmentSlot &lhs, const EntityEquipmentSlot &rhs) -> bool {
+auto operator==(const EntityEquipmentSlot &lhs, const EntityEquipmentSlot &rhs) -> bool
+{
     return lhs.getIndex() == rhs.getIndex();
 }
 
-auto operator!=(const EntityEquipmentSlot &lhs, const EntityEquipmentSlot &rhs) -> bool {
+auto operator!=(const EntityEquipmentSlot &lhs, const EntityEquipmentSlot &rhs) -> bool
+{
     return !(lhs == rhs);
 }

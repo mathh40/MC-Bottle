@@ -14,9 +14,9 @@ std::string ItemCoal::getTranslationKey(ItemStack stack) const
     return stack.getMetadata() == 1 ? "item.charcoal" : "item.coal";
 }
 
-void ItemCoal::getSubItems(const CreativeTabs& tab, std::vector<ItemStack>& items)
+void ItemCoal::getSubItems(const CreativeTabs &tab, std::vector<ItemStack> &items)
 {
-    if (isInCreativeTab(tab)) 
+    if (isInCreativeTab(tab))
     {
         items.push_back(ItemStack(this, 1, 0));
         items.push_back(ItemStack(this, 1, 1));
