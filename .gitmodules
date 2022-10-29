@@ -1,9 +1,6 @@
 [submodule "args"]
 	path = args
 	url = ../../Taywee/args.git
-[submodule "nlohmann_json"]
-	path = nlohmann_json
-	url = ../../nlohmann/json.git
 [submodule "crossguid"]
 	path = crossguid
 	url = ../../graeme-hill/crossguid.git
