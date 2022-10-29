@@ -4,9 +4,6 @@
 [submodule "dynamic_bitset"]
 	path = dynamic_bitset
 	url = ../../pinam45/dynamic_bitset.git
-[submodule "compile-time-regular-expressions"]
-	path = compile-time-regular-expressions
-	url = ../../hanickadot/compile-time-regular-expressions.git
 [submodule "fmt"]
 	path = fmt
 	url = ../../fmtlib/fmt.git
