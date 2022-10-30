@@ -1,0 +1,13 @@
+# Docs at https://docs.conan.io/en/latest/reference/conanfile_txt.html
+
+[requires]
+fmt/9.1.0
+spdlog/1.10.0
+ctre/3.7.1
+stduuid/1.2.2
+nlohmann_json/3.11.2
+
+[generators]
+CMakeDeps
+CMakeToolchain
+VirtualRunEnv

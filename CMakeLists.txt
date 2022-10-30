@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20...3.24)
 
 
 # Not ideal to use this global variable, but necessary to make sure
@@ -14,7 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Add project_options v0.20.0
 # https://github.com/cpp-best-practices/project_options
 include(FetchContent)
-FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.25.0.zip)
+FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.26.1.zip)
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 include(${_project_options_SOURCE_DIR}/src/DynamicProjectOptions.cmake)
@@ -110,7 +110,7 @@ dynamic_project_options(
   <utility>
   <memory># This is a list of headers to pre-compile, here are some common ones
   ENABLE_COVERAGE
-  #ENABLE_CONAN
+  ENABLE_CONAN
   # CONAN_OPTIONS    # Extra options to pass to conan
   # MSVC_WARNINGS    # Override the defaults for the MSVC warnings
   # CLANG_WARNINGS   # Override the defaults for the CLANG warnings
@@ -153,17 +153,16 @@ target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 add_library(ProjectMinecraft::project_options INTERFACE IMPORTED)
 add_library(ProjectMinecraft::project_warnings INTERFACE IMPORTED)
 
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+set(SPDLOG_FMT_EXTERNAL ON CACHE INTERNAL "")
+find_package(nlohmann_json REQUIRED)
+find_package(fmt REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(ctre REQUIRED)
+
 # configure files based on CMake configuration options
 add_subdirectory(configured_files)
-
 add_subdirectory(args)
-add_subdirectory(nlohmann_json)
-set(JSON_BuildTests OFF CACHE INTERNAL "")
-add_subdirectory(fmt)
-add_subdirectory(spdlog)
-set(SPDLOG_FMT_EXTERNAL ON CACHE INTERNAL "")
-add_subdirectory(crossguid)
-add_subdirectory(compile-time-regular-expressions)
 add_subdirectory(concurrentqueue)
 add_subdirectory(dynamic_bitset)
 add_subdirectory(authlib)

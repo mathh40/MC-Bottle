@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v2.5.0
       - uses: appleboy/discord-action@master
         with:
           message: New Commits Pushed

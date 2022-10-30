@@ -444,3 +444,6 @@ cmake-build-debug/
 # End of https://www.gitignore.io/api/c++,java,cmake,visualstudio,visualstudiocode
 /out/build/x64-Debug
 /CMakeSettings.json
+
+# Obsidian
+.obsidian

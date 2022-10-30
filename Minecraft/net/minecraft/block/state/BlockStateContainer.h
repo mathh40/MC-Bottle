@@ -1,10 +1,12 @@
 #pragma once
+#include "../../util/EnumBlockRenderType.h"
 #include "BlockStateBase.h"
 
 #include <span>
 #include <unordered_map>
 #include <vector>
 
+class Mirror;
 class Block;
 class IBlockState;
 

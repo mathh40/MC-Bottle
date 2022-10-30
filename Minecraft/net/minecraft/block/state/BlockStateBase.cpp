@@ -1,6 +1,7 @@
 #include "BlockStateBase.h"
 
 #include "../properties/IProperty.h"
+#include "Block.h"
 
 #include <sstream>
 
